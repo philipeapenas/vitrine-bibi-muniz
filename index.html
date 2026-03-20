@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <title>Vitrine de Links</title>
+  <meta name="description" content="Encontre todos os meus links em um só lugar.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Vitrine de Links">
+  <meta property="og:type" content="website">
+  <meta property="og:description" content="Encontre todos os meus links em um só lugar.">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Background Slideshow -->
+  <div id="bg-blur-layer" class="bg-blur-layer" aria-hidden="true"></div>
+  <div id="slideshow" class="slideshow" aria-hidden="true"></div>
+  <div class="slideshow-overlay" aria-hidden="true"></div>
+
+  <!-- Progress Bars (Stories-style) -->
+  <div id="progress-bars" class="progress-bars"></div>
+
+  <!-- Main Content -->
+  <main class="content">
+    <section class="profile-section">
+      <h1 id="profile-name" class="profile-name"></h1>
+      <p id="profile-bio" class="profile-bio"></p>
+
+      <div id="social-icons" class="social-icons"></div>
+    </section>
+
+    <section id="links-section" class="links-section"></section>
+  </main>
+
+  <script src="js/config.js" defer></script>
+  <script src="js/script.js" defer></script>
+</body>
+</html>

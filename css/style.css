@@ -1,0 +1,861 @@
+/* ═══════════════════════════════════════════════════════
+   VITRINE DE LINKS — Design System v2.0
+   "Luminous Ether" — Premium Glassmorphism
+   Generated via Google Stitch × Antigravity
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Custom Properties ─────────────────────────── */
+:root {
+  --bg: #0d0d0d;
+  --surface: #131313;
+  --surface-container: #201f1f;
+  --surface-high: #2a2a2a;
+  --surface-highest: #353534;
+  --on-surface: #e5e2e1;
+  --primary: #ffffff;
+  --secondary: #cdc1e5;
+  --tertiary: #ffb0c9;
+  --outline-variant: #444748;
+  --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ease-premium: cubic-bezier(0.23, 1, 0.32, 1);
+  --slide-duration: 4000ms;
+}
+
+/* ─── Reset & Base ──────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font);
+  background-color: var(--bg);
+  color: var(--primary);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ─── Background Slideshow ──────────────────────── */
+.bg-blur-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+  display: none;
+  overflow: hidden;
+}
+
+.bg-blur-layer__image {
+  position: absolute;
+  top: -5%;
+  left: -5%;
+  width: 110%;
+  height: 110%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease-premium);
+  will-change: opacity;
+  filter: blur(40px) brightness(0.4) saturate(1.2);
+}
+
+.bg-blur-layer__image.active {
+  opacity: 1;
+}
+
+.slideshow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.slideshow__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease-premium);
+  will-change: opacity;
+}
+
+.slideshow__image.active {
+  opacity: 1;
+}
+
+.slideshow-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.10) 0%,
+    rgba(0, 0, 0, 0.05) 25%,
+    rgba(0, 0, 0, 0.15) 55%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+  pointer-events: none;
+}
+
+/* ─── Progress Bars (Stories) — Shimmer ──────────── */
+.progress-bars {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 448px;
+  display: flex;
+  gap: 5px;
+  z-index: 10;
+  padding: 0 4px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.95), rgba(205,193,229,0.8));
+  border-radius: 3px;
+  transition: none;
+  box-shadow: 0 0 8px rgba(205, 193, 229, 0.4);
+}
+
+.progress-bar.completed .progress-bar__fill {
+  width: 100%;
+}
+
+.progress-bar.active .progress-bar__fill {
+  animation: progressFill var(--slide-duration) linear forwards;
+}
+
+@keyframes progressFill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* ─── Content Layout ────────────────────────────── */
+.content {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+}
+
+/* ─── Profile Section ───────────────────────────── */
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 45vh;
+  padding-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.profile-name {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #ffffff 0%, #cdc1e5 60%, #ffb0c9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradientText 6s ease-in-out infinite;
+  text-shadow: none;
+}
+
+@keyframes gradientText {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.profile-bio {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--on-surface);
+  opacity: 0.85;
+  line-height: 1.5;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+  margin-bottom: 18px;
+  letter-spacing: 0.01em;
+}
+
+/* ─── Social Icons — Glow ───────────────────────── */
+.social-icons {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  transition: all 0.35s var(--ease-premium);
+  cursor: pointer;
+  position: relative;
+}
+
+.social-icon:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: scale(1.12) translateY(-2px);
+  box-shadow: 0 0 20px rgba(205, 193, 229, 0.35);
+  border-color: rgba(205, 193, 229, 0.3);
+}
+
+.social-icon:active {
+  transform: scale(0.92);
+}
+
+.social-icon[aria-label="instagram"]:hover {
+  box-shadow: 0 0 24px rgba(255, 176, 201, 0.45);
+  border-color: rgba(255, 176, 201, 0.35);
+}
+
+.social-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: #ffffff;
+}
+
+/* ─── Link Cards — Premium Glassmorphism ────────── */
+.links-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 48px;
+  flex-grow: 1;
+}
+
+.link-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(68, 71, 72, 0.15);
+  transition: all 0.4s var(--ease-premium);
+  cursor: pointer;
+  text-decoration: none;
+  min-height: 200px;
+  aspect-ratio: 16 / 10;
+}
+
+.link-card:hover {
+  transform: scale(1.02) translateY(-2px);
+  border-color: rgba(205, 193, 229, 0.25);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.35),
+    0 0 30px rgba(205, 193, 229, 0.12);
+}
+
+.link-card:active {
+  transform: scale(0.97);
+  transition-duration: 0.1s;
+}
+
+.link-card__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.link-card__gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 65%;
+  background: linear-gradient(
+    to top,
+    rgba(13, 13, 13, 0.85) 0%,
+    rgba(13, 13, 13, 0.0) 100%
+  );
+  z-index: 1;
+}
+
+.link-card__content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 22px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.link-card__icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s var(--ease-premium);
+}
+
+.link-card:hover .link-card__icon {
+  background: rgba(205, 193, 229, 0.2);
+  border-color: rgba(205, 193, 229, 0.3);
+}
+
+.link-card__icon svg {
+  width: 16px;
+  height: 16px;
+  fill: #ffffff;
+}
+
+.link-card__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+/* ─── Ripple Effect ─────────────────────────────── */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(205, 193, 229, 0.4) 0%, transparent 70%);
+  transform: scale(0);
+  animation: rippleExpand 0.6s ease-out forwards;
+  pointer-events: none;
+  z-index: 3;
+}
+
+@keyframes rippleExpand {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ─── Card Shimmer ──────────────────────────────── */
+.link-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.06) 50%,
+    transparent 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+  transition: none;
+}
+
+.link-card:hover::after {
+  animation: shimmerSweep 0.8s ease-out forwards;
+}
+
+@keyframes shimmerSweep {
+  0%   { left: -100%; }
+  100% { left: 200%; }
+}
+
+/* ─── Entrance Animations ───────────────────────── */
+.fade-in-up {
+  animation: fadeInUp 0.7s var(--ease-premium) forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
+
+/* Stagger children */
+.profile-section .profile-name   { animation-delay: 0.1s; }
+.profile-section .profile-bio    { animation-delay: 0.2s; }
+.profile-section .social-icons   { animation-delay: 0.35s; }
+.links-section .link-card:nth-child(1) { animation-delay: 0.45s; }
+.links-section .link-card:nth-child(2) { animation-delay: 0.55s; }
+.links-section .link-card:nth-child(3) { animation-delay: 0.65s; }
+.links-section .link-card:nth-child(4) { animation-delay: 0.75s; }
+
+/* ─── Desktop: center with premium blur sides ────── */
+@media (min-width: 600px) {
+  body {
+    display: flex;
+    justify-content: center;
+    background-color: var(--bg);
+  }
+
+  .bg-blur-layer {
+    display: block;
+  }
+
+  .slideshow {
+    max-width: 480px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .slideshow-overlay {
+    max-width: 480px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .content {
+    position: relative;
+    z-index: 5;
+  }
+}
+
+/* ─── Scrollbar Hiding ──────────────────────────── */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   PRESELL PAGES
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Instagram Presell — "Lumina Nocturne" ─────── */
+.presell-ig {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #09092d 0%, #1a0a2e 50%, #0d0a28 100%);
+  background-size: 400% 400%;
+  animation: bgMorph 12s ease-in-out infinite;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes bgMorph {
+  0%, 100% { background-position: 0% 50%; }
+  25%      { background-position: 100% 0%; }
+  50%      { background-position: 100% 100%; }
+  75%      { background-position: 0% 100%; }
+}
+
+/* Bokeh particles */
+.presell-ig::before,
+.presell-ig::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(60px);
+}
+
+.presell-ig::before {
+  width: 300px;
+  height: 300px;
+  background: rgba(126, 81, 255, 0.12);
+  top: -80px;
+  right: -60px;
+  animation: bokehFloat 8s ease-in-out infinite;
+}
+
+.presell-ig::after {
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 176, 201, 0.10);
+  bottom: -40px;
+  left: -40px;
+  animation: bokehFloat 10s ease-in-out infinite reverse;
+}
+
+@keyframes bokehFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(30px, -20px) scale(1.1); }
+}
+
+.presell-ig__card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 28px;
+  padding: 40px 32px;
+  max-width: 380px;
+  width: 100%;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(126, 81, 255, 0.08);
+  animation: cardEntrance 0.5s var(--ease-premium) forwards;
+  opacity: 0;
+  transform: scale(0.92);
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes cardEntrance {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Avatar with Instagram gradient ring */
+.presell-ig__avatar-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+}
+
+.presell-ig__avatar-ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888, #a229c5, #8134af, #515bd4, #5B86E5, #f09433);
+  animation: ringRotate 3s linear infinite;
+  padding: 3px;
+}
+
+@keyframes ringRotate {
+  to { transform: rotate(360deg); }
+}
+
+.presell-ig__avatar-ring::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #09092d;
+}
+
+.presell-ig__avatar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.presell-ig__text {
+  font-size: 15px;
+  color: rgba(229, 227, 255, 0.8);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.presell-ig__text strong {
+  color: #e5e3ff;
+  font-weight: 700;
+}
+
+.presell-ig__btn {
+  display: block;
+  width: 100%;
+  padding: 16px 28px;
+  background: linear-gradient(135deg, #9c7eff 0%, #7e51ff 50%, #ff6c95 100%);
+  background-size: 200% 200%;
+  animation: btnGradient 4s ease-in-out infinite;
+  color: #ffffff;
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.35s var(--ease-premium);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: -0.01em;
+}
+
+@keyframes btnGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* Button shimmer */
+.presell-ig__btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  animation: btnShimmer 3s ease-in-out infinite;
+}
+
+@keyframes btnShimmer {
+  0%   { left: -100%; }
+  50%  { left: 200%; }
+  100% { left: 200%; }
+}
+
+.presell-ig__btn:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 8px 32px rgba(126, 81, 255, 0.4),
+    0 0 16px rgba(255, 108, 149, 0.25);
+}
+
+.presell-ig__btn:active {
+  transform: scale(0.96);
+  transition-duration: 0.1s;
+}
+
+
+/* ─── TikTok Presell — "Coral Essence" ──────────── */
+.presell-tt {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: linear-gradient(180deg, #fafafa 0%, #fff5f7 60%, #ffe8ee 100%);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.presell-tt__illustration {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: visible;
+}
+
+.presell-tt__circle-big {
+  position: absolute;
+  top: -70px;
+  right: -50px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff7f50 0%, #fc8274 50%, #ffb4aa 100%);
+  opacity: 0.75;
+  animation: circleFloat 6s ease-in-out infinite;
+  filter: blur(1px);
+}
+
+.presell-tt__circle-small {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffb4aa 0%, #ffdad5 100%);
+  opacity: 0.55;
+  animation: circleFloat 8s ease-in-out infinite reverse;
+}
+
+@keyframes circleFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(-12px, -8px) scale(1.04); }
+  66%      { transform: translate(8px, -16px) scale(0.98); }
+}
+
+.presell-tt__hand {
+  position: absolute;
+  top: 35px;
+  right: 55px;
+  font-size: 68px;
+  transform: rotate(-15deg);
+  filter: drop-shadow(0 6px 16px rgba(255, 127, 80, 0.25));
+  animation: handPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes handPulse {
+  0%, 100% {
+    transform: rotate(-15deg) translateY(0);
+    filter: drop-shadow(0 6px 16px rgba(255, 127, 80, 0.25));
+  }
+  50% {
+    transform: rotate(-15deg) translateY(-10px);
+    filter: drop-shadow(0 12px 24px rgba(255, 127, 80, 0.4));
+  }
+}
+
+.presell-tt__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.presell-tt__title {
+  font-size: 30px;
+  font-weight: 800;
+  color: #1b1c1c;
+  line-height: 1.25;
+  margin-bottom: 44px;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+.presell-tt__step {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: stepSlideIn 0.6s var(--ease-premium) forwards;
+}
+
+.presell-tt__step:nth-child(1) { animation-delay: 0.3s; }
+.presell-tt__step:nth-child(2) { animation-delay: 0.5s; }
+
+@keyframes stepSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.presell-tt__step-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(255, 127, 80, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 24px;
+}
+
+.presell-tt__step-text {
+  font-size: 16px;
+  color: #333333;
+  line-height: 1.6;
+  padding-top: 14px;
+}
+
+.presell-tt__step-text strong {
+  color: #1b1c1c;
+  font-weight: 700;
+}
+
+.presell-tt__footer {
+  text-align: center;
+  padding: 24px 0;
+  font-size: 13px;
+  color: #999999;
+  opacity: 0;
+  animation: fadeInUp 0.6s var(--ease-premium) forwards;
+  animation-delay: 0.8s;
+}
+
+.presell-tt__footer strong {
+  color: #a43c12;
+  font-weight: 600;
+}
