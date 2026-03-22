@@ -38,10 +38,55 @@
     {
         "id":  "track_3_deploy",
         "title":  "Deploy das Melhorias",
-        "status":  "in_progress",
+        "status":  "completed",
         "responsible_skill":  "vercel-expert",
         "dependencies":  [
                              "track_2_apply_fixes"
                          ]
+    },
+    {
+        "status":  "completed",
+        "title":  "Pesquisa UI/UX e Playbook",
+        "dependencies":  [
+
+                         ],
+        "id":  "track_1_fase2_pesquisa",
+        "responsible_skill":  "skill-expert"
+    },
+    {
+        "status":  "in_progress",
+        "title":  "Criar Skill flow-archivist",
+        "dependencies":  [
+                             "track_1_fase2_pesquisa"
+                         ],
+        "id":  "track_2_fase2_archivist",
+        "responsible_skill":  "skill-expert"
+    },
+    {
+        "status":  "pending",
+        "title":  "Refatorar Perfil Vitrine",
+        "dependencies":  [
+                             "track_2_fase2_archivist"
+                         ],
+        "id":  "track_3_fase2_css",
+        "responsible_skill":  "stitch-frontend"
+    },
+    {
+        "status":  "pending",
+        "title":  "Deploy Atualizado",
+        "dependencies":  [
+                             "track_3_fase2_css"
+                         ],
+        "id":  "track_4_fase2_deploy",
+        "responsible_skill":  "vercel-expert"
+    },
+    {
+        "status":  "pending",
+        "title":  "Arquivar Fluxo da Fase 2",
+        "dependencies":  [
+                             "track_4_fase2_deploy"
+                         ],
+        "id":  "track_5_fase2_arquivar",
+        "responsible_skill":  "flow-archivist"
     }
 ]

@@ -44,3 +44,16 @@ Refinar a interface da vitrine, melhorando o layout e a experiÃªncia de rolagem,
 
 ## ðŸ“ Log de ExecuÃ§Ã£o e Aprendizados
 > Registro dos passos tomados nas melhorias.
+---
+
+# Plano de Melhorias: Estilo Master e Expansão da Equipe (Fase 2)
+
+## ?? Objetivo Final
+Tornar a skill stitch-frontend uma especialista de elite em UI/UX Premium (com pesquisa de tendências). Em seguida, melhorar a legibilidade do perfil na Vitrine e criar uma nova skill (low-archivist) para automatizar o salvamento de fluxos.
+
+## ?? Tracks
+- **Track 1**: Pesquisa Web e Criação do Playbook de Estilo (Resp: skill-expert)
+- **Track 2**: Criação da Skill low-archivist (Resp: skill-expert)
+- **Track 3**: Refatoração do CSS da .profile-section na Vitrine (Resp: stitch-frontend)
+- **Track 4**: Deploy Atualizado para Validação (Resp: ercel-expert)
+- **Track 5**: Registro do Fluxo (Resp: low-archivist)
