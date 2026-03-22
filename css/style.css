@@ -53,6 +53,61 @@ img {
   display: block;
   max-width: 100%;
 }
+/* ═══════════════════════════════════════════════════════
+   VITRINE DE LINKS — Design System v2.0
+   "Luminous Ether" — Premium Glassmorphism
+   Generated via Google Stitch × Antigravity
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Custom Properties ─────────────────────────── */
+:root {
+  --bg: #0d0d0d;
+  --surface: #131313;
+  --surface-container: #201f1f;
+  --surface-high: #2a2a2a;
+  --surface-highest: #353534;
+  --on-surface: #e5e2e1;
+  --primary: #ffffff;
+  --secondary: #cdc1e5;
+  --tertiary: #ffb0c9;
+  --outline-variant: #444748;
+  --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ease-premium: cubic-bezier(0.23, 1, 0.32, 1);
+  --slide-duration: 4000ms;
+}
+
+/* ─── Reset & Base ──────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font);
+  background-color: var(--bg);
+  color: var(--primary);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
 
 /* ─── Background Slideshow ──────────────────────── */
 .bg-blur-layer {
@@ -61,8 +116,10 @@ img {
   left: 0;
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   z-index: -1;
-  display: none;
+  will-change: transform;
+  display: block;
   overflow: hidden;
 }
 
@@ -90,7 +147,9 @@ img {
   width: 100%;
   height: 100%;
   z-index: 0;
+  will-change: transform;
   overflow: hidden;
+  background: transparent;
 }
 
 .slideshow__image {
@@ -110,18 +169,10 @@ img {
   opacity: 1;
 }
 
-.slideshow-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.10) 0%,
-    rgba(0, 0, 0, 0.05) 25%,
-    rgba(0, 0, 0, 0.15) 55%,
+.slideshow__image--landscape {
+  object-fit: contain;
+  object-position: center center;
+}
     rgba(0, 0, 0, 0.75) 100%
   );
   pointer-events: none;

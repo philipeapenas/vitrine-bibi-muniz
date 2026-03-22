@@ -1,0 +1,47 @@
+[
+    {
+        "id":  "track_-1_implement_logging",
+        "title":  "Implementar Logging em Tempo Real",
+        "status":  "completed",
+        "responsible_skill":  "skill-expert",
+        "dependencies":  [
+
+                         ]
+    },
+    {
+        "id":  "track_0_fix_ceo_dodo",
+        "title":  "Corrigir Comportamento do /ceo-dodo",
+        "status":  "completed",
+        "responsible_skill":  "skill-expert",
+        "dependencies":  [
+                             "track_-1_implement_logging"
+                         ]
+    },
+    {
+        "id":  "track_1_optimize_skill",
+        "title":  "Otimizar Skill /stitch-frontend",
+        "status":  "completed",
+        "responsible_skill":  "skill-expert",
+        "dependencies":  [
+                             "track_0_fix_ceo_dodo"
+                         ]
+    },
+    {
+        "id":  "track_2_apply_fixes",
+        "title":  "Ajuste de Layout e Correção de Scroll",
+        "status":  "completed",
+        "responsible_skill":  "stitch-frontend",
+        "dependencies":  [
+                             "track_1_optimize_skill"
+                         ]
+    },
+    {
+        "id":  "track_3_deploy",
+        "title":  "Deploy das Melhorias",
+        "status":  "in_progress",
+        "responsible_skill":  "vercel-expert",
+        "dependencies":  [
+                             "track_2_apply_fixes"
+                         ]
+    }
+]

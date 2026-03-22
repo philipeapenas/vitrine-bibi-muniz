@@ -196,6 +196,23 @@
 
     if (!slideshowEl || photos.length === 0) return;
 
+    function applyOrientationClass(imageEl, landscapeClass) {
+      const updateOrientation = () => {
+        if (!imageEl.naturalWidth || !imageEl.naturalHeight) return;
+        imageEl.classList.toggle(
+          landscapeClass,
+          imageEl.naturalWidth > imageEl.naturalHeight
+        );
+      };
+
+      if (imageEl.complete) {
+        updateOrientation();
+        return;
+      }
+
+      imageEl.addEventListener("load", updateOrientation, { once: true });
+    }
+
     // Set CSS variable for progress bar animation
     document.documentElement.style.setProperty("--slide-duration", duration + "ms");
 
@@ -210,6 +227,7 @@
       img.draggable = false;
       if (i === 0) img.classList.add("active");
       slideshowEl.appendChild(img);
+      applyOrientationClass(img, "slideshow__image--landscape");
       images.push(img);
 
       if (bgBlurEl) {
