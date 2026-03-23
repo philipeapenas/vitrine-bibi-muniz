@@ -250,7 +250,8 @@ img {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  padding: 0 16px;
+  justify-content: flex-end;
+  padding: 55vh 16px 32px 16px;
 }
 
 /* ─── Profile Section ───────────────────────────── */
@@ -259,7 +260,7 @@ img {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-top: 43vh;
+  margin-top: 0;
   padding: 24px;
   flex-shrink: 0;
   background: rgba(0, 0, 0, 0.35);
