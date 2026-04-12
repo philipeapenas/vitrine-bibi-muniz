@@ -187,28 +187,6 @@ async function loadData() {
             elCtr.textContent = ctr + '%';
         }
 
-        // ─── KPIs Destino (Split) ───────────────────────────
-        const elCheckout = document.getElementById('kpi-click-checkout');
-        const elTelegram = document.getElementById('kpi-click-telegram');
-        if (elCheckout) animateValue(elCheckout, 0, userCheckout, 1000);
-        if (elTelegram) animateValue(elTelegram, 0, clickTelegram, 1000);
-
-        // Barras de % do split
-        const channelTotal = userCheckout + clickTelegram || 1;
-        const pctCheckout  = Math.round((userCheckout / channelTotal) * 100);
-        const pctTelegram  = Math.round((clickTelegram / channelTotal) * 100);
-
-        setTimeout(() => {
-            const barCo = document.getElementById('bar-checkout');
-            const barTg = document.getElementById('bar-telegram');
-            if (barCo) barCo.style.width = pctCheckout + '%';
-            if (barTg) barTg.style.width = pctTelegram + '%';
-            const pctCoEl = document.getElementById('pct-checkout');
-            const pctTgEl = document.getElementById('pct-telegram');
-            if (pctCoEl) pctCoEl.textContent = pctCheckout + '% dos cliques';
-            if (pctTgEl) pctTgEl.textContent = pctTelegram + '% dos cliques';
-        }, 300);
-
         // ─── Transações ─────────────────────────────────────
         let joined = 0, created = 0, approved = 0;
         (trans || []).forEach(t => {
@@ -224,29 +202,6 @@ async function loadData() {
         if (elJoined)   animateValue(elJoined, 0, joined, 1000);
         if (elCreated)  animateValue(elCreated, 0, created, 1000);
         if (elApproved) animateValue(elApproved, 0, approved, 1000);
-
-        // Estimativa conversão Telegram (leads / cliques bot)
-        const telegramConvEl = document.getElementById('kpi-telegram-conv');
-        if (telegramConvEl) {
-            const telegramConv = clickTelegram > 0 ? ((joined / clickTelegram) * 100).toFixed(1) : '0.0';
-            telegramConvEl.textContent = telegramConv + '%';
-        }
-
-        // ─── Rodapé de Conversão ─────────────────────────────
-        const convCheckEl  = document.getElementById('conv-check-pix');
-        const convPixEl    = document.getElementById('conv-pix-pago');
-        const convWinnerEl = document.getElementById('conv-winner');
-
-        const convCheck = userCheckout > 0 ? ((created / userCheckout) * 100).toFixed(1) : '0.0';
-        const convPix   = created > 0 ? ((approved / created) * 100).toFixed(1) : '0.0';
-
-        if (convCheckEl)  convCheckEl.textContent  = convCheck + '%';
-        if (convPixEl)    convPixEl.textContent     = convPix + '%';
-        if (convWinnerEl) {
-            const coEff = userCheckout > 0 ? (approved / userCheckout) : 0;
-            const tgEff = clickTelegram > 0 ? (joined / clickTelegram) : 0;
-            convWinnerEl.textContent = coEff >= tgEff ? '⚡ Checkout' : '✈ Telegram';
-        }
 
         const merged = [...(trans || []), ...checkoutEvents].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         renderTable(merged);

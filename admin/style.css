@@ -196,6 +196,30 @@ body {
     margin-bottom: 12px;
 }
 
+.kpi-card.minimalist {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid var(--border-ghost);
+}
+
+.kpi-card.minimalist .kpi-value {
+    font-size: 2.2rem;
+    margin: 4px 0;
+}
+
+.kpi-card.minimalist .kpi-label {
+    font-size: 0.65rem;
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+.kpi-card.minimalist .kpi-comparison {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
 .kpi-value {
     font-size: 2.5rem;
     font-weight: 700;
