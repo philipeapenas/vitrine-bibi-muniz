@@ -1,7 +1,7 @@
 window.onerror = function(msg, url, line) {
     console.error("Admin Error: " + msg + " | L:" + line);
 };
-console.log("💎 Admin v1.3: Royal Edition Active");
+console.log("⚡ Admin v2.0: Thunder Purple Active");
 
 function animateValue(obj, start, end, duration) {
     if (!obj) return;
@@ -29,6 +29,18 @@ const btnRefresh    = document.getElementById('refreshBtn');
 const btnDeploy     = document.getElementById('deployBtn');
 const btnLogout     = document.getElementById('logoutBtn');
 const connStatus    = document.getElementById('conn-status');
+const mainSidebar   = document.getElementById('mainSidebar');
+
+// Sidebar Toggle (Thunder Focus)
+if (mainSidebar) {
+    mainSidebar.addEventListener('click', (e) => {
+        // Only toggle if clicking the header or a specific toggle button (optional)
+        // For now, let's make it smarter: toggle on logo click
+        if (e.target.closest('.sidebar-header')) {
+            mainSidebar.classList.toggle('collapsed');
+        }
+    });
+}
 
 dateFilter.value = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
 
@@ -72,18 +84,18 @@ async function triggerVercelDeploy() {
 
         const res = await fetch(hookUrl, { method: 'POST' });
         if (res.ok) {
-            btnDeploy.innerHTML = '✅ Publicação Iniciada!';
+            btnDeploy.innerHTML = '✅ Iniciado!';
             setTimeout(() => {
                 btnDeploy.disabled = false;
                 btnDeploy.classList.remove('syncing');
-                btnDeploy.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path></svg> Publicar Site';
+                btnDeploy.innerHTML = 'Publicar Site';
             }, 5000);
         } else {
             throw new Error("Falha no trigger da Vercel");
         }
     } catch(e) {
         console.error("Erro no deploy:", e);
-        btnDeploy.innerHTML = '❌ Erro no Trigger';
+        btnDeploy.innerHTML = '❌ Erro';
         setTimeout(() => {
             btnDeploy.disabled = false;
             btnDeploy.classList.remove('syncing');
@@ -147,14 +159,16 @@ async function loadData() {
 
         (tracking || []).forEach(t => {
             if (t.event_type === 'pageview') pageviews++;
-            if (t.event_type === 'click') clicks++;
-            if (t.event_type === 'user_checkout') {
+            // Contagem universal de cliques (v2.1)
+            if (t.event_type === 'click' || t.event_type === 'click_dispatch') clicks++;
+            
+            if (t.event_type === 'user_checkout' || t.event_type === 'click_checkout') {
                 userCheckout++;
                 // Adiciona na lista para a tabela
                 checkoutEvents.push({
                     created_at: t.created_at,
                     event: 'user_checkout',
-                    sale_code: t.utm_term,
+                    sale_code: t.utm_term || 'organico',
                     plan_name: 'Checkout Iniciado',
                     plan_value: 0
                 });
@@ -215,20 +229,50 @@ async function loadData() {
 function renderTable(transactions) {
     const tbody = document.getElementById('salesTableBody');
     tbody.innerHTML = '';
-    const items = transactions.filter(t => t.event !== 'pageview' && t.event !== 'click');
+    
+    // Filtro mais robusto de eventos operacionais
+    const items = transactions.filter(t => 
+        ['user_checkout', 'payment_created', 'payment_approved', 'user_joined'].includes(t.event)
+    );
+
     if (!items.length) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Nenhum registro nesta data.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Aguardando operações...</td></tr>';
         return;
     }
+
     items.forEach(t => {
-        const tr  = document.createElement('tr');
-        const tm  = new Date(t.created_at).toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour:'2-digit', minute:'2-digit' });
-        let st = '';
-        if (t.event === 'payment_approved') st = '<span class="tag approved">Aprovado</span>';
-        else if (t.event === 'payment_created') st = '<span class="tag created">Pendente</span>';
-        else st = `<span class="tag">${t.event}</span>`;
+        const tr = document.createElement('tr');
+        const tm = new Date(t.created_at).toLocaleTimeString('pt-BR', { 
+            timeZone: 'America/Sao_Paulo', 
+            hour: '2-digit', minute: '2-digit' 
+        });
+
+        // Thunder Status Badges (v2.1)
+        let stBadge = '';
+        if (t.event === 'payment_approved') 
+            stBadge = '<span class="status-badge success">● Aprovado</span>';
+        else if (t.event === 'payment_created') 
+            stBadge = '<span class="status-badge pending">○ Pendente</span>';
+        else if (t.event === 'user_checkout') 
+            stBadge = '<span class="status-badge initiated">⚡ Iniciado</span>';
+        else 
+            stBadge = `<span class="status-badge">${t.event}</span>`;
+
+        // Operação ID Styling
+        const saleCode = t.sale_code || 'organico';
+        const opIdClass = saleCode === 'organico' ? 'op-id organico' : 'op-id';
+        const opIdHtml = `<span class="${opIdClass}">${saleCode}</span>`;
+
         const val = t.plan_value ? `R$ ${(t.plan_value/100).toFixed(2).replace('.', ',')}` : '-';
-        tr.innerHTML = `<td>${tm}</td><td>${st}</td><td>${t.customer_username || t.customer_chat_id || '-'}</td><td><strong>${t.sale_code || '-'}</strong></td><td>${t.plan_name || '-'}</td><td>${val}</td>`;
+        
+        tr.innerHTML = `
+            <td>${tm}</td>
+            <td>${stBadge}</td>
+            <td>${t.customer_username || t.customer_chat_id || '-'}</td>
+            <td>${opIdHtml}</td>
+            <td>${t.plan_name || '-'}</td>
+            <td>${val}</td>
+        `;
         tbody.appendChild(tr);
     });
 }
