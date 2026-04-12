@@ -1,7 +1,7 @@
 window.onerror = function(msg, url, line) {
     console.error("Admin Error: " + msg + " | L:" + line);
 };
-console.log("⚡ Admin v2.0: Thunder Purple Active");
+console.log("⚡ Admin v3.5: Thunder Purple Active");
 
 function animateValue(obj, start, end, duration) {
     if (!obj) return;
@@ -88,7 +88,8 @@ async function triggerVercelDeploy() {
             setTimeout(() => {
                 btnDeploy.disabled = false;
                 btnDeploy.classList.remove('syncing');
-                btnDeploy.innerHTML = 'Publicar Site';
+                btnDeploy.classList.remove('pending'); // Reset state
+                btnDeploy.innerHTML = 'Confirmar & Publicar Site';
             }, 5000);
         } else {
             throw new Error("Falha no trigger da Vercel");
@@ -104,12 +105,10 @@ async function triggerVercelDeploy() {
     }
 }
 
-function autoDeploy() {
-    if (deployTimer) clearTimeout(deployTimer);
-    deployTimer = setTimeout(() => {
-        console.log("Triggering auto-deploy...");
-        triggerVercelDeploy();
-    }, 10000); // 10s de debounce para evitar builds excessivos
+function setPending() {
+    if (btnDeploy) {
+        btnDeploy.classList.add('pending');
+    }
 }
 
 saveKeyBtn.addEventListener('click', () => {
@@ -357,6 +356,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
         const bannerUrl = (await uploadFile('fileBannerPic', 'banner'))  || cur?.banner_image_url    || '';
 
         const bioFull = document.getElementById('iptBioFull').value;
+        console.log("Saving profile data...", { bio_short: document.getElementById('iptBioShort').value });
         const { error } = await dbClient.from('site_profile').update({
             creator_name:        document.getElementById('iptCreatorName').value,
             creator_handle:      document.getElementById('iptCreatorHandle').value,
@@ -371,8 +371,9 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
             updated_at:          new Date()
         }).eq('id', 1);
         if (error) throw error;
+        console.log("✅ Profile updated successfully in Supabase");
         alert("✅ Identidade salva!");
-        autoDeploy();
+        setPending();
     } catch(e) { alert("Erro: " + e.message); }
     finally { btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>Salvar Identidade'; }
 });
@@ -386,7 +387,7 @@ document.getElementById('iptPulseEnabled').addEventListener('change', async (e) 
             updated_at: new Date()
         }).eq('id', 1);
         if (error) throw error;
-        autoDeploy();
+        setPending();
         // Feedback visual sutil (opcional)
         console.log("Pulse updated:", e.target.checked);
     } catch(e) { 
@@ -461,7 +462,7 @@ document.getElementById('thankyouForm').addEventListener('submit', async (e) => 
         }).eq('id', 1);
         if (error) throw error;
         alert("✅ Página de Obrigado salva! Clique em 'Preview' para ver.");
-        autoDeploy();
+        setPending();
     } catch(e) { alert("Erro: " + e.message); }
     finally { btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>Salvar Pós-Venda'; }
 });
@@ -526,7 +527,7 @@ document.getElementById('offerForm').addEventListener('submit', async (e) => {
         if (error) throw error;
         document.getElementById('offerEditor').style.display = 'none';
         loadOffersData();
-        autoDeploy();
+        setPending();
     } catch(e) { alert("Erro: " + e.message); }
     finally { btn.textContent = 'Salvar Oferta'; }
 });
@@ -552,7 +553,7 @@ window.deleteOffer = async (id) => {
     if (confirm(`Apagar oferta "${id}"?`)) {
         await dbClient.from('site_offers').delete().eq('id', id);
         loadOffersData();
-        autoDeploy();
+        setPending();
     }
 };
 
@@ -613,7 +614,7 @@ async function loadLinksData() {
                     await dbClient.from('site_links').update({ sort_order: update.sort_order }).eq('id', update.id);
                 }
                 console.log('Ordem dos links sincronizada');
-                autoDeploy();
+                setPending();
             }
         });
 
@@ -655,7 +656,7 @@ document.getElementById('linkForm').addEventListener('submit', async (e) => {
         }
         document.getElementById('linkEditor').style.display = 'none';
         loadLinksData();
-        autoDeploy();
+        setPending();
     } catch(e) { alert('Erro: ' + e.message); }
     finally { btn.textContent = 'Salvar Botão'; }
 });
@@ -676,7 +677,7 @@ window.deleteLink = async (id) => {
     if (confirm('Remover este botão da vitrine?')) {
         await dbClient.from('site_links').delete().eq('id', id);
         loadLinksData();
-        autoDeploy();
+        setPending();
     }
 };
 
@@ -754,7 +755,7 @@ async function loadCarouselPhotos() {
                     await dbClient.from('carousel_photos').update({ sort_order: update.sort_order }).eq('id', update.id);
                 }
                 console.log('Ordem salva com sucesso');
-                autoDeploy();
+                setPending();
             }
         });
 
@@ -808,7 +809,7 @@ document.getElementById('fileCarousel').addEventListener('change', async (e) => 
         }
 
         await loadCarouselPhotos();
-        autoDeploy();
+        setPending();
     } catch(err) {
         alert('Erro no upload: ' + err.message);
     } finally {
@@ -829,7 +830,7 @@ window.deleteCarouselPhoto = async (id, storagePath) => {
         
         if (dbError) throw dbError;
         loadCarouselPhotos();
-        autoDeploy();
+        setPending();
     } catch(e) {
         alert('Erro ao remover: ' + e.message);
     }

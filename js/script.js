@@ -45,7 +45,7 @@
 
   async function fetchProfileFromDB() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/site_profile?id=eq.1&select=creator_name,bio_full,bio_short,pulse_enabled,facebook_pixel_id`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/site_profile?id=eq.1&select=creator_name,bio_full,bio_short,pulse_enabled,facebook_pixel_id&t=${Date.now()}`, {
         headers: {
           "apikey": SUPABASE_ANON,
           "Authorization": "Bearer " + SUPABASE_ANON
@@ -59,7 +59,7 @@
 
   async function fetchLinksFromDB() {
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/site_links?select=title,url,active&active=eq.true&order=sort_order.asc`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/site_links?select=title,url,active&active=eq.true&order=sort_order.asc&t=${Date.now()}`, {
         headers: {
           "apikey": SUPABASE_ANON,
           "Authorization": "Bearer " + SUPABASE_ANON
@@ -77,7 +77,7 @@
   async function fetchCarouselFromDB() {
     try {
       // Busca da nova tabela ordenada por sort_order
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/carousel_photos?select=public_url&order=sort_order.asc`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/carousel_photos?select=public_url&order=sort_order.asc&t=${Date.now()}`, {
         headers: {
           "apikey": SUPABASE_ANON,
           "Authorization": "Bearer " + SUPABASE_ANON
@@ -130,7 +130,8 @@
       document.title = cleanName;
     }
     if (bioEl) {
-      bioEl.textContent = CONFIG.bio;
+      // Converte quebras de linha em <br> para respeitar a formatação do Admin
+      bioEl.innerHTML = CONFIG.bio ? CONFIG.bio.replace(/\n/g, '<br>') : "";
       bioEl.classList.add("fade-in-up");
     }
   }

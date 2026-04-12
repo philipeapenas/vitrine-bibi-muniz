@@ -580,6 +580,22 @@ tr:hover td {
     box-shadow: 0 0 20px var(--accent-glow);
 }
 
+.btn-thunder.pending {
+    background: var(--success);
+    animation: thunder-pulse 2s infinite;
+}
+
+.btn-thunder.pending:hover {
+    background: #059669;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+}
+
+@keyframes thunder-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
 .btn-outline {
     background: transparent;
     border: 1px solid var(--border-ghost);
