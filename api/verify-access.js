@@ -34,7 +34,7 @@ module.exports = async function handler(req, res) {
     // Busca a transação pelo ID da PushinPay ou pelo ID interno
     const { data, error } = await supabase
       .from('transactions')
-      .select('status, paid_at, value')
+      .select('status, paid_at, value, payer_name')
       .or(`pushinpay_id.eq.${id},id.eq.${id}`)
       .single();
 
@@ -48,7 +48,8 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({
         authorized: true,
         paid_at: data.paid_at,
-        value: data.value
+        value: data.value,
+        payer_name: data.payer_name
       });
     }
 

@@ -1158,6 +1158,22 @@
       }
 
       async function manualCheck() {
+        // --- BYPASS DE TESTE LOCAL (Não afeta a produção real na Vercel) ---
+        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+            alert("⚠️ Modo de Teste Local: Simulando PIX Pago com sucesso!");
+            if (window.DodoTracker) {
+              window.DodoTracker.capture('purchase', { value: selPlan.value, plan: selPlan._key });
+            }
+            const urlParams = new URLSearchParams(window.location.search);
+            if (selPlan && selPlan.url) {
+                urlParams.set('redirect', encodeURIComponent(selPlan.url));
+            }
+            // Força a injeção do txId na URL para validar no obrigado.html
+            urlParams.set('tx', txId || 'test-tx-12345');
+            window.location.href = `/obrigado.html?${urlParams.toString()}`;
+            return;
+        }
+
         const now = Date.now();
         if (verifyLock || now - lastPoll < 10000) {
           const wait = Math.ceil((10000 - (now - lastPoll)) / 1000);
