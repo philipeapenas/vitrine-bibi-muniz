@@ -410,16 +410,6 @@
                 document.querySelector('.card').style.display = 'block';
             }, 800);
         }
-
-        // Sucesso: Liberar página
-        statusEl.textContent = "Acesso Autorizado!";
-        statusEl.style.color = "#10B981";
-        
-        setTimeout(() => {
-            overlay.classList.add('hidden');
-            document.querySelector('.card').style.display = 'block';
-        }, 800);
-
     } catch (err) {
         console.error('[Gatekeeper]', err.message);
         statusEl.textContent = "Acesso Negado. Redirecionando...";
