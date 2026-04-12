@@ -208,12 +208,18 @@ async function loadData() {
 
         const convEl = document.getElementById('kpi-sales-conversion');
         if (convEl) {
-            const convCheck = userCheckout > 0 ? ((created / userCheckout) * 100).toFixed(1) : 0;
-            const convPay = created > 0 ? ((approved / created) * 100).toFixed(1) : 0;
+            const convCheck = userCheckout > 0 ? ((created / userCheckout) * 100).toFixed(1) : '0.0';
+            const convPay   = created > 0 ? ((approved / created) * 100).toFixed(1) : '0.0';
             convEl.innerHTML = `
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                    <div><span>↓ ${convCheck}%</span> Checkout → PIX</div>
-                    <div><span>↓ ${convPay}%</span> PIX → Pago</div>
+                <div class="kpi-conversion">
+                    <div>
+                        <span class="conv-pct">${convCheck}%</span>
+                        <span class="conv-label">Checkout → PIX</span>
+                    </div>
+                    <div>
+                        <span class="conv-pct">${convPay}%</span>
+                        <span class="conv-label">PIX → Pago</span>
+                    </div>
                 </div>`;
         }
 
