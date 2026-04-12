@@ -313,6 +313,225 @@ tr:hover td {
 }
 
 /* ───────────────────────────────────────────
+   Traffic Split Card (v2.3)
+──────────────────────────────────────────── */
+.traffic-split-card {
+    margin-top: 24px;
+    background: var(--surface-lowest);
+    border: 1px solid var(--border-ghost);
+    border-top: 2px solid var(--accent);
+}
+
+.split-header {
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border-ghost);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.split-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-primary);
+}
+
+.split-hint {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.split-channels {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+}
+
+.split-channel {
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.checkout-channel {
+    border-right: 1px solid var(--border-ghost);
+}
+
+.channel-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.channel-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-low);
+    border: 1px solid var(--border-ghost);
+    flex-shrink: 0;
+}
+
+.channel-label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.channel-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-family: 'Space Grotesk', monospace;
+    margin-top: 2px;
+}
+
+.channel-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-left: auto;
+}
+
+/* Mini funil dentro do canal */
+.channel-funnel {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface-low);
+    padding: 12px 16px;
+    border: 1px solid var(--border-ghost);
+}
+
+.funnel-step {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.funnel-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.funnel-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.funnel-num.approved {
+    color: var(--success);
+}
+
+.funnel-arrow {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+/* Barra de progresso do split */
+.channel-progress {
+    background: var(--surface-high);
+    height: 4px;
+    width: 100%;
+}
+
+.channel-progress-bar {
+    height: 4px;
+    width: 0%;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.checkout-bar  { background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+.telegram-bar  { background: #0088cc; box-shadow: 0 0 8px rgba(0,136,204,0.3); }
+
+.channel-pct {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+}
+
+/* Divisor VS */
+.split-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    gap: 12px;
+}
+
+.split-divider-line {
+    width: 1px;
+    flex: 1;
+    background: var(--border-ghost);
+}
+
+.split-divider-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 8px 0;
+}
+
+/* Rodapé de conversão */
+.split-conversion {
+    border-top: 1px solid var(--border-ghost);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center;
+}
+
+.conv-item {
+    padding: 16px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+}
+
+.conv-label-sm {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+}
+
+.conv-pct {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.conv-pct.winner {
+    color: var(--success);
+}
+
+.conv-sep {
+    width: 1px;
+    height: 40px;
+    background: var(--border-ghost);
+}
+
+/* ───────────────────────────────────────────
    Buttons & Inputs (Sharp)
 ──────────────────────────────────────────── */
 .btn-thunder {
