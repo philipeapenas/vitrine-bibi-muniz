@@ -1,7 +1,7 @@
 window.onerror = function(msg, url, line) {
     console.error("Admin Error: " + msg + " | L:" + line);
 };
-console.log("⚡ Admin v4.0: Thunder Purple Single-Click Flow Active");
+console.log("⚡ Admin v4.1: Dodo Hot Single-Click Flow Active");
 
 function animateValue(obj, start, end, duration) {
     if (!obj) return;
