@@ -617,6 +617,7 @@ window.editLink = async (id) => {
     document.getElementById('linkEditor').scrollIntoView({ behavior: 'smooth' });
 };
 
+window.deleteLink = async (id) => {
     if (confirm('Remover este botão da vitrine?')) {
         await dbClient.from('site_links').delete().eq('id', id);
         loadLinksData();
