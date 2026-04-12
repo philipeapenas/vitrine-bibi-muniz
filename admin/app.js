@@ -1,7 +1,7 @@
 window.onerror = function(msg, url, line) {
     console.error("Admin Error: " + msg + " | L:" + line);
 };
-console.log("⚡ Admin v3.5: Thunder Purple Active");
+console.log("⚡ Admin v4.0: Thunder Purple Single-Click Flow Active");
 
 function animateValue(obj, start, end, duration) {
     if (!obj) return;
@@ -75,20 +75,24 @@ async function triggerVercelDeploy() {
 
         btnDeploy.disabled = true;
         btnDeploy.classList.add('syncing');
-        btnDeploy.innerHTML = `
-            <svg viewBox="0 0 50 50" style="width:15px;height:15px;animation:rotate 2s linear infinite; margin-right:8px;">
-                <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5" stroke-dasharray="90,150" stroke-dashoffset="0"></circle>
-            </svg> 
-            Publicando...
-        `;
+        
+        // Fase 1: Sincronização de Banco
+        btnDeploy.innerHTML = `Sincronizando Banco...`;
+        await Promise.all([
+            persistProfileData(),
+            persistStatsData(),
+            persistThankyouData()
+        ]);
 
+        // Fase 2: Trigger Vercel
+        btnDeploy.innerHTML = `Publicando...`;
         const res = await fetch(hookUrl, { method: 'POST' });
         if (res.ok) {
             btnDeploy.innerHTML = '✅ Iniciado!';
             setTimeout(() => {
                 btnDeploy.disabled = false;
                 btnDeploy.classList.remove('syncing');
-                btnDeploy.classList.remove('pending'); // Reset state
+                btnDeploy.classList.remove('pending');
                 btnDeploy.innerHTML = 'Confirmar & Publicar Site';
             }, 5000);
         } else {
@@ -96,11 +100,12 @@ async function triggerVercelDeploy() {
         }
     } catch(e) {
         console.error("Erro no deploy:", e);
-        btnDeploy.innerHTML = '❌ Erro';
+        btnDeploy.innerHTML = '❌ Erro de Sincronização';
+        alert("Erro ao publicar: " + e.message);
         setTimeout(() => {
             btnDeploy.disabled = false;
             btnDeploy.classList.remove('syncing');
-            btnDeploy.innerHTML = 'Publicar Site';
+            btnDeploy.innerHTML = 'Confirmar & Publicar Site';
         }, 3000);
     }
 }
@@ -346,21 +351,14 @@ async function loadProfileData() {
     } catch(e) { console.error("loadProfileData:", e); }
 }
 
-document.getElementById('profileForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = e.target.querySelector('button[type="submit"]');
-    btn.textContent = 'Salvando...';
+async function persistProfileData(showFeedback = false) {
+    if (!dbClient) return;
     try {
         const { data: cur } = await dbClient.from('site_profile').select('profile_picture_url, banner_image_url').eq('id', 1).single();
         const picUrl    = (await uploadFile('fileProfilePic', 'profile')) || cur?.profile_picture_url || '';
         const bannerUrl = (await uploadFile('fileBannerPic', 'banner'))  || cur?.banner_image_url    || '';
 
         const bioFull = document.getElementById('iptBioFull').value;
-        console.log("Saving profile data...", { 
-            bio_short: document.getElementById('iptBioShort').value,
-            bio_full: bioFull 
-        });
-
         const { error, count } = await dbClient.from('site_profile').update({
             creator_name:        document.getElementById('iptCreatorName').value,
             creator_handle:      document.getElementById('iptCreatorHandle').value,
@@ -376,15 +374,23 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
         }, { count: 'exact' }).eq('id', 1);
 
         if (error) throw error;
-        
-        if (count === 0) {
-            throw new Error("Nenhum registro atualizado. Verifique se sua chave de acesso (Role Key) tem permissão de escrita.");
-        }
-        console.log("✅ Profile updated successfully in Supabase");
-        alert("✅ Identidade salva!");
+        if (count === 0) throw new Error("Chave sem permissão de escrita");
+        if (showFeedback) alert("✅ Perfil salvo!");
+        return true;
+    } catch(e) {
+        if (showFeedback) alert("Erro Perfil: " + e.message);
+        throw e;
+    }
+}
+
+document.getElementById('profileForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = 'Salvando...';
+    try {
+        await persistProfileData(true);
         setPending();
-    } catch(e) { alert("Erro: " + e.message); }
-    finally { btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>Salvar Identidade'; }
+    } finally { btn.innerHTML = 'Salvar Identidade'; }
 });
 
 // Auto-salvar Pulse Toggle
@@ -405,10 +411,8 @@ document.getElementById('iptPulseEnabled').addEventListener('change', async (e) 
     }
 });
 
-document.getElementById('statsForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = e.target.querySelector('button[type="submit"]');
-    btn.textContent = 'Salvando...';
+async function persistStatsData(showFeedback = false) {
+    if (!dbClient) return;
     try {
         const { error } = await dbClient.from('site_profile').update({
             stat_likes:   document.getElementById('iptStatLikes').value,
@@ -419,9 +423,22 @@ document.getElementById('statsForm').addEventListener('submit', async (e) => {
             updated_at:   new Date()
         }).eq('id', 1);
         if (error) throw error;
-        alert("✅ Estatísticas salvas!");
-    } catch(e) { alert("Erro: " + e.message); }
-    finally { btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>Salvar Estatísticas'; }
+        if (showFeedback) alert("✅ Estatísticas salvas!");
+        return true;
+    } catch(e) {
+        if (showFeedback) alert("Erro Stats: " + e.message);
+        throw e;
+    }
+}
+
+document.getElementById('statsForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = 'Salvando...';
+    try {
+        await persistStatsData(true);
+        setPending();
+    } finally { btn.innerHTML = 'Salvar Estatísticas'; }
 });
 
 // ─── Pós-Venda (Thank You Page) ──────────────────────
@@ -457,10 +474,8 @@ function updatePreview(data) {
     document.getElementById(id)?.addEventListener('input', () => updatePreview({}));
 });
 
-document.getElementById('thankyouForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = e.target.querySelector('button[type="submit"]');
-    btn.textContent = 'Salvando...';
+async function persistThankyouData(showFeedback = false) {
+    if (!dbClient) return;
     try {
         const { error } = await dbClient.from('site_profile').update({
             thankyou_title:    document.getElementById('iptThxTitle').value,
@@ -470,10 +485,22 @@ document.getElementById('thankyouForm').addEventListener('submit', async (e) => 
             updated_at:        new Date()
         }).eq('id', 1);
         if (error) throw error;
-        alert("✅ Página de Obrigado salva! Clique em 'Preview' para ver.");
+        if (showFeedback) alert("✅ Pós-Venda salvo!");
+        return true;
+    } catch(e) {
+        if (showFeedback) alert("Erro Pós-Venda: " + e.message);
+        throw e;
+    }
+}
+
+document.getElementById('thankyouForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.textContent = 'Salvando...';
+    try {
+        await persistThankyouData(true);
         setPending();
-    } catch(e) { alert("Erro: " + e.message); }
-    finally { btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>Salvar Pós-Venda'; }
+    } finally { btn.innerHTML = 'Salvar Pós-Venda'; }
 });
 
 // ─── Ofertas ─────────────────────────────────────────
@@ -844,6 +871,17 @@ window.deleteCarouselPhoto = async (id, storagePath) => {
         alert('Erro ao remover: ' + e.message);
     }
 };
+
+// ─── Auto-Detect Changes (Single-Click Flow) ────────
+function setupAutoDetect() {
+    const selector = 'input, textarea, select';
+    document.querySelectorAll(selector).forEach(el => {
+        el.addEventListener('input', setPending);
+        el.addEventListener('change', setPending);
+    });
+}
+// Chamar após carregamento inicial
+setTimeout(setupAutoDetect, 2000);
 
 // ─── MOBILE MENU SYSTEM ───
 document.addEventListener('DOMContentLoaded', () => {
