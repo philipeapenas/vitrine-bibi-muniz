@@ -148,14 +148,20 @@ async function loadData() {
             if (t.event_type === 'click_segredo') clickTelegram++;
         });
 
-        // KPIs de Tráfego
-        document.getElementById('kpi-pageviews').textContent = pageviews;
-        document.getElementById('kpi-clicks').textContent    = clicks + clickTelegram + userCheckout; // Total de cliques
-        document.getElementById('kpi-click-telegram').textContent = clickTelegram;
-        document.getElementById('kpi-click-checkout').textContent = userCheckout;
+        // KPIs de Tráfego (Sincronizados com v1.2)
+        const elClicks   = document.getElementById('kpi-clicks');
+        const elTelegram = document.getElementById('kpi-click-telegram');
+        const elCheckout = document.getElementById('kpi-click-checkout');
+        const elCtr      = document.getElementById('kpi-ctr');
+
+        if (elClicks)   elClicks.textContent   = clicks + clickTelegram + userCheckout;
+        if (elTelegram) elTelegram.textContent = clickTelegram;
+        if (elCheckout) elCheckout.textContent = userCheckout;
         
-        const ctr = pageviews > 0 ? (((clicks + clickTelegram + userCheckout) / pageviews) * 100).toFixed(1) : 0;
-        document.getElementById('kpi-ctr').textContent = ctr + '%';
+        if (elCtr) {
+            const ctr = pageviews > 0 ? (((clicks + clickTelegram + userCheckout) / pageviews) * 100).toFixed(1) : 0;
+            elCtr.textContent = ctr + '%';
+        }
 
         let joined = 0, created = 0, approved = 0;
         (trans || []).forEach(t => {
@@ -163,9 +169,14 @@ async function loadData() {
             if (t.event === 'payment_created')  created++;
             if (t.event === 'payment_approved') approved++;
         });
-        document.getElementById('kpi-user-joined').textContent  = joined;
-        document.getElementById('kpi-pay-created').textContent  = created;
-        document.getElementById('kpi-pay-approved').textContent = approved;
+
+        const elJoined   = document.getElementById('kpi-user-joined');
+        const elCreated  = document.getElementById('kpi-pay-created');
+        const elApproved = document.getElementById('kpi-pay-approved');
+
+        if (elJoined)   elJoined.textContent   = joined;
+        if (elCreated)  elCreated.textContent  = created;
+        if (elApproved) elApproved.textContent = approved;
 
         const convEl = document.getElementById('kpi-sales-conversion');
         if (convEl) {
