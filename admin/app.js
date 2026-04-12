@@ -1,7 +1,21 @@
 window.onerror = function(msg, url, line) {
     console.error("Admin Error: " + msg + " | L:" + line);
 };
-console.log("🚀 Admin V1.2: Mobile Responsive + Vercel Active");
+console.log("💎 Admin v1.3: Royal Edition Active");
+
+function animateValue(obj, start, end, duration) {
+    if (!obj) return;
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.textContent = Math.floor(progress * (end - start) + start);
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+    window.requestAnimationFrame(step);
+}
 
 const SUPABASE_URL = "https://mdmjyvxrozxrxwmasnuq.supabase.co";
 let dbClient = null;
@@ -154,9 +168,9 @@ async function loadData() {
         const elCheckout = document.getElementById('kpi-click-checkout');
         const elCtr      = document.getElementById('kpi-ctr');
 
-        if (elClicks)   elClicks.textContent   = clicks + clickTelegram + userCheckout;
-        if (elTelegram) elTelegram.textContent = clickTelegram;
-        if (elCheckout) elCheckout.textContent = userCheckout;
+        if (elClicks)   animateValue(elClicks, 0, clicks + clickTelegram + userCheckout, 1000);
+        if (elTelegram) animateValue(elTelegram, 0, clickTelegram, 1000);
+        if (elCheckout) animateValue(elCheckout, 0, userCheckout, 1000);
         
         if (elCtr) {
             const ctr = pageviews > 0 ? (((clicks + clickTelegram + userCheckout) / pageviews) * 100).toFixed(1) : 0;
@@ -174,9 +188,9 @@ async function loadData() {
         const elCreated  = document.getElementById('kpi-pay-created');
         const elApproved = document.getElementById('kpi-pay-approved');
 
-        if (elJoined)   elJoined.textContent   = joined;
-        if (elCreated)  elCreated.textContent  = created;
-        if (elApproved) elApproved.textContent = approved;
+        if (elJoined)   animateValue(elJoined, 0, joined, 1000);
+        if (elCreated)  animateValue(elCreated, 0, created, 1000);
+        if (elApproved) animateValue(elApproved, 0, approved, 1000);
 
         const convEl = document.getElementById('kpi-sales-conversion');
         if (convEl) {
