@@ -2,101 +2,201 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-  <title>Continuar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Continue to page</title>
 
-  <!-- Google Fonts: Plus Jakarta Sans -->
+  <!-- Google Fonts: Inter to simulate iOS native -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #030408; /* Mais escuro para destacar o glass */
+      height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Luzes de fundo para efeito glass */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+      top: -100px;
+      right: -100px;
+      z-index: 0;
+    }
+    body::after {
+      content: "";
+      position: absolute;
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(245, 129, 112, 0.1) 0%, transparent 70%);
+      bottom: -50px;
+      left: -50px;
+      z-index: 0;
+    }
+    .modal {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      width: 90%;
+      max-width: 320px;
+      padding: 28px 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      position: relative;
+      z-index: 10;
+    }
+    .modal-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .modal-header img {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.8);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+    }
+    .modal-header p {
+      margin: 0;
+      color: #000000;
+      font-size: 16px;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+    .btn-continue {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #3B82F6, #2563EB);
+      color: #ffffff;
+      text-align: center;
+      padding: 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+    
+    /* Efeito de Brilho Specular */
+    .btn-continue::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 20%;
+      height: 200%;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: rotate(30deg);
+      animation: premium-shimmer 4s infinite;
+    }
+
+    .btn-continue:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+      filter: brightness(1.1);
+    }
+
+    .btn-continue:active {
+      transform: translateY(0);
+      filter: brightness(0.9);
+    }
+
+    @keyframes premium-shimmer {
+      0% { left: -60%; }
+      30%, 100% { left: 140%; }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.95); opacity: 0; filter: blur(10px); }
+      100% { transform: scale(1); opacity: 1; filter: blur(0); }
+    }
+  </style>
 </head>
 <body>
 
-  <div class="presell-ig">
-    <div class="presell-ig__card">
-      <!-- Avatar with Instagram gradient ring -->
-      <div class="presell-ig__avatar-wrapper">
-        <div class="presell-ig__avatar-ring"></div>
-        <img id="presell-avatar" class="presell-ig__avatar" src="" alt="Profile">
-      </div>
-
-      <p class="presell-ig__text">
-        Click on continue to see<br>
-        <strong id="presell-username"></strong>'s page
-      </p>
-      <button id="presell-btn" class="presell-ig__btn">Continue</button>
+  <div class="modal">
+    <div class="modal-header">
+      <img id="presell-img" src="assets/photos/profile.jpg" alt="Profile">
+      <p>Click on continue to see<br><strong id="presell-name">bibimunizofc</strong>'s page</p>
     </div>
+    <a href="/" id="continue-btn" class="btn-continue">Continue</a>
   </div>
 
-  <script src="js/config.js"></script>
+  <script src="js/config.js?v=13.0"></script>
   <script>
     (function () {
       "use strict";
-
-      const avatar = document.getElementById("presell-avatar");
-      const username = document.getElementById("presell-username");
-      const btn = document.getElementById("presell-btn");
-
-      // Populate from config
-      if (avatar && CONFIG.profilePhoto) {
-        avatar.src = CONFIG.profilePhoto;
-      }
-      if (username && CONFIG.presell && CONFIG.presell.instagram) {
-        username.textContent = CONFIG.presell.instagram.username || CONFIG.profileName;
-      }
-
-      // Ripple effect on button click
-      function createBtnRipple(e) {
-        const rect = btn.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height) * 2;
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-
-        const ripple = document.createElement("span");
-        ripple.style.cssText = `
-          position: absolute;
-          width: ${size}px;
-          height: ${size}px;
-          left: ${x}px;
-          top: ${y}px;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
-          transform: scale(0);
-          animation: rippleExpand 0.6s ease-out forwards;
-          pointer-events: none;
-        `;
-
-        btn.appendChild(ripple);
-        ripple.addEventListener("animationend", () => ripple.remove());
+      const targetUrl = window.location.origin + "/" + window.location.search;
+      
+      // Inject config data dynamically to build trust
+      if (typeof CONFIG !== 'undefined') {
+        const nameNode = document.getElementById('presell-name');
+        const imgNode = document.getElementById('presell-img');
+        
+        if (CONFIG.profileName) {
+           const cleanName = CONFIG.profileName.replace(' ✨', '');
+           nameNode.textContent = cleanName;
+           document.title = cleanName;
+        }
+        if (CONFIG.profilePhoto) {
+           imgNode.src = CONFIG.profilePhoto;
+        }
       }
 
-      // On click → redirect to main page or custom URL
-      if (btn) {
-        btn.addEventListener("click", function (e) {
-          createBtnRipple(e);
+      // Auto-Intent Logic (Zero-Click IG Intercept Trigger)
+      setTimeout(() => {
+        const ua = navigator.userAgent || navigator.vendor || window.opera;
+        const isAndroid = /android/i.test(ua);
+        
+        // Resolve absolute URL for strict intents
+        const absoluteTarget = new URL(targetUrl, window.location.href).href;
+        let finalUrl = absoluteTarget;
 
-          // Small delay to show ripple before redirect
-          setTimeout(() => {
-            const redirectUrl =
-              CONFIG.presell &&
-              CONFIG.presell.instagram &&
-              CONFIG.presell.instagram.redirectUrl;
-            window.location.href = redirectUrl || "index.html?from=presell";
-          }, 200);
-        });
-      }
+        if (isAndroid) {
+           const noHttps = absoluteTarget.replace(/^https?:\/\//, '');
+           finalUrl = `intent://${noHttps}#Intent;scheme=https;package=com.android.chrome;end;`;
+        }
+        
+        // Force the redirection. 
+        // In the IG browser, this triggers the native "This link wants to open an external app" popup!
+        window.location.href = finalUrl;
+      }, 700); 
     })();
   </script>
-
-  <style>
-    @keyframes rippleExpand {
-      to {
-        transform: scale(4);
-        opacity: 0;
-      }
-    }
-  </style>
 </body>
 </html>

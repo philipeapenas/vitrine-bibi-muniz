@@ -1,0 +1,1461 @@
+<!doctype html>
+<html lang="pt-BR" id="htmlRoot">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>Privacy | Checkout Bibi Muniz</title>
+    <meta
+      name="description"
+      content="Acesse o conteúdo exclusivo da Bibi Muniz. Assine agora e tenha acesso imediato."
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/checkout.css?v=4.1" />
+  </head>
+  <body>
+    <!-- ═══ PRELOADER ═══ -->
+    <div id="preloader" class="co-preloader">
+      <div class="co-spinner"></div>
+    </div>
+
+    <!-- ═══ HEADER ═══ -->
+    <header class="co-header">
+      <a href="https://privacy.com.br/auth?route=sign-in" class="co-logo" aria-label="Voltar para login">
+        <span class="co-logo-text"
+          >privacy<span class="co-logo-dot">.</span></span
+        >
+      </a>
+      <div
+        class="co-header-actions"
+        style="display: flex; align-items: center; gap: 8px"
+      >
+        <div class="co-lang-wrapper" aria-label="Mudar idioma">
+          <button
+            class="co-lang-btn"
+            id="langBtn"
+            onclick="toggleLangDropdown()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path
+                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+              />
+            </svg>
+          </button>
+          <div class="co-lang-dropdown hidden" id="langDropdown">
+            <button class="co-lang-opt" onclick="setLang('en')">Inglês</button>
+            <button class="co-lang-opt" onclick="setLang('pt')">
+              Português
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ═══ MAIN ═══ -->
+    <main class="co-main">
+      <!-- ─── Profile Card ─── -->
+      <div class="co-card">
+        <div class="co-cover" style="position: relative">
+          <div class="co-cover-bg"></div>
+          <div class="co-avatar-wrap">
+            <div class="co-avatar-bg"></div>
+          </div>
+          <button
+            id="darkModeToggle"
+            class="co-dark-mode-toggle"
+            aria-label="Dark Mode"
+            onclick="toggleDarkMode(event)"
+          >
+            <svg
+              class="icon-sun"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg
+              class="icon-moon"
+              style="display: none"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Stats row (Injected by JS) -->
+        <div class="co-header-row" id="coStatsRow" style="opacity: 0;">
+          <div class="co-stats-row">
+            <span class="co-stat">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <span id="coStatImages">0</span>
+            </span>
+            <span class="co-stat">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                <rect x="2" y="2" width="20" height="20" rx="2.18"></rect>
+                <path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5"></path>
+              </svg>
+              <span id="coStatVideos">0</span>
+            </span>
+            <span class="co-stat">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span id="coStatMedias">0</span>
+            </span>
+            <span class="co-stat co-stat-like">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+              <span id="coStatLikes">0</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Bio -->
+        <div class="co-bio">
+          <h1 class="co-name" id="coProfileName">
+            ...
+            <span class="co-check" aria-label="Verificado">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#f58170"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"
+                />
+                <path d="m9 12 2 2 4-4" />
+              </svg>
+            </span>
+          </h1>
+          <p class="co-username" id="coUsername">...</p>
+
+          <p class="co-bio-short" id="bioShort">
+            <span id="bioShortContent">Carregando perfil...</span>
+            <button class="co-read-more" id="btnReadMore" onclick="expandBio()" style="display:none">Ler mais</button>
+          </p>
+          <p class="co-bio-full hidden" id="bioFull">
+            <span id="bioFullContent">...</span>
+            <button class="co-read-more" id="btnReadLess" onclick="collapseBio()">Ler menos</button>
+          </p>
+
+          <!-- Localização -->
+          <p class="co-location" id="coLocation" style="display: none">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span id="coLocationText"></span>
+          </p>
+
+          <!-- Socials -->
+          <div class="co-socials">
+            <a
+              href="https://www.instagram.com/bibimunizz021/"
+              target="_blank"
+              rel="noopener"
+              class="co-social-pill"
+              aria-label="Instagram"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.9"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="2" width="20" height="20" rx="5" />
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <!-- /co-bio -->
+
+        <!-- Assinaturas -->
+        <div class="co-plans" id="dynamicPlansContainer">
+          <h2 class="co-section-title" id="lblSubscriptions">Assinaturas</h2>
+          <!-- Planos serao injetados via JS -->
+        </div>
+      </div>
+      <!-- /profile card -->
+
+      <!-- ─── Tabs Bottom Bar (Standalone) ─── -->
+      <div class="co-tabs standalone-tabs">
+        <button
+          class="co-tab active"
+          id="tabPosts"
+          onclick="switchTab('posts')"
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.9"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <polyline points="21 15 16 10 5 21" />
+          </svg>
+          <span id="lblPostsTab">809 Postagens</span>
+        </button>
+        <button class="co-tab" id="tabMidias" onclick="switchTab('midias')">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.9"
+          >
+            <rect x="2" y="2" width="20" height="20" rx="2.18" />
+            <path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5" />
+          </svg>
+          <span id="lblMidiasTab">757 Mídias</span>
+        </button>
+        <div class="co-tab-bar">
+          <div class="co-tab-indicator" id="tabIndicator"></div>
+        </div>
+      </div>
+
+      <!-- ─── Posts Card ─── -->
+      <div class="co-card co-posts-card">
+        <div id="viewPosts">
+          <div class="co-post">
+            <div class="co-post-head">
+              <div class="co-post-avatar"></div>
+              <div class="co-post-meta">
+                <span class="co-post-name">
+                  Bibi Muniz
+                  <svg
+                    class="co-check-sm"
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#f58170"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"
+                    />
+                    <path d="m9 12 2 2 4-4" />
+                  </svg>
+                </span>
+                <span class="co-post-handle">@bibimunizz021</span>
+              </div>
+              <button class="co-kebab" aria-label="Opções">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <circle cx="12" cy="5" r="1.2" />
+                  <circle cx="12" cy="12" r="1.2" />
+                  <circle cx="12" cy="19" r="1.2" />
+                </svg>
+              </button>
+            </div>
+
+            <div class="co-locked-media">
+              <div class="co-locked-overlay">
+                <svg
+                  class="co-lock-svg"
+                  width="38"
+                  height="38"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <div class="co-locked-stats">
+                  <span
+                    ><svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.9"
+                    >
+                      <rect x="3" y="3" width="18" height="18" rx="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                    <span id="coLockedImages">372</span></span
+                  >
+                  <span
+                    ><svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.9"
+                    >
+                      <rect x="2" y="2" width="20" height="20" rx="2.18" />
+                      <path
+                        d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 7h5M17 17h5"
+                      />
+                    </svg>
+                    <span id="coLockedVideos">385</span></span
+                  >
+                  <span
+                    ><svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.9"
+                    >
+                      <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                      />
+                    </svg>
+                    <span id="coLockedLikes">386.9K</span></span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="co-post-actions">
+              <div class="co-post-actions-left">
+                <button
+                  class="co-act"
+                  aria-label="Curtir"
+                  onclick="openModal(event, 'plan-ilimitado')"
+                >
+                  <svg
+                    width="21"
+                    height="21"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path
+                      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  class="co-act"
+                  aria-label="Comentar"
+                  onclick="openModal(event, 'plan-ilimitado')"
+                >
+                  <svg
+                    width="21"
+                    height="21"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                  >
+                    <path
+                      d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  class="co-act"
+                  aria-label="Gorjeta"
+                  onclick="openModal(event, 'plan-ilimitado')"
+                >
+                  <svg
+                    width="21"
+                    height="21"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path
+                      d="M12 6v12M9.5 9.5a2.5 2.5 0 0 1 5 0c0 1.5-1.2 2-2.5 2.5-1.3.5-2.5 1-2.5 2.5a2.5 2.5 0 0 0 5 0"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <button
+                class="co-act"
+                aria-label="Salvar"
+                onclick="openModal(event, 'plan-ilimitado')"
+              >
+                <svg
+                  width="21"
+                  height="21"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="viewMidias" class="hidden">
+          <div class="co-midias-submenu" onclick="openModal(event, 'plan-ilimitado')">
+            <button class="co-midia-pill active">Todos</button>
+            <button class="co-midia-pill">Fotos</button>
+            <button class="co-midia-pill">Vídeos</button>
+            <button class="co-midia-pill">Pagos</button>
+          </div>
+          <div
+            class="co-midias-grid"
+            onclick="openModal(event, 'plan-ilimitado')"
+          >
+            <div class="co-midia-item">
+              <div class="co-midia-lock">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+            </div>
+            <div class="co-midia-item">
+              <div class="co-midia-lock">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+            </div>
+            <div class="co-midia-item">
+              <div class="co-midia-lock">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+            </div>
+            <div class="co-midia-item">
+              <div class="co-midia-lock">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+            </div>
+            <div class="co-midia-item">
+              <div class="co-midia-lock">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+            </div>
+            <div class="co-midia-item">
+              <div class="co-midia-lock">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /posts card -->
+    </main>
+
+    <!-- ═══ PIX MODAL ═══ -->
+    <div
+      class="pix-overlay hidden"
+      id="pixOverlay"
+      onclick="overlayClick(event)"
+    >
+      <div class="pix-modal" id="pixModal" role="dialog" aria-modal="true">
+        <!-- ── Step 1: Resumo do Pedido ── -->
+        <div id="stepSummary">
+          <div class="pix-cover">
+            <div class="pix-cover-bg"></div>
+            <button
+              class="pix-close"
+              onclick="closeModal()"
+              aria-label="Fechar"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+            <div class="pix-avatar"></div>
+          </div>
+
+          <div class="pix-body">
+            <div class="pix-creator">
+              <span class="pix-creator-name">Bibi Muniz</span>
+              <span class="pix-creator-handle">@bibimunizz021</span>
+            </div>
+
+            <div class="pix-benefits-box">
+              <div class="pix-section-label" id="lblBenefits">
+                BENEFÍCIOS EXCLUSIVOS
+              </div>
+              <ul class="pix-benefits-list" id="planBenefits">
+                <li id="benef1">Acesso ao conteúdo VIP ilimitado</li>
+                <li id="benef2">Chat exclusivo e prioritário</li>
+                <li id="benef3">Cancele quando quiser</li>
+              </ul>
+            </div>
+
+            <div class="pix-order-box">
+              <div class="pix-section-label" id="lblOrderSummary">
+                RESUMO DO PEDIDO
+              </div>
+              <div class="pix-order-sub" id="lblTotalLabel">
+                Total da assinatura
+              </div>
+              <div class="pix-order-price" id="modalPrice">R$ 24,90</div>
+            </div>
+
+            <button
+              class="co-plan-btn pix-generate-btn"
+              id="generateBtn"
+              onclick="generatePix()"
+            >
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+              </svg>
+              <span id="lblGenerate">Gerar Chave PIX</span>
+            </button>
+
+            <!-- ── QR Content (Hidden Initially) ── -->
+            <div id="qrContent" class="hidden">
+              <div class="pix-qr-wrap">
+                <img id="qrImg" class="pix-qr-img" alt="QR Code PIX" src="" />
+              </div>
+
+              <div class="pix-countdown-row">
+                <div class="pix-countdown-elegant">
+                  Forma de pagamento: PIX à vista <br />
+                  Total: <strong id="qrTotalLabel">R$ 29,90</strong> &mdash;
+                  <span id="lblExpiresIn">Expira em</span>
+                  <strong id="cdTime">20:00</strong>
+                </div>
+              </div>
+
+              <!-- Clickable Code Box -->
+              <div class="pix-code-box" onclick="copyCode()" style="cursor: pointer;" title="Clique para copiar">
+                <p class="pix-code-text" id="pixCodeText"></p>
+              </div>
+
+              <button
+                class="co-plan-btn pix-copy-btn"
+                id="copyBtn"
+                onclick="copyCode()"
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="9" y="9" width="13" height="13" rx="2" />
+                  <path
+                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                  />
+                </svg>
+                <span id="copyBtnText">Copiar chave Pix</span>
+              </button>
+
+              <button
+                class="pix-verify-btn"
+                id="verifyBtn"
+                onclick="manualCheck()"
+              >
+                <span id="lblVerify">Já paguei — Verificar</span>
+              </button>
+            </div>
+
+            <button
+              class="pix-cancel-link"
+              onclick="closeModal()"
+              id="lblCancel1"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ COOKIE BANNER ═══ -->
+    <div class="co-cookie" id="cookieBanner">
+      <p class="co-cookie-text" id="cookieText">
+        Privacy utiliza cookies e tecnologias similares para fornecer, manter e
+        melhorar nossos serviços. Se aceitar, utilizaremos estes dados para
+        personalização e análise. Para mais informações, leia nossa
+        <a href="#" class="co-cookie-link" id="cookiePolicyLink"
+          >Política de Privacidade</a
+        >.
+      </p>
+      <button
+        class="co-cookie-btn"
+        id="cookieAcceptBtn"
+        onclick="acceptCookies()"
+      >
+        Aceitar
+      </button>
+    </div>
+
+    <script>
+      // ═══ i18n ═══
+      const L = {
+        pt: {
+          subscriptions: "Assinaturas",
+          promotions: "Promoções",
+          readMore: "Ler mais",
+          readLess: "Ler menos",
+          bioShort:
+            "Aqui é onde tem <strong>tudo</strong> o que você procura 💋 Os vídeos contêm conteúdo adulto exclusivo mostrando tudo que você pode imaginar! Aqui tem de tudo!!!",
+          bioFull:
+            "Aqui é onde tem <strong>tudo</strong> o que você procura 💋 Os vídeos contêm conteúdo adulto exclusivo mostrando tudo que você pode imaginar. Fotos, vídeos, conteúdo premium e muito mais te esperando aqui dentro! Não vai perder, não é? 🔥🔞",
+          plan1: "1 mês",
+          plan3: "3 meses",
+          plan6: "6 meses",
+          planV: "Vitalício",
+          off3: "(5% off)",
+          off6: "(16% off)",
+          postsTab: "809 Postagens",
+          midiasTab: "757 Mídias",
+          // Cookie
+          cookieText:
+            "Privacy utiliza cookies e tecnologias similares para fornecer, manter e melhorar nossos serviços. Se aceitar, utilizaremos estes dados para personalização e análise. Para mais informações, leia nossa ",
+          cookiePolicy: "Política de Privacidade",
+          cookieAccept: "Aceitar",
+          // Modal
+          benefits: "BENEFÍCIOS EXCLUSIVOS",
+          orderSummary: "RESUMO DO PEDIDO",
+          totalLabel: "Total da assinatura",
+          generate: "Gerar Chave PIX",
+          cancel: "Cancelar",
+          copy: "Copiar Código PIX",
+          copied: "Copiado!",
+          verify: "Já paguei — Verificar",
+          verifying: "Verificando...",
+          expiresIn: "Expira em",
+          b1: "Acesso ao conteúdo VIP ilimitado",
+          b2: "Chat exclusivo e prioritário",
+          b3: "Cancele quando quiser",
+          b3v: "Acesso vitalício garantido",
+          generating: "Gerando PIX...",
+          errGenerate: "Erro ao gerar PIX. Tente novamente.",
+          expired: "PIX expirado",
+          verifyWait: "Aguarde 60s para verificar novamente.",
+          disclaimer:
+            "A PUSHIN PAY atua exclusivamente como processadora de pagamentos e não possui qualquer responsabilidade pela entrega, suporte, conteúdo, qualidade ou cumprimento das obrigações relacionadas aos produtos ou serviços oferecidos pelo vendedor.",
+        },
+        en: {
+          subscriptions: "Subscriptions",
+          promotions: "Promotions",
+          readMore: "Read more",
+          readLess: "Read less",
+          bioShort:
+            "Here's where you'll find <strong>everything</strong> you're looking for 💋 Videos with exclusive adult content showing everything you can imagine! Everything is here!!!",
+          bioFull:
+            "Here's where you'll find <strong>everything</strong> you're looking for 💋 Exclusive adult videos, photos, premium content and so much more waiting inside! Don't miss out 🔥🔞",
+          plan1: "1 month",
+          plan3: "3 months",
+          plan6: "6 months",
+          planV: "Lifetime",
+          off3: "(5% off)",
+          off6: "(16% off)",
+          postsTab: "809 Posts",
+          midiasTab: "757 Media",
+          cookieText:
+            "Privacy uses cookies and similar technologies to provide, maintain and improve our services. If you accept, we'll use this data for personalization and analytics. For more info, read our ",
+          cookiePolicy: "Privacy Policy",
+          cookieAccept: "Accept",
+          benefits: "EXCLUSIVE BENEFITS",
+          orderSummary: "ORDER SUMMARY",
+          totalLabel: "Subscription total",
+          generate: "Generate PIX Key",
+          cancel: "Cancel",
+          copy: "Copy PIX Code",
+          copied: "Copied!",
+          verify: "I paid — Verify",
+          verifying: "Verifying...",
+          expiresIn: "Expires in",
+          b1: "Unlimited VIP content access",
+          b2: "Exclusive priority chat",
+          b3: "Cancel anytime",
+          b3v: "Lifetime access guaranteed",
+          generating: "Generating PIX...",
+          errGenerate: "Error generating PIX. Please try again.",
+          expired: "PIX expired",
+          verifyWait: "Please wait 60s before checking again.",
+          disclaimer:
+            "PUSHIN PAY acts exclusively as a payment processor and bears no responsibility for delivery, support, content quality, or fulfillment of obligations related to the products or services offered by the seller.",
+        },
+      };
+
+      // ═══ Plans (Now Dynamic) ═══
+      let PLANS = {};
+
+      // ═══ State ═══
+      let lang = "pt";
+      let selPlan = null;
+      let txId = null;
+      let pixCode = null;
+      let cdInterval = null;
+      let pollTimer = null;
+      let lastPoll = 0;
+      let verifyLock = false;
+
+      // ───────────────────────────────────────────
+      // i18n
+      // ───────────────────────────────────────────
+      function t(key) {
+        return L[lang][key] || L.pt[key] || key;
+      }
+
+      function toggleLangDropdown() {
+        document.getElementById("langDropdown").classList.toggle("hidden");
+      }
+
+      function setLang(newLang) {
+        lang = newLang;
+        applyLang();
+        document.getElementById("langDropdown").classList.add("hidden");
+      }
+
+      function applyLang() {
+        const l = L[lang];
+        document.getElementById("htmlRoot").lang =
+          lang === "en" ? "en" : "pt-BR";
+
+        // Bio
+        document.getElementById("btnReadMore").textContent = l.readMore;
+        document.getElementById("btnReadLess").textContent = l.readLess;
+
+        // Plans
+        document.getElementById("lblSubscriptions").textContent =
+          l.subscriptions;
+
+        // Tabs
+        document.getElementById("lblPostsTab").textContent = l.postsTab;
+        document.getElementById("lblMidiasTab").textContent = l.midiasTab;
+
+        // Cookie
+        document.getElementById("cookieText").innerHTML =
+          l.cookieText +
+          `<a href="#" class="co-cookie-link">${l.cookiePolicy}</a>.`;
+        document.getElementById("cookieAcceptBtn").textContent = l.cookieAccept;
+
+        // Modal (if open)
+        document.getElementById("lblBenefits").textContent = l.benefits;
+        document.getElementById("lblOrderSummary").textContent = l.orderSummary;
+        document.getElementById("lblTotalLabel").textContent = l.totalLabel;
+        document.getElementById("lblGenerate").textContent = l.generate;
+        document.getElementById("lblCancel1").textContent = l.cancel;
+        document.getElementById("lblCancel2").textContent = l.cancel;
+        document.getElementById("lblExpiresIn").textContent = l.expiresIn;
+        document.getElementById("lblVerify").textContent = l.verify;
+        document.getElementById("lblDisclaimer1").textContent = l.disclaimer;
+        document.getElementById("lblDisclaimer2").textContent = l.disclaimer;
+
+        const copyBtnText = document.getElementById("copyBtnText");
+        if (copyBtnText) copyBtnText.textContent = l.copy;
+
+        // Update benefits if plan is selected
+        if (selPlan) renderBenefits();
+      }
+
+      // ───────────────────────────────────────────
+      // Bio
+      // ───────────────────────────────────────────
+      function expandBio() {
+        document.getElementById("bioShort").classList.add("hidden");
+        document.getElementById("bioFull").classList.remove("hidden");
+      }
+      function collapseBio() {
+        document.getElementById("bioFull").classList.add("hidden");
+        document.getElementById("bioShort").classList.remove("hidden");
+      }
+
+      // ───────────────────────────────────────────
+      // Promos toggle
+      // ───────────────────────────────────────────
+      function togglePromos() {
+        const body = document.getElementById("promosBody");
+        const chev = document.getElementById("promosChevron");
+        const btn = document.getElementById("promosToggle");
+        const open = body.style.display !== "none";
+        body.style.display = open ? "none" : "flex";
+        chev.classList.toggle("open", !open);
+        btn.setAttribute("aria-expanded", String(!open));
+      }
+
+      // ───────────────────────────────────────────
+      // Tabs
+      // ───────────────────────────────────────────
+      function switchTab(tab) {
+        document
+          .querySelectorAll(".co-tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .getElementById(tab === "posts" ? "tabPosts" : "tabMidias")
+          .classList.add("active");
+        document.getElementById("tabIndicator").style.left =
+          tab === "posts" ? "0" : "50%";
+
+        if (tab === "posts") {
+          document.getElementById("viewPosts").classList.remove("hidden");
+          document.getElementById("viewMidias").classList.add("hidden");
+        } else {
+          document.getElementById("viewPosts").classList.add("hidden");
+          document.getElementById("viewMidias").classList.remove("hidden");
+        }
+      }
+
+      // ───────────────────────────────────────────
+      // Modal
+      // ───────────────────────────────────────────
+      function openModal(e, planKey) {
+        e.preventDefault();
+        selPlan = PLANS[planKey];
+        if (!selPlan) return;
+        selPlan._key = planKey;
+
+        document.getElementById("modalPrice").textContent = selPlan.display;
+        renderBenefits();
+
+        document.getElementById("qrContent").classList.add("hidden");
+        document.getElementById("generateBtn").classList.remove("hidden");
+        document.getElementById("generateBtn").disabled = false;
+        document.getElementById("lblGenerate").textContent = t("generate");
+
+        document.getElementById("pixOverlay").classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      function renderBenefits() {
+        const ul = document.getElementById("planBenefits");
+        ul.innerHTML = selPlan.benefits.map((b) => `<li>${t(b)}</li>`).join("");
+      }
+
+      function closeModal() {
+        document.getElementById("pixOverlay").classList.add("hidden");
+        document.body.style.overflow = "";
+        clearTimers();
+        txId = null;
+        pixCode = null;
+        lastPoll = 0;
+        verifyLock = false;
+        document.getElementById("generateBtn").classList.remove("hidden");
+        document.getElementById("qrContent").classList.add("hidden");
+      }
+
+      function overlayClick(e) {
+        if (e.target.id === "pixOverlay") closeModal();
+      }
+
+      function clearTimers() {
+        if (cdInterval) {
+          clearInterval(cdInterval);
+          cdInterval = null;
+        }
+        if (pollTimer) {
+          clearInterval(pollTimer);
+          pollTimer = null;
+        }
+      }
+
+      // ───────────────────────────────────────────
+      // PIX Generation
+      // ───────────────────────────────────────────
+      async function generatePix() {
+        const btn = document.getElementById("generateBtn");
+        btn.disabled = true;
+        document.getElementById("lblGenerate").textContent = t("generating");
+
+        try {
+          const attribution = window.DodoTracker ? window.DodoTracker.getUTMs() : {};
+          
+          // Captura Sale Code da URL (?code=...)
+          const urlParams = new URLSearchParams(window.location.search);
+          const saleCode = urlParams.get('code');
+          if (saleCode) attribution.sale_code = saleCode;
+          
+          const res = await fetch("/api/create-pix", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              value: selPlan.value, 
+              plan: selPlan._key,
+              attribution: attribution 
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "API error");
+
+          txId = data.id;
+          pixCode = data.qr_code;
+
+          showQrStep(data);
+        } catch (err) {
+          console.error("[generatePix]", err);
+          btn.disabled = false;
+          document.getElementById("lblGenerate").textContent = t("errGenerate");
+          setTimeout(() => {
+            document.getElementById("lblGenerate").textContent = t("generate");
+          }, 3000);
+        }
+      }
+
+      function showQrStep(data) {
+        // Set QR image
+        document.getElementById("qrImg").src = data.qr_code_base64 || "";
+
+        // Truncate PIX code visually? The user said "deixe destacado e copiável". We'll show the whole string, word-wrapped.
+        const code = data.qr_code || "";
+        document.getElementById("pixCodeText").textContent = code;
+
+        document.getElementById("qrTotalLabel").textContent = selPlan.display;
+
+        // Switch step internally (just toggle views in the same card)
+        document.getElementById("generateBtn").classList.add("hidden");
+        document.getElementById("qrContent").classList.remove("hidden");
+
+        // Start countdown 20 min
+        startCountdown(1200);
+
+        // Auto-poll every 10s
+        lastPoll = 0;
+        pollTimer = setInterval(autoPoll, 10000);
+      }
+
+      // ───────────────────────────────────────────
+      // Countdown
+      // ───────────────────────────────────────────
+      function startCountdown(secs) {
+        let remaining = secs;
+        updateCd(remaining);
+        cdInterval = setInterval(() => {
+          remaining--;
+          updateCd(remaining);
+          if (remaining <= 0) {
+            clearInterval(cdInterval);
+            cdInterval = null;
+            document.getElementById("cdTime").textContent = "--:--";
+            document.getElementById("lblExpiresIn").textContent = t("expired");
+          }
+        }, 1000);
+      }
+
+      function updateCd(s) {
+        const m = Math.floor(s / 60)
+          .toString()
+          .padStart(2, "0");
+        const sec = (s % 60).toString().padStart(2, "0");
+        document.getElementById("cdTime").textContent = `${m}:${sec}`;
+        document.getElementById("cdTime").textContent = `${m}:${sec}`;
+      }
+
+      // ───────────────────────────────────────────
+      // Payment check
+      // ───────────────────────────────────────────
+      async function checkPayment() {
+        if (!txId) return false;
+        try {
+          const res = await fetch(`/api/check-pix?id=${txId}`);
+          const data = await res.json();
+            // Dispara evento de compra no Tracker
+            if (window.DodoTracker) {
+              window.DodoTracker.capture('purchase', { 
+                value: selPlan.value,
+                plan: selPlan._key 
+              });
+            }
+
+            window.location.href = `/obrigado.html?${params.toString()}`;
+            return true;
+
+          if (data.status === "canceled") {
+            clearTimers();
+            alert(
+              lang === "en"
+                ? "PIX canceled. Please generate a new one."
+                : "PIX cancelado. Gere um novo.",
+            );
+            closeModal();
+            return true;
+          }
+        } catch (err) {
+          console.error("[checkPayment]", err);
+        }
+        return false;
+      }
+
+      async function autoPoll() {
+        await checkPayment();
+      }
+
+      async function manualCheck() {
+        const now = Date.now();
+        if (verifyLock || now - lastPoll < 10000) {
+          const wait = Math.ceil((10000 - (now - lastPoll)) / 1000);
+          const btn = document.getElementById("verifyBtn");
+          btn.disabled = true;
+          document.getElementById("lblVerify").textContent =
+            `${t("verifyWait")} (${wait}s)`;
+          setTimeout(
+            () => {
+              btn.disabled = false;
+              document.getElementById("lblVerify").textContent = t("verify");
+            },
+            10000 - (now - lastPoll),
+          );
+          return;
+        }
+        verifyLock = true;
+        lastPoll = now;
+        document.getElementById("lblVerify").textContent = t("verifying");
+        document.getElementById("verifyBtn").disabled = true;
+        await checkPayment();
+        // Re-enable after 10s
+        setTimeout(() => {
+          verifyLock = false;
+          document.getElementById("verifyBtn").disabled = false;
+          document.getElementById("lblVerify").textContent = t("verify");
+        }, 10000);
+      }
+
+      // ───────────────────────────────────────────
+      // Copy PIX code
+      // ───────────────────────────────────────────
+      function copyCode() {
+        if (!pixCode) return;
+        navigator.clipboard
+          .writeText(pixCode)
+          .then(() => {
+            const btn = document.getElementById("copyBtnText");
+            btn.textContent = t("copied");
+            document.getElementById("copyBtn").style.filter =
+              "brightness(1.05)";
+            setTimeout(() => {
+              btn.textContent = t("copy");
+              document.getElementById("copyBtn").style.filter = "";
+            }, 2200);
+          })
+          .catch(() => {
+            // Fallback
+            const ta = document.createElement("textarea");
+            ta.value = pixCode;
+            ta.style.cssText = "position:fixed;opacity:0";
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+            document.getElementById("copyBtnText").textContent = t("copied");
+            setTimeout(() => {
+              document.getElementById("copyBtnText").textContent = t("copy");
+            }, 2200);
+          });
+      }
+
+      // ───────────────────────────────────────────
+      // Cookie
+      // ───────────────────────────────────────────
+      function acceptCookies() {
+        document.getElementById("cookieBanner").style.display = "none";
+        try {
+          localStorage.setItem("co_cookie_ok", "1");
+        } catch (e) {}
+      }
+
+      // ───────────────────────────────────────────
+      // Dark Mode
+      // ───────────────────────────────────────────
+      function toggleDarkMode(e) {
+        const btn = e.currentTarget;
+        const isDark = document.body.classList.contains("theme-dark");
+
+        const circle = document.createElement("div");
+        circle.className = "dark-mode-circle" + (isDark ? " light" : "");
+        document.body.appendChild(circle);
+
+        requestAnimationFrame(() => {
+          circle.classList.add("expand");
+        });
+
+        // Troca o tema após a gota cobrir parte da tela (sincronia premium)
+        setTimeout(() => {
+          document.body.classList.toggle("theme-dark");
+
+          const sun = btn.querySelector(".icon-sun");
+          const moon = btn.querySelector(".icon-moon");
+          if (sun && moon) {
+            sun.style.display = isDark ? "block" : "none";
+            moon.style.display = isDark ? "none" : "block";
+          }
+
+          // Remove o overlay após a gota e os fades completarem
+          setTimeout(() => circle.remove(), 1400);
+        }, 80);
+      }
+
+      // ───────────────────────────────────────────
+      // Init
+      // ───────────────────────────────────────────
+      async function loadConfig() {
+        try {
+          const res = await fetch("/api/checkout-config");
+          if (res.ok) {
+            const data = await res.json();
+            if (data.profile) {
+              const p = data.profile;
+
+              // Inicializa Pixel do Facebook se existir
+              if (p.facebook_pixel_id && window.DodoTracker) {
+                window.DodoTracker.setPixel(p.facebook_pixel_id);
+                window.DodoTracker.capture('click_checkout', { source: 'checkout_direct_load' });
+              }
+
+              const p_1255 = p; // preserve reference for existing code
+              // Preenche perfil
+              document.querySelector(".co-username").textContent =
+                p.creator_handle;
+
+              const profileNameHtml = `
+                ${p.creator_name}
+                <svg class="co-check-sm" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f58170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/>
+                  <path d="m9 12 2 2 4-4"/>
+                </svg>`;
+
+              // Nome (h1 dentro de .co-bio)
+              document.getElementById("coProfileName").innerHTML = profileNameHtml;
+
+              // ─── Sincronização de Estatísticas (Admin -> Checkout) ───
+              const imagesCount = p.stat_images || "1.6K";
+              const videosCount = p.stat_videos || "1.8K";
+              const mediasCount = p.stat_medias || "3.387 Mídias";
+              const likesCount  = p.stat_likes  || "245K";
+              const postsCount  = p.stat_posts  || "3.166 Postagens";
+
+              // 1. Barra de Status (coStatsRow)
+              const elStatImages = document.getElementById("coStatImages");
+              const elStatVideos = document.getElementById("coStatVideos");
+              const elStatMedias = document.getElementById("coStatMedias");
+              const elStatLikes  = document.getElementById("coStatLikes");
+
+              if (elStatImages) elStatImages.textContent = imagesCount;
+              if (elStatVideos) elStatVideos.textContent = videosCount;
+              if (elStatMedias) elStatMedias.textContent = mediasCount.replace(" Mídias", "").replace(" Medias", ""); // Apenas número na barra
+              if (elStatLikes)  elStatLikes.textContent  = likesCount;
+
+              // 2. Abas de Navegação (Tabs)
+              const elPostsTab = document.getElementById("lblPostsTab");
+              const elMidiasTab = document.getElementById("lblMidiasTab");
+
+              if (elPostsTab) elPostsTab.textContent  = postsCount.includes(" ") ? postsCount : `${postsCount} ${t("postsTab")}`;
+              if (elMidiasTab) elMidiasTab.textContent = mediasCount.includes(" ") ? mediasCount : `${mediasCount} ${t("midiasTab")}`;
+
+              // 3. Post Bloqueado (Locked Overlay)
+              const elLockedImages = document.getElementById("coLockedImages");
+              const elLockedVideos = document.getElementById("coLockedVideos");
+              const elLockedLikes  = document.getElementById("coLockedLikes");
+
+              if (elLockedImages) elLockedImages.textContent = imagesCount;
+              if (elLockedVideos) elLockedVideos.textContent = videosCount;
+              if (elLockedLikes)  elLockedLikes.textContent  = likesCount;
+
+              // Mostrar a barra após carregar
+              const statsRow = document.getElementById("coStatsRow");
+              if (statsRow) statsRow.style.opacity = "1";
+              // Avatar e Fundo
+              if (p.profile_picture_url) {
+                document.querySelector(".co-avatar-bg").style.backgroundImage =
+                  `url('${p.profile_picture_url}')`;
+                document.querySelector(".pix-avatar").style.backgroundImage =
+                  `url('${p.profile_picture_url}')`;
+              }
+              if (p.banner_image_url) {
+                document.querySelector(".co-cover-bg").style.backgroundImage =
+                  `url('${p.banner_image_url}')`;
+                document.querySelector(".pix-cover-bg").style.backgroundImage =
+                  `url('${p.banner_image_url}')`;
+              }
+
+              // Bio
+              const fullText = p.bio_full || "...";
+              let shortText = p.bio_short || "...";
+              
+              const breakIdx = fullText.indexOf('\n\n');
+              const htmlBreakIdx = fullText.indexOf('<br><br>');
+              
+              let finalBreakIdx = -1;
+              if (breakIdx !== -1 && htmlBreakIdx !== -1) {
+                  finalBreakIdx = Math.min(breakIdx, htmlBreakIdx);
+              } else if (breakIdx !== -1) {
+                  finalBreakIdx = breakIdx;
+              } else if (htmlBreakIdx !== -1) {
+                  finalBreakIdx = htmlBreakIdx;
+              } else if (fullText.indexOf('<br>') !== -1 && fullText.indexOf('<br>') === fullText.lastIndexOf('<br>')) {
+                  // Fallback se tiver apenas 1 quebra simples no texto todo (caso raro)
+                  finalBreakIdx = fullText.indexOf('<br>');
+              }
+              
+              if (finalBreakIdx !== -1) {
+                  shortText = fullText.substring(0, finalBreakIdx) + "... ";
+                  document.getElementById("btnReadMore").style.display = "inline-block";
+              } else {
+                  document.getElementById("btnReadMore").style.display = "none";
+              }
+              
+              document.getElementById("bioShortContent").innerHTML = shortText;
+              document.getElementById("bioFullContent").innerHTML = fullText;
+              document.querySelector(".pix-creator-name").textContent =
+                p.creator_name;
+              document.querySelector(".pix-creator-handle").textContent =
+                p.creator_handle;
+
+              // Posts Perfil Sync (simulado)
+              document.querySelector(".co-post-name").innerHTML =
+                profileNameHtml;
+              document.querySelector(".co-post-handle").textContent =
+                p.creator_handle;
+              if (p.profile_picture_url)
+                document.querySelector(
+                  ".co-post-avatar",
+                ).style.backgroundImage = `url('${p.profile_picture_url}')`;
+
+              // Ig
+              if (p.instagram_url) {
+                document.querySelector(".co-social-pill").href =
+                  p.instagram_url;
+              } else {
+                document.querySelector(".co-social-pill").style.display =
+                  "none";
+              }
+
+              // Localização
+              if (p.location) {
+                const locEl = document.getElementById("coLocation");
+                document.getElementById("coLocationText").textContent =
+                  p.location;
+                if (locEl) locEl.style.display = "flex";
+              }
+            }
+
+            if (data.offers) {
+              const container = document.getElementById(
+                "dynamicPlansContainer",
+              );
+              data.offers.forEach((o) => {
+                // Populate PLANS var expected by openModal
+                PLANS[o.id] = {
+                  value: o.value_cents,
+                  display: `R$ ${(o.value_cents / 100).toFixed(2).replace(".", ",")}`,
+                  label: o.name,
+                  url: o.url,
+                  benefits: ["b1", "b2", "b3v"],
+                };
+
+                const btn = document.createElement("a");
+                btn.href = "#";
+                btn.className = "co-plan-btn";
+                btn.onclick = (e) => openModal(e, o.id);
+
+                btn.innerHTML = `
+                  <span class="co-plan-label">${o.name} ${o.is_promotion ? `<span class="co-discount-badge">(${o.discount_label})</span>` : ""}</span>
+                  <span class="co-plan-price">R$ ${(o.value_cents / 100).toFixed(2).replace(".", ",")}</span>
+                `;
+                container.appendChild(btn);
+              });
+            }
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      (async function init() {
+        // Iniciar invisível para evitar flash
+        document.body.style.opacity = '0';
+        document.body.style.transition = 'opacity 0.4s ease';
+
+        try {
+          await loadConfig();
+        } finally {
+          // Remover preloader com fade
+          const preloader = document.getElementById("preloader");
+          if (preloader) {
+            preloader.classList.add("loaded");
+          }
+        }
+        
+        // Revelar suavemente
+        setTimeout(() => {
+          document.body.style.opacity = '1';
+          const stats = document.getElementById("coStatsRow");
+          if(stats) stats.style.opacity = '1';
+        }, 300); // Aguarda um pouco o fade do loader
+
+        try {
+          if (localStorage.getItem("co_cookie_ok")) {
+            document.getElementById("cookieBanner").style.display = "none";
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </body>
+</html>

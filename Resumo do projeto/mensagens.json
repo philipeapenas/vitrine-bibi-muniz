@@ -1,6 +1,0 @@
-{
-    "from":  "stitch-frontend",
-    "to":  "vercel-expert",
-    "message":  "Layout adjustments and scroll/background-attachment bugs resolved successfully. Requesting final production deployment.",
-    "track_id":  "track_2_apply_fixes"
-}

@@ -11,8 +11,7 @@
 
   // ─── User-Agent Detection ─────────────────────────
   const ua = navigator.userAgent || "";
-  const urlParams = new URLSearchParams(window.location.search);
-  const fromPresell = urlParams.get("from") === "presell";
+  const presellShown = sessionStorage.getItem("presell_shown");
 
   function isInstagramBrowser() {
     return /Instagram/i.test(ua);
@@ -24,12 +23,15 @@
 
   // Redirect to presell pages if inside app browsers
   // Skip if user already came from a presell page (prevents loop)
-  if (!fromPresell) {
+  // Skip if user already came from a presell page in this session
+  if (!presellShown) {
     if (isInstagramBrowser()) {
+      sessionStorage.setItem("presell_shown", "1");
       window.location.replace("presell-instagram.html");
       return;
     }
     if (isTikTokBrowser()) {
+      sessionStorage.setItem("presell_shown", "1");
       window.location.replace("presell-tiktok.html");
       return;
     }
@@ -38,11 +40,82 @@
   // ─── Wait for DOM ─────────────────────────────────
   document.addEventListener("DOMContentLoaded", init);
 
-  function init() {
+  const SUPABASE_URL = "https://mdmjyvxrozxrxwmasnuq.supabase.co";
+  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kbWp5dnhyb3p4cnh3bWFzbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzMTExNjgsImV4cCI6MjA4OTg4NzE2OH0.1gLdW8hohxALfDd2kthsJHqPjTbztgleGizJE7IcBbU";
+
+  async function fetchProfileFromDB() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/site_profile?id=eq.1&select=creator_name,bio_full,bio_short,pulse_enabled,facebook_pixel_id`, {
+        headers: {
+          "apikey": SUPABASE_ANON,
+          "Authorization": "Bearer " + SUPABASE_ANON
+        }
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data?.[0] || null;
+    } catch(e) { return null; }
+  }
+
+  async function fetchLinksFromDB() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/site_links?select=title,url,active&active=eq.true&order=sort_order.asc`, {
+        headers: {
+          "apikey": SUPABASE_ANON,
+          "Authorization": "Bearer " + SUPABASE_ANON
+        }
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (!data || !data.length) return null;
+      return data.map(l => ({ title: l.title, url: l.url }));
+    } catch(e) {
+      return null;
+    }
+  }
+
+  async function fetchCarouselFromDB() {
+    try {
+      // Busca da nova tabela ordenada por sort_order
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/carousel_photos?select=public_url&order=sort_order.asc`, {
+        headers: {
+          "apikey": SUPABASE_ANON,
+          "Authorization": "Bearer " + SUPABASE_ANON
+        }
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (!data || !data.length) return null;
+      return data.map(item => item.public_url);
+    } catch(e) {
+      return null;
+    }
+  }
+
+  async function init() {
+    const [dbProfile, dbLinks, carouselPhotos] = await Promise.all([
+      fetchProfileFromDB(),
+      fetchLinksFromDB(),
+      fetchCarouselFromDB()
+    ]);
+
+    // Aplica configurações do banco ao CONFIG global
+    if (dbProfile) {
+      if (dbProfile.creator_name) CONFIG.profileName = dbProfile.creator_name;
+      if (dbProfile.bio_short)    CONFIG.bio = dbProfile.bio_short;
+      else if (dbProfile.bio_full) CONFIG.bio = dbProfile.bio_full;
+      CONFIG.pulseEnabled = dbProfile.pulse_enabled !== false;
+      
+      // Inicializa Pixel se configurado
+      if (dbProfile.facebook_pixel_id && window.DodoTracker) {
+        window.DodoTracker.setPixel(dbProfile.facebook_pixel_id);
+      }
+    }
+
     renderProfile();
     renderSocials();
-    renderLinks();
-    initSlideshow();
+    renderLinks(dbLinks || CONFIG.links, CONFIG.pulseEnabled);
+    initSlideshow(carouselPhotos || CONFIG.backgroundPhotos);
   }
 
   // ─── Render Profile ───────────────────────────────
@@ -51,8 +124,10 @@
     const bioEl = document.getElementById("profile-bio");
 
     if (nameEl) {
-      nameEl.textContent = CONFIG.profileName;
+      const cleanName = CONFIG.profileName ? CONFIG.profileName.replace(' ✨', '') : "Bibi Muniz";
+      nameEl.innerHTML = `${CONFIG.profileName}`;
       nameEl.classList.add("fade-in-up");
+      document.title = cleanName;
     }
     if (bioEl) {
       bioEl.textContent = CONFIG.bio;
@@ -152,46 +227,54 @@
     }
   }
 
-  // ─── Render Link Cards ────────────────────────────
-  function renderLinks() {
+  // ─── Render Link Pills ────────────────────────────
+  function renderLinks(links, pulseEnabled = true) {
     const container = document.getElementById("links-section");
     if (!container) return;
 
-    const linkIconSVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const arrowSVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
 
-    CONFIG.links.forEach((linkData, index) => {
-      const card = document.createElement("a");
-      card.href = linkData.url;
-      card.target = "_blank";
-      card.rel = "noopener noreferrer";
-      card.className = "link-card fade-in-up";
+    (links || CONFIG.links).forEach((linkData, index) => {
+      const pill = document.createElement("a");
+      let finalUrl = linkData.url;
+      if (linkData.trackCode) {
+        const brTzString = new Date().toLocaleString("en-US", { timeZone: "America/Sao_Paulo" });
+        const brDate = new Date(brTzString);
+        const dd = String(brDate.getDate()).padStart(2, '0');
+        const mm = String(brDate.getMonth() + 1).padStart(2, '0');
+        const yy = String(brDate.getFullYear()).slice(-2);
+        const dateStr = dd + mm + yy;
+        const fullCode = linkData.trackCode + dateStr;
+        finalUrl += (finalUrl.includes('?') ? '&' : '?') + 'code=' + fullCode;
+        pill.setAttribute('data-sale-code', fullCode);
+      }
 
-      card.innerHTML = `
-        ${linkData.image ? `<img class="link-card__image" src="${linkData.image}" alt="${linkData.title}" loading="lazy">` : ""}
-        <div class="link-card__gradient"></div>
-        <div class="link-card__content">
-          <div class="link-card__icon">
-            ${linkIconSVG}
-          </div>
-          <span class="link-card__title">${linkData.title}</span>
-        </div>
+      pill.href = finalUrl;
+      pill.id = `link-${index + 1}`;
+      pill.target = "_blank";
+      pill.rel = "noopener noreferrer";
+      pill.className = "link-pill fade-in-up";
+      if (index === 0 && pulseEnabled) pill.classList.add("attention-pulse");
+      pill.style.animationDelay = `${0.45 + index * 0.1}s`;
+
+      pill.innerHTML = `
+        <span class="link-pill__title">${linkData.title}</span>
+        <span class="link-pill__arrow">${arrowSVG}</span>
       `;
 
-      // Ripple + Particle on click
-      card.addEventListener("click", function (e) {
+      pill.addEventListener("click", function (e) {
         createRipple(e, this);
-        createParticleBurst(e, this);
       });
 
-      container.appendChild(card);
+      container.appendChild(pill);
     });
   }
 
-  function initSlideshow() {
+  function initSlideshow(photosToUse) {
     const slideshowEl = document.getElementById("slideshow");
     const bgBlurEl = document.getElementById("bg-blur-layer");
     const progressEl = document.getElementById("progress-bars");
-    const photos = CONFIG.backgroundPhotos || [];
+    const photos = photosToUse || CONFIG.backgroundPhotos || [];
     const duration = CONFIG.slideDuration || 4000;
 
     if (!slideshowEl || photos.length === 0) return;

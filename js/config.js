@@ -7,7 +7,7 @@
 
 const CONFIG = {
   // ─── Perfil ───────────────────────────────────────
-  profileName: "Seu Nome ✨",
+  profileName: "Bibi Muniz ✨",
   bio: "Aqui é onde tem tudo o que você procura 💋",
   // foto usada na presell do Instagram (circular)
   profilePhoto: "assets/photos/profile.jpg",
@@ -15,8 +15,8 @@ const CONFIG = {
   // ─── Redes Sociais ────────────────────────────────
   // Deixe null para esconder o ícone
   socials: {
-    instagram: "https://www.instagram.com/seuperfil/",
-    tiktok: "https://www.tiktok.com/@seuperfil",
+    instagram: "https://www.instagram.com/bibimunizz021/",
+    tiktok: null,
   },
 
   // ─── Fotos de Fundo (Carrossel) ───────────────────
@@ -33,24 +33,25 @@ const CONFIG = {
   // ─── Links ────────────────────────────────────────
   links: [
     {
-      title: "Mundinho secreto 🔞",
-      url: "https://www.youtube.com/",
-      icon: "link",       // "link" = ícone de corrente
+      title: "Cantinho secreto 🔞",
+      url: "https://apextry.com/go/bibimunizzofc",
+      icon: "link",
       image: "assets/photos/card1.jpg",
+      trackCode: "insta_bio"
     },
-    // Para adicionar mais links, copie o bloco acima:
-    // {
-    //   title: "Outro Link 🔥",
-    //   url: "https://exemplo.com",
-    //   icon: "link",
-    //   image: "assets/photos/card2.png",
-    // },
+    {
+      title: "Acesso Direto 🔥",
+      url: "checkout.html",
+      icon: "link",
+      image: "assets/photos/card1.jpg", // Troque por card2.jpg quando tiver a imagem
+      trackCode: "checkout_direto"
+    },
   ],
 
   // ─── Pre-sell (Páginas de Ponte) ──────────────────
   presell: {
     instagram: {
-      username: "seuperfil",
+      username: "bibimunizz021",
     },
     tiktok: {
       // Sem configurações extras por enquanto

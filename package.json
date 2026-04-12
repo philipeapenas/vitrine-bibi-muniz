@@ -1,0 +1,27 @@
+{
+  "name": "vitrine---bibi-muniz",
+  "version": "1.0.0",
+  "description": "Projeto estruturado utilizando padrões Vanilla JS ideais para deploy rápido na Vercel (HTML/CSS/JS puros).",
+  "main": "middleware.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/philipeapenas/vitrine-bibi-muniz.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/philipeapenas/vitrine-bibi-muniz/issues"
+  },
+  "homepage": "https://github.com/philipeapenas/vitrine-bibi-muniz#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.103.0"
+  }
+}

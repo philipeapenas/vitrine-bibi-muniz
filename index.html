@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-  <title>Vitrine de Links</title>
+  <title>Bibi Muniz</title>
   <meta name="description" content="Encontre todos os meus links em um só lugar.">
 
   <!-- Open Graph -->
@@ -16,31 +16,50 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=11.0-neon">
 </head>
 <body>
+  
+  <!-- Backlight Blobs (21st.dev style) -->
+  <div class="bg-blobs" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
 
-  <!-- Background Slideshow -->
+  <!-- Background Blur Slideshow (fundo embaçado) -->
   <div id="bg-blur-layer" class="bg-blur-layer" aria-hidden="true"></div>
-  <div id="slideshow" class="slideshow" aria-hidden="true"></div>
-  <div class="slideshow-overlay" aria-hidden="true"></div>
 
   <!-- Progress Bars (Stories-style) -->
   <div id="progress-bars" class="progress-bars"></div>
 
   <!-- Main Content -->
   <main class="content">
-    <section class="profile-section">
-      <h1 id="profile-name" class="profile-name"></h1>
-      <p id="profile-bio" class="profile-bio"></p>
 
-      <div id="social-icons" class="social-icons"></div>
-    </section>
+    <!-- Nome do Perfil — Acima da moldura -->
+    <h1 id="profile-name" class="profile-name"></h1>
 
+    <!-- Redes Sociais — Agora entre o nome e a moldura -->
+    <div id="social-icons" class="social-icons"></div>
+
+    <!-- NEON CARD / MOLDURA — Centro da tela -->
+    <div class="neon-card">
+      <div class="neon-card__glow" aria-hidden="true"></div>
+      
+      <!-- Foreground Slideshow (as fotos nítidas agora dentro da moldura) -->
+      <div id="slideshow" class="slideshow" aria-hidden="true"></div>
+    </div>
+
+    <!-- Bio — Abaixo da moldura -->
+    <p id="profile-bio" class="profile-bio"></p>
+
+    <!-- Botões pílula — parte inferior -->
     <section id="links-section" class="links-section"></section>
+
   </main>
 
-  <script src="js/config.js" defer></script>
-  <script src="js/script.js" defer></script>
+  <script src="js/config.js?v=11.0" defer></script>
+  <script src="js/tracker.js?v=1.1" defer></script>
+  <script src="js/script.js?v=11.0" defer></script>
 </body>
 </html>

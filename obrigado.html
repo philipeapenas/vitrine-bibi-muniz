@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Liberado ✅</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --accent-blue: #3B82F6;
+            --success:     #10B981;
+            --card-bg:     #1C1C2E;
+            --card-border: rgba(255,255,255,0.06);
+        }
+
+        html, body {
+            height: 100%;
+            background: #0B0F19;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px 16px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+            animation: fadeUp 0.5s ease both;
+            display: none; /* Instablock: oculto por padrão */
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .banner-wrap {
+            position: relative;
+            height: 240px;
+            background-color: #0B0F19;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            overflow: visible;
+        }
+        .banner-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 40%, var(--card-bg));
+        }
+        .check-badge {
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 52px;
+            height: 52px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid var(--card-bg);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+            animation: popIn 0.4s 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: translateX(-50%) scale(0); }
+            to   { opacity: 1; transform: translateX(-50%) scale(1); }
+        }
+
+        .card-body {
+            padding: 48px 28px 32px;
+            text-align: center;
+        }
+        .headline {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            font-size: 0.9rem;
+            color: #9CA3AF;
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .summary-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 24px;
+        }
+        .summary-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #6B7280;
+            margin-bottom: 16px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.875rem;
+        }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-row span:first-child { color: #9CA3AF; }
+        .summary-row span:last-child  { color: #fff; font-size: 0.8rem; font-family: monospace; }
+        .summary-row.total span:first-child { color: #fff; font-weight: 700; font-family: 'Inter', sans-serif; font-size: 0.9rem; }
+        .summary-row.total span:last-child  { color: var(--success); font-weight: 700; font-size: 1rem; font-family: 'Inter', sans-serif; }
+
+        .cta-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+        }
+        .cta-btn:hover {
+            background: #2563EB;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 28px rgba(59, 130, 246, 0.4);
+        }
+
+        .card-footer {
+            padding: 16px 28px;
+            text-align: center;
+            border-top: 1px solid var(--card-border);
+            font-size: 0.75rem;
+            color: #4B5563;
+        }
+    <style>
+        /* Security Overlay */
+        #securityOverlay {
+            position: fixed;
+            inset: 0;
+            background: #0B0F19;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+        #securityOverlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .lock-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: var(--accent-blue);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+        .security-text {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+    </style>
+</head>
+<body>
+
+<div id="securityOverlay">
+    <div class="lock-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+    </div>
+    <div class="security-text" id="securityStatus">Verificando Acesso...</div>
+</div>
+
+<div class="card">
+    <div class="banner-wrap" id="bannerWrap">
+        <div class="banner-overlay"></div>
+        <div class="check-badge">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <h1 class="headline" id="thxTitle">Pagamento Aprovado!</h1>
+        <p class="subtitle" id="thxSubtitle">Obrigada! O seu acesso VIP exclusivo acabou de ser liberado.</p>
+
+        <div class="summary-box">
+            <div class="summary-label">Resumo do Pedido</div>
+            <div class="summary-row">
+                <span>Cliente</span>
+                <span id="summaryClient">Visitante</span>
+            </div>
+            <div class="summary-row">
+                <span>Transação PIX</span>
+                <span id="summaryTxId">—</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total Pago</span>
+                <span id="summaryValue">—</span>
+            </div>
+        </div>
+
+        <a class="cta-btn" id="ctaBtn" href="#" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            Acessar Grupo VIP
+        </a>
+    </div>
+
+    <div class="card-footer" id="cardFooterYear">
+        © 2026 Checkout Platform. Todos os direitos reservados.
+    </div>
+</div>
+
+<script>
+(async function init() {
+    const params     = new URLSearchParams(window.location.search);
+    const clientId   = params.get('name')    || params.get('client') || 'Visitante';
+    const txId       = params.get('tx')      || params.get('tx_id')  || '—';
+    const valueStr   = params.get('value')   || '0';
+    
+    // Atualiza interface básica
+    document.getElementById('summaryClient').textContent = clientId;
+    document.getElementById('summaryTxId').textContent   = txId;
+    document.getElementById('summaryValue').textContent  = valueStr.includes('R$') ? valueStr : '—';
+    document.getElementById('cardFooterYear').innerHTML = `© ${new Date().getFullYear()} Checkout Platform. Todos os direitos reservados.`;
+
+    const statusEl = document.getElementById('securityStatus');
+    const overlay  = document.getElementById('securityOverlay');
+
+    // ─── GATEKEEPER SERVICE ───
+    try {
+        if (txId === '—') throw new Error('Acesso não autorizado: ID ausente.');
+
+        const verifyRes = await fetch(`/api/verify-access?id=${txId}`);
+        const verifyData = await verifyRes.json();
+
+        if (!verifyRes.ok || !verifyData.authorized) {
+            throw new Error(verifyData.message || 'Pagamento não confirmado.');
+        }
+
+        // Sucesso: Liberar página
+        statusEl.textContent = "Acesso Autorizado!";
+        statusEl.style.color = "#10B981";
+        
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+            document.querySelector('.card').style.display = 'block';
+        }, 800);
+
+    } catch (err) {
+        console.error('[Gatekeeper]', err.message);
+        statusEl.textContent = "Acesso Negado. Redirecionando...";
+        statusEl.style.color = "#EF4444";
+        
+        setTimeout(() => {
+            window.location.href = "/checkout.html";
+        }, 2000);
+        return; // Interrompe carregamento da config
+    }
+
+    // ─── LOAD CONFIG (DADOS DO ADMIN) ───
+    try {
+        const res = await fetch('/api/checkout-config');
+        if (!res.ok) return;
+        const data = await res.json();
+        const p = data.profile;
+        if (!p) return;
+
+        if (p.thankyou_title)   document.getElementById('thxTitle').textContent    = p.thankyou_title;
+        if (p.thankyou_message) document.getElementById('thxSubtitle').textContent = p.thankyou_message;
+
+        const btn = document.getElementById('ctaBtn');
+        if (p.thankyou_btn_text) {
+            btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>' + p.thankyou_btn_text;
+        }
+        if (p.thankyou_btn_url) btn.href = p.thankyou_btn_url;
+
+        if (p.banner_image_url) {
+            document.getElementById('bannerWrap').style.backgroundImage = "url('" + p.banner_image_url + "')";
+        }
+    } catch(e) {
+        console.error('Config error:', e);
+    }
+
+    // ─── TRACKER INIT (Facebook Pixel + PageView) ───
+    if (window.DodoTracker) {
+        // O config-profile já foi buscado acima e está em 'data.profile'
+        const res = await fetch('/api/checkout-config');
+        const data = await res.json();
+        const p = data.profile;
+        if (p && p.facebook_pixel_id) {
+            window.DodoTracker.setPixel(p.facebook_pixel_id);
+        }
+    }
+})();
+</script>
+
+<script src="js/tracker.js?v=1.1" defer></script>
+
+</body>
+</html>
