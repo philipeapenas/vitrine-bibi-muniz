@@ -356,8 +356,12 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
         const bannerUrl = (await uploadFile('fileBannerPic', 'banner'))  || cur?.banner_image_url    || '';
 
         const bioFull = document.getElementById('iptBioFull').value;
-        console.log("Saving profile data...", { bio_short: document.getElementById('iptBioShort').value });
-        const { error } = await dbClient.from('site_profile').update({
+        console.log("Saving profile data...", { 
+            bio_short: document.getElementById('iptBioShort').value,
+            bio_full: bioFull 
+        });
+
+        const { error, count } = await dbClient.from('site_profile').update({
             creator_name:        document.getElementById('iptCreatorName').value,
             creator_handle:      document.getElementById('iptCreatorHandle').value,
             location:            document.getElementById('iptLocation').value,
@@ -366,11 +370,16 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
             profile_picture_url: picUrl,
             banner_image_url:    bannerUrl,
             bio_full:            bioFull,
-            bio_short:           document.getElementById('iptBioShort').value || bioFull,
+            bio_short:           document.getElementById('iptBioShort').value,
             vercel_deploy_hook_url: document.getElementById('iptVercelHook').value,
             updated_at:          new Date()
-        }).eq('id', 1);
+        }, { count: 'exact' }).eq('id', 1);
+
         if (error) throw error;
+        
+        if (count === 0) {
+            throw new Error("Nenhum registro atualizado. Verifique se sua chave de acesso (Role Key) tem permissão de escrita.");
+        }
         console.log("✅ Profile updated successfully in Supabase");
         alert("✅ Identidade salva!");
         setPending();

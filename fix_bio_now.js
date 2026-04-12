@@ -2,29 +2,27 @@
 const { createClient } = require('@supabase/supabase-js');
 
 const SUPABASE_URL = "https://mdmjyvxrozxrxwmasnuq.supabase.co";
-// Usando a chave anon que está no diagnose-db.js
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kbWp5dnhyb3p4cnh3bWFzbnVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzMTExNjgsImV4cCI6MjA4OTg4NzE2OH0.1gLdW8hohxALfDd2kthsJHqPjTbztgleGizJE7IcBbU";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-async function fix() {
-    console.log("⚡ Forçando atualização via SDK...");
-    const newBio = "Tudo o que eu não mostro nas redes\n💋";
-    
+async function testSave() {
+    console.log("🛠️ Tentando salvar a bio via script...");
     const { data, error } = await supabase
         .from('site_profile')
-        .update({ 
-            bio_short: newBio,
-            updated_at: new Date() 
+        .update({
+            bio_short: "Tudo o que não mostro nas redes 💋",
+            updated_at: new Date()
         })
-        .eq('id', 1)
-        .select();
+        .eq('id', 1);
 
     if (error) {
-        console.error("❌ Erro:", error.message);
+        console.error("❌ Erro ao salvar:", error.message);
     } else {
-        console.log("✅ Sucesso! Nova bio no banco:", data[0].bio_short);
+        console.log("✅ Sucesso! Agora verificando...");
+        const { data: check } = await supabase.from('site_profile').select('bio_short').eq('id', 1).single();
+        console.log("📄 Bio atual no banco:", check.bio_short);
     }
 }
 
-fix();
+testSave();
