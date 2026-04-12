@@ -67,6 +67,7 @@ module.exports = async function handler(req, res) {
     // Registrar horário de pagamento apenas quando confirmado
     if (status === 'paid') {
       updatePayload.paid_at = new Date().toISOString();
+      updatePayload.event   = 'payment_approved';
     }
 
     const { error: updateError } = await supabase
