@@ -153,13 +153,13 @@
         clickType = "social";
     }
 
-    // Captura Sale Code dinâmico do atributo (injetado pelo script.js)
+    // Captura Sale Code dinâmico do atributo (injetado pelo script.js) com fallback para utm_term da URL
     const saleCode = targetLink.getAttribute('data-sale-code');
     const extraPayload = { 
       clicked_url: targetLink.href,
-      click_type: clickType
+      click_type: clickType,
+      utm_term: saleCode || currentUtms.utm_term || 'organico'
     };
-    if (saleCode) extraPayload.utm_term = saleCode;
 
     window.DodoTracker.capture(eventName, extraPayload);
   });

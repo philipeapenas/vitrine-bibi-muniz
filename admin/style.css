@@ -14,9 +14,13 @@
     --accent: #8B5CF6;
     --accent-glow: rgba(139, 92, 246, 0.3);
     --accent-container: #5516BE;
+    --accent-light: rgba(139, 92, 246, 0.08);
     
     --border-ghost: rgba(73, 68, 84, 0.15);
+    --border-color: rgba(73, 68, 84, 0.25);
     --border-radius: 0px; /* Non-negotiable for Thunder vibe */
+    
+    --input-bg: #131313;
     
     --success: #10B981;
     --danger: #EF4444;
@@ -907,4 +911,307 @@ button {
 @keyframes rotate {
     from { transform: rotate(0deg); }
     to   { transform: rotate(360deg); }
+}
+
+/* ───────────────────────────────────────────
+   MISSING CLASSES — Restore after design rework
+   (btn-primary, btn-ghost, switch toggle, .form-group.full,
+    tag badges, drag-handles, carousel-card, sortable utils,
+    mobile sidebar overlay, conn-status.connected)
+──────────────────────────────────────────── */
+
+/* Primary CTA button */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    background: var(--accent-container);
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Ghost / secondary button */
+.btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-ghost);
+    padding: 10px 20px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.btn-ghost:hover {
+    border-color: var(--accent);
+    color: #fff;
+}
+
+/* form-group.full → full grid width */
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+/* ── Toggle Switch (Pulse enabled) ── */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--surface-high);
+    border: 1px solid var(--border-ghost);
+    transition: 0.3s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background: var(--text-muted);
+    transition: 0.3s;
+}
+
+input:checked + .slider {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+    background: #fff;
+}
+
+.slider.round { border-radius: 34px; }
+.slider.round:before { border-radius: 50%; }
+
+/* ── Status Tags (Ofertas / Links) ── */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    background: var(--surface-low);
+    border: 1px solid var(--border-ghost);
+    color: var(--text-muted);
+}
+
+.tag.approved {
+    color: var(--success);
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.25);
+}
+
+.tag.created {
+    color: #FBBF24;
+    background: rgba(251, 191, 36, 0.06);
+    border-color: rgba(251, 191, 36, 0.2);
+}
+
+/* ── Drag Handle (Links & Carrossel) ── */
+.link-drag-handle,
+.carousel-drag-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    cursor: grab;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+.link-drag-handle:hover,
+.carousel-drag-handle:hover {
+    color: var(--accent);
+}
+
+/* ── Carousel Card ── */
+.carousel-card {
+    position: relative;
+    aspect-ratio: 9 / 14;
+    background: var(--surface-low);
+    border: 1px solid var(--border-ghost);
+    overflow: hidden;
+    cursor: grab;
+    transition: border-color 0.2s;
+}
+
+.carousel-card:hover {
+    border-color: var(--accent);
+}
+
+.carousel-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.carousel-delete-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 24px;
+    height: 24px;
+    background: rgba(239, 68, 68, 0.85);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10;
+}
+
+.carousel-card:hover .carousel-delete-btn {
+    opacity: 1;
+}
+
+.carousel-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    padding: 20px 8px 8px;
+}
+
+.carousel-date {
+    font-size: 0.62rem;
+    color: rgba(255,255,255,0.7);
+}
+
+/* ── Drag-and-drop ghost/chosen states (SortableJS) ── */
+.sortable-ghost {
+    opacity: 0.3;
+    background: var(--accent-light) !important;
+    border-color: var(--accent) !important;
+}
+
+.sortable-chosen {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.sortable-drag {
+    opacity: 0.95;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+}
+
+/* ── conn-status connected state ── */
+#conn-status.connected {
+    color: var(--success);
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.25);
+}
+
+/* ── Mobile Sidebar Overlay ── */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 99;
+    backdrop-filter: blur(4px);
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        height: 100%;
+        width: 260px !important;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 200;
+        border-right: 1px solid var(--border-ghost);
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .sidebar-menu {
+        display: flex;
+    }
+
+    .dashboard-container {
+        padding: 20px 16px;
+    }
+
+    .split-channels {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-channel {
+        border-right: none;
+        border-bottom: 1px solid var(--border-ghost);
+    }
+
+    .split-divider {
+        display: none;
+    }
+
+    .split-conversion {
+        grid-template-columns: 1fr;
+    }
+
+    .conv-sep {
+        width: 100%;
+        height: 1px;
+    }
+
+    #mobileMenuBtn {
+        display: inline-flex !important;
+        align-items: center;
+    }
+
+    .header-title {
+        display: flex;
+        align-items: center;
+    }
 }
