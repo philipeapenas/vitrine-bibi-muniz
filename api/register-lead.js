@@ -23,14 +23,17 @@ module.exports = async function handler(req, res) {
   const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
-    return res.status(500).json({ error: 'Configuração do Supabase ausente no Vercel' });
+    console.warn('[register-lead] Configuração do Supabase ausente no Vercel');
+    return res.status(200).json({ success: true, warning: 'Log ignorado' });
   }
 
   try {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Registra a visita inicial como um Lead
-    const { error } = await supabase.from('transactions').insert({
+    // Registra a visita inicial como um Lead de forma assíncrona
+    // Não usamos 'await' na resposta final para não atrasar o cliente, 
+    // mas tratamos o erro internamente.
+    supabase.from('transactions').insert({
       client_id:    clientId,
       event:        'checkout_visit',
       plan_name:    'Checkout Iniciado',
@@ -43,20 +46,19 @@ module.exports = async function handler(req, res) {
       utm_term:     attribution?.utm_term || null,
       utm_content:  attribution?.utm_content || null,
       src:          attribution?.src || null,
+    }).then(({ error }) => {
+      if (error) console.error('[register-lead] Supabase Error:', error.message);
+      else console.log('[register-lead] Lead registrado com sucesso.');
     });
-
-    if (error) {
-      console.error('[register-lead] Supabase Error:', error);
-      throw error;
-    }
 
     return res.status(200).json({ 
       success: true, 
-      message: 'Visitante registrado como Lead' 
+      message: 'Solicitação de registro enviada' 
     });
 
   } catch (err) {
     console.error('[register-lead] Catch:', err.message);
-    return res.status(500).json({ error: 'Erro interno ao registrar lead' });
+    // Retornamos 200 mesmo no erro para NÃO quebrar o checkout do usuário final
+    return res.status(200).json({ success: true, error_catch: err.message });
   }
 };
