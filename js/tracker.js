@@ -126,6 +126,9 @@
     },
     setPixel: function(id) {
         initFBPixel(id);
+    },
+    getUTMs: function() {
+        return getUTMs();
     }
   };
 
