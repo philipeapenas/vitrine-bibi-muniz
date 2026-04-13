@@ -1469,6 +1469,11 @@
                 container.appendChild(btn);
               });
             }
+          } catch (err) {
+            console.error(err);
+          }
+        }
+
       async function registerLead() {
         try {
           if (localStorage.getItem("dodo_lead_registered")) return;
