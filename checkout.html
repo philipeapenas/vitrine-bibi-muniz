@@ -19,6 +19,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/checkout.css?v=4.1" />
+    <script src="js/tracker.js?v=2.0"></script>
   </head>
   <body>
     <!-- ═══ PRELOADER ═══ -->
@@ -974,6 +975,14 @@
         if (!selPlan) return;
         selPlan._key = planKey;
 
+        // Rastreamento de escolha de plano
+        if (window.DodoTracker) {
+          window.DodoTracker.capture('click_plan', { 
+            plan_id: planKey, 
+            plan_name: selPlan.name 
+          });
+        }
+
         document.getElementById("modalPrice").textContent = selPlan.display;
         renderBenefits();
 
@@ -1025,6 +1034,13 @@
         const btn = document.getElementById("generateBtn");
         btn.disabled = true;
         document.getElementById("lblGenerate").textContent = t("generating");
+
+        // Rastreamento de intenção de pagamento
+        if (window.DodoTracker) {
+          window.DodoTracker.capture('click_generate_pix', { 
+            plan_name: selPlan.name 
+          });
+        }
 
         try {
           const attribution = window.DodoTracker ? window.DodoTracker.getUTMs() : {};
@@ -1288,6 +1304,12 @@
             if (data.profile) {
               const p = data.profile;
 
+              // Fallbacks de Segurança: Se o perfil estiver vazio no banco, usa os padrões da Bibi Muniz
+              if (!p.creator_name)  p.creator_name   = "Bibi Muniz";
+              if (!p.creator_handle) p.creator_handle = "@bibimunizz021";
+              if (!p.bio_full || p.bio_full === "...")   p.bio_full = L.pt.bioFull;
+              if (!p.bio_short || p.bio_short === "...") p.bio_short = L.pt.bioShort;
+
               // Inicializa Pixel do Facebook se existir
               if (p.facebook_pixel_id && window.DodoTracker) {
                 window.DodoTracker.setPixel(p.facebook_pixel_id);
@@ -1447,9 +1469,34 @@
                 container.appendChild(btn);
               });
             }
+      async function registerLead() {
+        try {
+          if (localStorage.getItem("dodo_lead_registered")) return;
+
+          const clickId = localStorage.getItem("vitrine_click_id");
+          if (!clickId) return;
+
+          const attribution = window.DodoTracker ? window.DodoTracker.getUTMs() : {};
+          
+          const urlParams = new URLSearchParams(window.location.search);
+          const saleCode = urlParams.get('code');
+          if (saleCode) attribution.sale_code = saleCode;
+
+          const res = await fetch("/api/register-lead", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              clientId: clickId,
+              attribution: attribution
+            }),
+          });
+
+          if (res.ok) {
+            localStorage.setItem("dodo_lead_registered", "true");
+            console.log("[Dodo] Lead registrado com sucesso.");
           }
         } catch (err) {
-          console.error(err);
+          console.error("[Dodo] Falha ao registrar lead:", err);
         }
       }
 
@@ -1460,6 +1507,8 @@
 
         try {
           await loadConfig();
+          // Registrar Lead após carregar configs (garante o tracker pronto)
+          setTimeout(registerLead, 1000);
         } finally {
           // Remover preloader com fade
           const preloader = document.getElementById("preloader");

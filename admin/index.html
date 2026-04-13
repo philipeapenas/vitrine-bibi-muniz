@@ -68,16 +68,36 @@
                 </button>
                 <h1>Painel de Operações</h1>
                 <span id="conn-status" class="badge">Sincronizado</span>
-            </div>
             <div class="header-actions">
-                <input type="date" id="dateFilter" class="form-input">
                 <button id="deployBtn" class="btn-thunder">Confirmar & Publicar Site</button>
                 <button id="refreshBtn" class="btn-outline">Recarregar</button>
             </div>
         </div>
 
-        <!-- ═══ TAB: ANALYTICS ═══ -->
         <div id="tab-analytics" class="tab-content" style="display: block;">
+            
+            <div class="dashboard-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 12px; background: var(--surface-low); border: 1px solid var(--border-color);">
+                <div style="font-weight: 600; font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">
+                    Analítico / Controle de Período
+                </div>
+                <div class="filter-container">
+                    <select id="filterMode" class="form-input filter-select">
+                        <option value="today">Hoje</option>
+                        <option value="yesterday">Ontem</option>
+                        <option value="week">Esta Semana</option>
+                        <option value="month">Este Mês</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
+                    <div id="dateInputGroup" class="date-input-group">
+                        <input type="date" id="dateFilter" class="form-input">
+                    </div>
+                    <div id="rangeInputGroup" class="date-input-group" style="display:none;">
+                        <input type="date" id="dateStart" class="form-input">
+                        <span class="range-sep">até</span>
+                        <input type="date" id="dateEnd" class="form-input">
+                    </div>
+                </div>
+            </div>
 
             <!-- LINHA 1: KPIs Minimalistas -->
             <section class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
@@ -127,7 +147,7 @@
                 <div class="section-header">
                     <h2>Histórico Operacional</h2>
                 </div>
-                <div class="table-container">
+                <div class="table-responsive">
                     <table id="salesTable">
                         <thead><tr><th>Horário</th><th>Status</th><th>Cliente</th><th>Sale Code</th><th>Plano</th><th>Valor</th></tr></thead>
                         <tbody id="salesTableBody"><tr><td colspan="6" class="text-center text-muted">Aguardando dados...</td></tr></tbody>
@@ -326,7 +346,7 @@
                         Adicionar
                     </button>
                 </div>
-                <div class="table-container">
+                <div class="table-responsive">
                     <table id="offersTable">
                         <thead><tr><th>ID</th><th>Nome</th><th>Preço</th><th>Promoção</th><th class="text-center">Ações</th></tr></thead>
                         <tbody id="offersTableBody"></tbody>
@@ -384,7 +404,7 @@
                         <span class="slider round"></span>
                     </label>
                 </div>
-                <div class="table-container">
+                <div class="table-responsive">
                     <table id="linksTable">
                         <thead><tr><th style="width:40px;"></th><th>Texto do Botão</th><th>URL Destino</th><th>Ativo</th><th class="text-center">Ações</th></tr></thead>
                         <tbody id="linksTableBody"></tbody>

@@ -25,6 +25,11 @@ const overlay       = document.getElementById('config-overlay');
 const adminKeyInput = document.getElementById('adminKeyInput');
 const saveKeyBtn    = document.getElementById('saveKeyBtn');
 const dateFilter    = document.getElementById('dateFilter');
+const filterMode    = document.getElementById('filterMode');
+const dateStart     = document.getElementById('dateStart');
+const dateEnd       = document.getElementById('dateEnd');
+const dateInputGroup = document.getElementById('dateInputGroup');
+const rangeInputGroup = document.getElementById('rangeInputGroup');
 const btnRefresh    = document.getElementById('refreshBtn');
 const btnDeploy     = document.getElementById('deployBtn');
 const btnLogout     = document.getElementById('logoutBtn');
@@ -43,8 +48,30 @@ if (mainSidebar) {
 }
 
 dateFilter.value = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
+dateStart.value = dateFilter.value;
+dateEnd.value = dateFilter.value;
+
+filterMode.addEventListener('change', () => {
+    const isCustom = filterMode.value === 'custom';
+    const isTodayOrYesterday = filterMode.value === 'today' || filterMode.value === 'yesterday';
+    
+    dateInputGroup.style.display = isTodayOrYesterday ? 'block' : 'none';
+    rangeInputGroup.style.display = isCustom ? 'flex' : 'none';
+
+    if (filterMode.value === 'yesterday') {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        dateFilter.value = yesterday.toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
+    } else if (filterMode.value === 'today') {
+        dateFilter.value = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
+    }
+
+    loadData();
+});
 
 dateFilter.addEventListener('change', loadData);
+dateStart.addEventListener('change', loadData);
+dateEnd.addEventListener('change', loadData);
 btnRefresh.addEventListener('click', loadData);
 if (btnDeploy) btnDeploy.addEventListener('click', triggerVercelDeploy);
 btnLogout.addEventListener('click', () => {
@@ -129,7 +156,15 @@ function initSupabase(key) {
         dbClient = window.supabase.createClient(SUPABASE_URL, key);
         connStatus.textContent = "● Conectado";
         connStatus.classList.add("connected");
+        
+        // Carga Global: Carrega todos os dados imediatamente para evitar overwriting por inputs vazios
         loadData();
+        loadProfileData();
+        loadOffersData();
+        loadThankyouData();
+        loadLinksData();
+        loadCarouselPhotos();
+        
         setupRealtime();
     } catch(e) {
         alert("Erro ao conectar. Verifique a chave.");
@@ -139,10 +174,44 @@ function initSupabase(key) {
 }
 
 // ─── Helper ────────────────────────────────────────
-function getStartAndEndOfDay(dateString) {
+function getCalculatedRange() {
+    const mode = filterMode.value;
+    const now = new Date();
+    const tz = 'America/Sao_Paulo';
+
+    let start, end;
+
+    if (mode === 'today' || mode === 'yesterday') {
+        const d = dateFilter.value;
+        start = new Date(d + 'T00:00:00-03:00');
+        end = new Date(d + 'T23:59:59.999-03:00');
+    } 
+    else if (mode === 'week') {
+        // Semana Atual (Domingo a Sábado)
+        const day = now.getDay();
+        const diff = now.getDate() - day;
+        start = new Date(now.setDate(diff));
+        start.setHours(0,0,0,0);
+        
+        end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        end.setHours(23,59,59,999);
+    }
+    else if (mode === 'month') {
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+        start.setHours(0,0,0,0);
+        
+        end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        end.setHours(23,59,59,999);
+    }
+    else if (mode === 'custom') {
+        start = new Date(dateStart.value + 'T00:00:00-03:00');
+        end = new Date(dateEnd.value + 'T23:59:59.999-03:00');
+    }
+
     return {
-        start: new Date(dateString + 'T00:00:00-03:00').toISOString(),
-        end:   new Date(dateString + 'T23:59:59.999-03:00').toISOString()
+        start: start.toISOString(),
+        end: end.toISOString()
     };
 }
 
@@ -150,7 +219,7 @@ function getStartAndEndOfDay(dateString) {
 async function loadData() {
     if (!dbClient) return;
     btnRefresh.style.opacity = '0.5';
-    const { start, end } = getStartAndEndOfDay(dateFilter.value);
+    const { start, end } = getCalculatedRange();
 
     try {
         const [{ data: tracking }, { data: trans }] = await Promise.all([
@@ -171,6 +240,24 @@ async function loadData() {
                     event: 'user_checkout',
                     sale_code: t.utm_term || 'organico',
                     plan_name: 'Checkout Iniciado',
+                    plan_value: 0
+                });
+            }
+            if (t.event_type === 'click_plan') {
+                checkoutEvents.push({
+                    created_at: t.created_at,
+                    event: 'click_plan',
+                    sale_code: t.utm_term || 'organico',
+                    plan_name: t.plan_name || 'Plano Selecionado',
+                    plan_value: 0
+                });
+            }
+            if (t.event_type === 'click_generate_pix') {
+                checkoutEvents.push({
+                    created_at: t.created_at,
+                    event: 'click_generate_pix',
+                    sale_code: t.utm_term || 'organico',
+                    plan_name: t.plan_name || 'Gerar PIX',
                     plan_value: 0
                 });
             }
@@ -222,7 +309,7 @@ function renderTable(transactions) {
     
     // Filtro mais robusto de eventos operacionais
     const items = transactions.filter(t => 
-        ['user_checkout', 'payment_created', 'payment_approved', 'user_joined'].includes(t.event)
+        ['checkout_visit', 'user_checkout', 'click_plan', 'click_generate_pix', 'payment_created', 'payment_approved', 'user_joined'].includes(t.event)
     );
 
     if (!items.length) {
@@ -245,6 +332,12 @@ function renderTable(transactions) {
             stBadge = '<span class="status-badge pending">○ Pendente</span>';
         else if (t.event === 'user_checkout') 
             stBadge = '<span class="status-badge initiated">⚡ Iniciado</span>';
+        else if (t.event === 'click_plan') 
+            stBadge = '<span class="status-badge plan">⚡ Clique Plano</span>';
+        else if (t.event === 'click_generate_pix') 
+            stBadge = '<span class="status-badge pix-trigger">💎 Gerar PIX</span>';
+        else if (t.event === 'checkout_visit') 
+            stBadge = '<span class="status-badge lead">⚡ Lead Inscrito</span>';
         else 
             stBadge = `<span class="status-badge">${t.event}</span>`;
 
@@ -876,6 +969,9 @@ window.deleteCarouselPhoto = async (id, storagePath) => {
 function setupAutoDetect() {
     const selector = 'input, textarea, select';
     document.querySelectorAll(selector).forEach(el => {
+        // Ignorar elementos de filtro do dashboard (analíticos)
+        if (el.closest('.dashboard-controls')) return;
+        
         el.addEventListener('input', setPending);
         el.addEventListener('change', setPending);
     });
