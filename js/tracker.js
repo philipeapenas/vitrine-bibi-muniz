@@ -85,7 +85,6 @@
         session_id: sessionId,
         url: window.location.href,
         user_agent: navigator.userAgent,
-        click_id: clickId,
         ...currentUtms,
         ...extraPayload
       };
