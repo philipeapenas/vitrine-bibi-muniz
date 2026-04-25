@@ -15,21 +15,38 @@
       utm_term: urlParams.get('utm_term'),
       utm_content: urlParams.get('utm_content'),
       utm_id: urlParams.get('utm_id'),
-      src: urlParams.get('src')
+      src: urlParams.get('src'),
+      sale_code: urlParams.get('code')
     };
 
-    // Filtra nulos
-    Object.keys(utms).forEach(key => utms[key] === null && delete utms[key]);
+    // Filtra nulos/vazios
+    Object.keys(utms).forEach(key => (utms[key] === null || utms[key] === '') && delete utms[key]);
 
-    // Persistência "Last Click"
-    if (Object.keys(utms).length > 0) {
-      localStorage.setItem("dodo_utms", JSON.stringify(utms));
-      return utms;
+    const storedStr = localStorage.getItem("dodo_utms");
+    let current = storedStr ? JSON.parse(storedStr) : {};
+
+    // Se a URL traz um ?code=, ele SEMPRE vence (link do bot Telegram, presell, etc)
+    // Isso garante que "insta_bio250426" vindo do bot nunca seja sobrescrito por um antigo
+    if (utms.sale_code) {
+      current = { ...current, ...utms };
+      localStorage.setItem("dodo_utms", JSON.stringify(current));
+    } else if (Object.keys(utms).length > 0) {
+      // Tem UTMs mas sem ?code= — preserva sale_code existente, atualiza o resto
+      const preservedCode = current.sale_code;
+      current = { ...current, ...utms };
+      if (preservedCode) current.sale_code = preservedCode;
+      localStorage.setItem("dodo_utms", JSON.stringify(current));
     }
 
-    // Se não tem na URL, tenta pegar do localStorage
-    const stored = localStorage.getItem("dodo_utms");
-    return stored ? JSON.parse(stored) : {};
+    // GERAÇÃO AUTOMÁTICA: só se NUNCA teve sale_code (primeiro acesso absoluto)
+    if (!current.sale_code) {
+      const brTz = new Date().toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+      const [d, m, y] = brTz.split(',')[0].split('/');
+      current.sale_code = `VITRINE-${d}${m}${y.slice(-2)}`;
+      localStorage.setItem("dodo_utms", JSON.stringify(current));
+    }
+
+    return current;
   }
 
   const currentUtms = getUTMs();
@@ -85,6 +102,9 @@
         session_id: sessionId,
         url: window.location.href,
         user_agent: navigator.userAgent,
+        client_id:  localStorage.getItem("vitrine_click_id") || null,
+        sale_code:  currentUtms.sale_code || 'organico',
+        utm_term:   currentUtms.sale_code || currentUtms.utm_term || 'organico', // Garante o Sale Code no term se houver
         ...currentUtms,
         ...extraPayload
       };
@@ -127,7 +147,7 @@
         initFBPixel(id);
     },
     getUTMs: function() {
-        return getUTMs();
+        return getUTMs(); // Agora usa a função unificada e blindada
     }
   };
 

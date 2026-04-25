@@ -25,7 +25,7 @@ module.exports = async function handler(req, res) {
   }
 
   const body = req.body || {};
-  const { value, plan, attribution } = body;
+  const { value, plan, plan_name, plan_value, attribution, clientId } = body;
 
   if (!value || typeof value !== 'number' || value < 50) {
     return res.status(400).json({ error: 'value deve ser número >= 50 (centavos)' });
@@ -60,7 +60,7 @@ module.exports = async function handler(req, res) {
 
     // ─── Log no Supabase (não-bloqueante) ─────────────────
     // Erros aqui NÃO impedem a resposta ao usuário — transação já foi criada na PushinPay
-    logToSupabase(data, plan, attribution || {}).catch(err =>
+    logToSupabase(data, plan, plan_name, attribution || {}, clientId).catch(err =>
       console.warn('[create-pix] Supabase log falhou (não crítico):', err.message)
     );
 
@@ -80,29 +80,36 @@ module.exports = async function handler(req, res) {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-async function logToSupabase(pixData, plan, attribution) {
+async function logToSupabase(pixData, plan, plan_name, attribution, clientId) {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
   if (!supabaseUrl || !supabaseKey) return; // Silencioso — env vars opcionais
 
   const supabase = createClient(supabaseUrl, supabaseKey);
 
+  const finalValue = parseInt(pixData.value) || 0;
+
+  // INSERT: Cada geração de PIX cria uma nova linha no histórico
+  // O webhook-pix.js vai ATUALIZAR esta linha específica via pushinpay_id quando o pagamento for confirmado
   await supabase.from('transactions').insert({
+    client_id:      clientId      || null,
     pushinpay_id:   pixData.id,
-    status:         pixData.status,      // 'created'
-    value:          pixData.value,
-    plan_name:      plan || null,
-    event:          'payment_created',
+    status:         'Pix gerado',
+    value:          finalValue,
+    plan_value:     finalValue,
+    plan_name:      plan_name     || plan || null,
+    event:          'click_generate_pix',
     payment_method: 'pix',
     webhook_url:    pixData.webhook_url || null,
-    // UTMs, Sale Code e Fonte
-    sale_code:      attribution.sale_code || null,
-    utm_source:     attribution.utm_source || null,
-    utm_medium:     attribution.utm_medium || null,
-    utm_campaign:   attribution.utm_campaign || null,
-    utm_term:       attribution.utm_term || null,
-    utm_content:    attribution.utm_content || null,
-    src:            attribution.src || null,
+    
+    // Atribuição: salva o sale_code que veio com o lead nesta ação
+    sale_code:      attribution?.sale_code    || null,
+    utm_source:     attribution?.utm_source   || null,
+    utm_medium:     attribution?.utm_medium   || null,
+    utm_campaign:   attribution?.utm_campaign || null,
+    utm_term:       attribution?.utm_term     || null,
+    utm_content:    attribution?.utm_content  || null,
+    src:            attribution?.src          || null,
   });
 }
 

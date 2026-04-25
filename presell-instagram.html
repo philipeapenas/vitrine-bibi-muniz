@@ -154,20 +154,28 @@
       <img id="presell-img" src="assets/photos/profile.jpg" alt="Profile">
       <p>Click on continue to see<br><strong id="presell-name">bibimunizofc</strong>'s page</p>
     </div>
-    <a href="/" id="continue-btn" class="btn-continue">Continue</a>
+    <a href="/" id="continue-btn" class="btn-continue" onclick="escapeWebView(event)">Continue</a>
   </div>
 
   <script src="js/config.js?v=13.0"></script>
   <script>
     (function () {
       "use strict";
+
+      // ─── Construir URL de destino preservando query strings (UTMs, code, etc) ───
       const targetUrl = window.location.origin + "/" + window.location.search;
-      
-      // Inject config data dynamically to build trust
+      const absoluteTarget = new URL(targetUrl, window.location.href).href;
+
+      // ─── Detecção de plataforma ───
+      const ua = navigator.userAgent || navigator.vendor || window.opera || "";
+      const isAndroid  = /android/i.test(ua);
+      const isIOS      = /iP(hone|od|ad)/i.test(ua) || (/Mac/i.test(ua) && navigator.maxTouchPoints > 1);
+      const isIGWebView = /Instagram/i.test(ua);
+
+      // ─── Inject config data (trust-building visual) ───
       if (typeof CONFIG !== 'undefined') {
         const nameNode = document.getElementById('presell-name');
-        const imgNode = document.getElementById('presell-img');
-        
+        const imgNode  = document.getElementById('presell-img');
         if (CONFIG.profileName) {
            const cleanName = CONFIG.profileName.replace(' ✨', '');
            nameNode.textContent = cleanName;
@@ -178,24 +186,71 @@
         }
       }
 
-      // Auto-Intent Logic (Zero-Click IG Intercept Trigger)
-      setTimeout(() => {
-        const ua = navigator.userAgent || navigator.vendor || window.opera;
-        const isAndroid = /android/i.test(ua);
-        
-        // Resolve absolute URL for strict intents
-        const absoluteTarget = new URL(targetUrl, window.location.href).href;
-        let finalUrl = absoluteTarget;
+      /**
+       * escapeWebView — Força abertura no navegador externo (Safari/Chrome).
+       * Chamado tanto pelo auto-redirect quanto pelo botão "Continue".
+       *
+       * Estratégia por plataforma:
+       *   Android → intent:// scheme aponta para Chrome. Se Chrome não
+       *             instalado, fallback para navegador padrão via href.
+       *   iOS     → window.open() com _blank trigga o prompt do Instagram
+       *             "Abrir no Safari?". Se falhar, location.href como fallback.
+       *   Outros  → Navegação direta (não está no IG WebView).
+       */
+      window.escapeWebView = function(e) {
+        if (e) e.preventDefault();
 
         if (isAndroid) {
-           const noHttps = absoluteTarget.replace(/^https?:\/\//, '');
-           finalUrl = `intent://${noHttps}#Intent;scheme=https;package=com.android.chrome;end;`;
+          // Android: intent:// abre no Chrome diretamente, bypassando o WebView
+          const noScheme = absoluteTarget.replace(/^https?:\/\//, '');
+          const intentUrl = `intent://${noScheme}#Intent;scheme=https;package=com.android.chrome;end;`;
+          window.location.href = intentUrl;
+
+          // Fallback: se intent falhar (Chrome não instalado), tenta navegação direta após 1.5s
+          setTimeout(function() {
+            window.location.href = absoluteTarget;
+          }, 1500);
+
+        } else if (isIOS) {
+          // iOS: window.open com _blank trigga prompt "Abrir no Safari?" no IG WebView
+          // Usar user gesture (onclick) é essencial — sem gesture o iOS bloqueia silenciosamente
+          var opened = window.open(absoluteTarget, '_blank');
+
+          // Fallback: se window.open retornar null (bloqueado), tenta location.href
+          if (!opened) {
+            window.location.href = absoluteTarget;
+          }
+
+        } else {
+          // Desktop ou navegador normal — navegação direta
+          window.location.href = absoluteTarget;
         }
-        
-        // Force the redirection. 
-        // In the IG browser, this triggers the native "This link wants to open an external app" popup!
-        window.location.href = finalUrl;
-      }, 700); 
+      };
+
+      // ─── Configurar botão "Continue" como fallback manual ───
+      var btn = document.getElementById('continue-btn');
+      btn.href = absoluteTarget; // fallback nativo caso JS falhe
+      btn.setAttribute('target', '_blank'); // hint extra para iOS
+      btn.setAttribute('rel', 'noopener noreferrer');
+
+      // ─── Auto-redirect: tenta escapar automaticamente ───
+      // No IG WebView, dispara após 800ms para tentar abrir externamente.
+      // No navegador normal, redireciona direto sem delay.
+      if (isIGWebView) {
+        setTimeout(function() {
+          // No auto-redirect, Android funciona sem gesture.
+          // iOS: window.open SEM gesture é bloqueado — o botão manual cobre esse caso.
+          if (isAndroid) {
+            escapeWebView(null);
+          }
+          // iOS: NÃO faz auto-redirect (bloqueado sem gesture).
+          // O usuário PRECISA clicar no botão "Continue" — que já está configurado.
+        }, 800);
+      } else {
+        // Não está no IG WebView — redireciona direto para a vitrine
+        window.location.href = absoluteTarget;
+      }
+
     })();
   </script>
 </body>

@@ -223,45 +223,43 @@ async function loadData() {
 
     try {
         const [{ data: tracking }, { data: trans }] = await Promise.all([
-            dbClient.from('tracking_events').select('event_type, utm_term, created_at').gte('created_at', start).lte('created_at', end),
+            dbClient.from('tracking_events').select('*').gte('created_at', start).lte('created_at', end),
             dbClient.from('transactions').select('*').gte('created_at', start).lte('created_at', end).order('created_at', { ascending: false })
         ]);
 
         let pageviews = 0, clicks = 0, userCheckout = 0, clickTelegram = 0;
-        const checkoutEvents = [];
+        
+        // ─── KPIs desduplicados por client_id (contagem precisa) ───
+        const checkoutVisitSet = new Set();
+        const pixGeneratedSet  = new Set();
+        const approvedSet      = new Set();
+        const joinedSet        = new Set();
+
+        // ─── Histórico: TODAS as ações sem merge ───
+        const allActions = [];
 
         (tracking || []).forEach(t => {
             if (t.event_type === 'pageview') pageviews++;
             if (t.event_type === 'click' || t.event_type === 'click_dispatch') clicks++;
-            if (t.event_type === 'user_checkout' || t.event_type === 'click_checkout') {
-                userCheckout++;
-                checkoutEvents.push({
-                    created_at: t.created_at,
-                    event: 'user_checkout',
-                    sale_code: t.utm_term || 'organico',
-                    plan_name: 'Checkout Iniciado',
-                    plan_value: 0
-                });
-            }
-            if (t.event_type === 'click_plan') {
-                checkoutEvents.push({
-                    created_at: t.created_at,
-                    event: 'click_plan',
-                    sale_code: t.utm_term || 'organico',
-                    plan_name: t.plan_name || 'Plano Selecionado',
-                    plan_value: 0
-                });
-            }
-            if (t.event_type === 'click_generate_pix') {
-                checkoutEvents.push({
-                    created_at: t.created_at,
-                    event: 'click_generate_pix',
-                    sale_code: t.utm_term || 'organico',
-                    plan_name: t.plan_name || 'Gerar PIX',
-                    plan_value: 0
-                });
-            }
             if (t.event_type === 'click_segredo') clickTelegram++;
+            if (['user_checkout', 'click_checkout'].includes(t.event_type)) userCheckout++;
+
+            // KPI: Visitantes únicos do checkout (desduplicado)
+            if (t.event_type === 'checkout_visit') {
+                const key = t.client_id || ('cv_' + t.id);
+                checkoutVisitSet.add(key);
+            }
+
+            // Adicionar ao histórico (cada ação = uma linha)
+            allActions.push({
+                created_at: t.created_at,
+                event: t.event_type === 'click_checkout' ? 'user_checkout' : t.event_type,
+                sale_code: t.sale_code || t.utm_term || 'organico',
+                plan_name: t.plan_name || '',
+                plan_value: Number(t.plan_value || 0),
+                client_id: t.client_id || null,
+                _source: 'tracking'
+            });
         });
 
         const totalClicks = userCheckout + clickTelegram + clicks;
@@ -278,24 +276,58 @@ async function loadData() {
             elCtr.textContent = ctr + '%';
         }
 
-        // ─── Transações ─────────────────────────────────────
-        let joined = 0, created = 0, approved = 0;
+        // ─── Transações: cada uma é uma ação independente ──────────────────
         (trans || []).forEach(t => {
-            if (t.event === 'user_joined')      joined++;
-            if (t.event === 'payment_created')  created++;
-            if (t.event === 'payment_approved') approved++;
+            // KPIs desduplicados por client_id
+            const key = t.client_id || ('tx_' + t.id);
+            if (t.event === 'click_generate_pix' || t.status === 'Pix gerado') {
+                pixGeneratedSet.add(key);
+            }
+            if (t.event === 'payment_approved' || t.status === 'paid') {
+                approvedSet.add(key);
+            }
+            if (t.event === 'user_joined') {
+                joinedSet.add(key);
+            }
+
+            // Adicionar ao histórico (cada transação = uma linha)
+            allActions.push({
+                ...t,
+                _source: 'transaction'
+            });
         });
 
-        const elJoined   = document.getElementById('kpi-user-joined');
-        const elCreated  = document.getElementById('kpi-pay-created');
-        const elApproved = document.getElementById('kpi-pay-approved');
+        // ─── KPIs Linha 2 (Funil de Conversão) ──────────────────
+        const checkoutVisits = checkoutVisitSet.size;
+        const created  = pixGeneratedSet.size;
+        const approved = approvedSet.size;
+        const joined   = joinedSet.size;
 
-        if (elJoined)   animateValue(elJoined, 0, joined, 1000);
-        if (elCreated)  animateValue(elCreated, 0, created, 1000);
-        if (elApproved) animateValue(elApproved, 0, approved, 1000);
+        const elJoined          = document.getElementById('kpi-user-joined');
+        const elCreated         = document.getElementById('kpi-pay-created');
+        const elApproved        = document.getElementById('kpi-pay-approved');
+        const elCheckoutVisits  = document.getElementById('kpi-checkout-visits');
 
-        const merged = [...(trans || []), ...checkoutEvents].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        renderTable(merged);
+        if (elJoined)         animateValue(elJoined, 0, joined, 1000);
+        if (elCreated)        animateValue(elCreated, 0, created, 1000);
+        if (elApproved)       animateValue(elApproved, 0, approved, 1000);
+        if (elCheckoutVisits) animateValue(elCheckoutVisits, 0, checkoutVisits, 1000);
+
+        // ─── KPI P2: Taxa de Conversão do Checkout ──────────────────
+        const elConvCheckout    = document.getElementById('kpi-conv-checkout');
+        const elConvCheckoutSub = document.getElementById('kpi-conv-checkout-sub');
+        if (elConvCheckout) {
+            const convRate = checkoutVisits > 0 ? ((approved / checkoutVisits) * 100).toFixed(1) : null;
+            elConvCheckout.textContent = convRate !== null ? convRate + '%' : '—';
+        }
+        if (elConvCheckoutSub) {
+            elConvCheckoutSub.textContent = `${approved} aprovados / ${checkoutVisits} visitantes`;
+        }
+
+        // Ordenar TUDO por horário (mais recente primeiro)
+        allActions.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        renderTable(allActions);
     } catch(e) {
         console.error(e);
     } finally {
@@ -307,9 +339,11 @@ function renderTable(transactions) {
     const tbody = document.getElementById('salesTableBody');
     tbody.innerHTML = '';
     
-    // Filtro mais robusto de eventos operacionais
+    // Filtro robusto de eventos operacionais (sem merge, mostra cada ação)
     const items = transactions.filter(t => 
         ['checkout_visit', 'user_checkout', 'click_plan', 'click_generate_pix', 'payment_created', 'payment_approved', 'user_joined'].includes(t.event)
+        || t.status === 'Pix gerado'
+        || t.status === 'paid'
     );
 
     if (!items.length) {
@@ -328,32 +362,47 @@ function renderTable(transactions) {
         let stBadge = '';
         if (t.event === 'payment_approved') 
             stBadge = '<span class="status-badge success">● Aprovado</span>';
+        else if (t.status === 'Pix gerado' || t.event === 'click_generate_pix') 
+            stBadge = '<span class="status-badge pix-trigger">💎 Gerar PIX</span>';
         else if (t.event === 'payment_created') 
             stBadge = '<span class="status-badge pending">○ Pendente</span>';
-        else if (t.event === 'user_checkout') 
+        else if (t.event === 'user_checkout' || t.event === 'click_checkout') 
             stBadge = '<span class="status-badge initiated">⚡ Iniciado</span>';
         else if (t.event === 'click_plan') 
             stBadge = '<span class="status-badge plan">⚡ Clique Plano</span>';
-        else if (t.event === 'click_generate_pix') 
-            stBadge = '<span class="status-badge pix-trigger">💎 Gerar PIX</span>';
         else if (t.event === 'checkout_visit') 
             stBadge = '<span class="status-badge lead">⚡ Lead Inscrito</span>';
+        else if (t.event === 'user_joined') 
+            stBadge = '<span class="status-badge initiated">🤖 Bot Telegram</span>';
+        else if (t.event === 'pageview') 
+            stBadge = '<span class="status-badge">👁️ Visitou</span>';
         else 
-            stBadge = `<span class="status-badge">${t.event}</span>`;
+            stBadge = `<span class="status-badge">${t.event || t.event_type || 'Operação'}</span>`;
 
         // Operação ID Styling
         const saleCode = t.sale_code || 'organico';
         const opIdClass = saleCode === 'organico' ? 'op-id organico' : 'op-id';
         const opIdHtml = `<span class="${opIdClass}">${saleCode}</span>`;
 
-        const val = t.plan_value ? `R$ ${(t.plan_value/100).toFixed(2).replace('.', ',')}` : '-';
+        // Exibição do Plano e Valor (Ultra Resiliente)
+        const planName = t.plan_name || (t.plan ? t.plan.replace(/_/g, ' ').toUpperCase() : '-');
+        const displayValue = Number(t.plan_value || t.value || t.planValue || 0);
+        const val = displayValue > 0 ? `R$ ${(displayValue/100).toFixed(2).replace('.', ',')}` : '-';
         
+        // Debug para o console do admin (v8)
+        if (displayValue === 0 && (t.event === 'click_generate_pix' || t.status === 'Pix gerado')) {
+            console.log("⚠️ Registro sem valor encontrado:", t);
+        }
+
+        // Column CLIENTE logic: Prefer username, then email, then client_id prefix
+        const customer = t.customer_username || t.customer_email || (t.client_id ? `Guest_${t.client_id.substring(0,5)}` : '-');
+
         tr.innerHTML = `
             <td>${tm}</td>
             <td>${stBadge}</td>
-            <td>${t.customer_username || t.customer_chat_id || '-'}</td>
+            <td>${customer}</td>
             <td>${opIdHtml}</td>
-            <td>${t.plan_name || '-'}</td>
+            <td>${planName}</td>
             <td>${val}</td>
         `;
         tbody.appendChild(tr);
@@ -365,6 +414,8 @@ function setupRealtime() {
     dbClient.channel('dashboard-live')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'tracking_events' }, () => setTimeout(loadData, 500))
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'transactions' }, () => setTimeout(loadData, 500))
+        // UPDATE: captura confirmações de pagamento do webhook-pix.js em tempo real
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'transactions' }, () => setTimeout(loadData, 500))
         .subscribe();
 }
 
@@ -440,6 +491,7 @@ async function loadProfileData() {
         document.getElementById('iptStatMedias').value  = data.stat_medias  || '3.387 Mídias';
         document.getElementById('iptStatImages').value  = data.stat_images  || '1.6K';
         document.getElementById('iptStatVideos').value  = data.stat_videos  || '1.8K';
+        document.getElementById('iptStatPaidVideos').value = data.stat_paid_videos || '147 Vídeos';
         document.getElementById('iptVercelHook').value  = data.vercel_deploy_hook_url || '';
     } catch(e) { console.error("loadProfileData:", e); }
 }
@@ -513,6 +565,7 @@ async function persistStatsData(showFeedback = false) {
             stat_medias:  document.getElementById('iptStatMedias').value,
             stat_images:  document.getElementById('iptStatImages').value,
             stat_videos:  document.getElementById('iptStatVideos').value,
+            stat_paid_videos: document.getElementById('iptStatPaidVideos').value,
             updated_at:   new Date()
         }).eq('id', 1);
         if (error) throw error;
