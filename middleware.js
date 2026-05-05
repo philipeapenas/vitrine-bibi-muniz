@@ -1,12 +1,11 @@
 export const config = {
-  matcher: ['/admin/:path*', '/obrigado.html'],
+  matcher: ['/obrigado.html'],
 };
 
 export default async function middleware(request) {
   const url = new URL(request.url);
-  const hostname = url.hostname;
 
-  // 1. Barreira de Segurança: Página de Obrigado (Instablock)
+  // Barreira de Segurança: Página de Obrigado (Instablock)
   if (url.pathname === '/obrigado.html') {
     const txId = url.searchParams.get('tx') || url.searchParams.get('tx_id');
     
@@ -44,30 +43,5 @@ export default async function middleware(request) {
         console.error('[Middleware] Erro ao validar transação:', err.message);
       }
     }
-  }
-
-  // 2. Barreira de Segurança: Painel Admin (Basic Auth)
-  if (url.pathname.startsWith('/admin')) {
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return;
-    }
-
-    const authorizationHeader = request.headers.get('authorization');
-    if (authorizationHeader) {
-      const basicAuth = authorizationHeader.split(' ')[1];
-      const [user, password] = atob(basicAuth).split(':');
-      const ADMIN_PASS = process.env.ADMIN_PASSWORD;
-
-      if (user === 'admin' && password === ADMIN_PASS) {
-        return;
-      }
-    }
-
-    return new Response('Acesso Negado. Insira as credenciais do Administrador.', {
-      status: 401,
-      headers: {
-        'WWW-Authenticate': 'Basic realm="Painel de Controle Bibi Muniz"'
-      }
-    });
   }
 }

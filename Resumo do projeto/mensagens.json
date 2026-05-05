@@ -7,7 +7,7 @@
     "files_affected": [
       "supabase/functions/tracking-webhook/index.ts",
       "index.html",
-      "Resumo do projeto/audit_log.md"
+      "Agente Orquestrador/Resumo do projeto/audit_log.md"
     ]
   },
   {
@@ -44,5 +44,24 @@
     "status": "success",
     "summary": "Fase 12 da Vitrine Bibi Muniz (Admin e Auth) 100% finalizada com correções de Vercel e JS em Prod e blindagem da Service Key. Encerrando pacote de orquestração.",
     "files_affected": []
+  },
+  {
+    "id": "msg_vitrine_v3_001",
+    "type": "handoff",
+    "from": "assistente-expert",
+    "to": "ceo-dodo",
+    "subject": "Vault atualizado — Vitrine V3 Tutorial-Centric (2026-05-04)",
+    "message": "Auto-archive concluido. Sessao de refatoracao radical da Vitrine Bibi Muniz arquivada no Vault. Daily note 04-05-26 criada com herancas P1/P2/P3 (4 itens marcados N/A pela remocao do admin/tracking, 1 concluido hoje). Nota de entrega criada documentando a transicao V2 (Glassmorphism+Supabase+admin+tracking+presells) -> V3 (single-page tutorial-centric). PRF do projeto reescrito refletindo nova arquitetura. Logs de atividade (3 skills) e log de chat depositados via log_to_daily.py.",
+    "context": {
+      "project": "Vitrine - Bibi Muniz",
+      "artifacts": [
+        "Dodo Company/05_Daily/Segunda/04-05-26.md",
+        "Dodo Company/01_Projetos/Vitrine - Bibi Muniz/03_Entregas/2026-05-04_vitrine-v3-tutorial-centric.md",
+        "Dodo Company/01_Projetos/Vitrine - Bibi Muniz/01_PRF.md"
+      ],
+      "next_action": "Nenhuma. Vault sincronizado. Producao no ar em https://bibimuniz.vercel.app."
+    },
+    "timestamp": "2026-05-04T17:50:35-03:00",
+    "status": "pending"
   }
 ]

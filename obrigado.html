@@ -384,9 +384,10 @@
                 document.querySelector('.card').style.display = 'block';
             }, 500);
         } else {
-            if (txId === '—') throw new Error('Acesso não autorizado: ID ausente.');
+            const clickId = localStorage.getItem("vitrine_click_id");
+            if (txId === '—' && !clickId) throw new Error('Acesso não autorizado: Identificador ausente.');
 
-            const verifyRes = await fetch(`/api/verify-access?id=${txId}`);
+            const verifyRes = await fetch(`/api/verify-access?id=${txId}&client_id=${clickId || ''}`);
             const verifyData = await verifyRes.json();
 
             if (!verifyRes.ok || !verifyData.authorized) {

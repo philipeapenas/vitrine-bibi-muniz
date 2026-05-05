@@ -19,7 +19,6 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/checkout.css?v=4.1" />
-    <script src="js/tracker.js?v=2.2"></script>
   </head>
   <body>
     <!-- ═══ PRELOADER ═══ -->
@@ -975,14 +974,6 @@
         if (!selPlan) return;
         selPlan._key = planKey;
 
-        // Rastreamento de escolha de plano
-        if (window.DodoTracker) {
-          window.DodoTracker.capture('click_plan', { 
-            plan_id: planKey, 
-            plan_name: selPlan.name 
-          });
-        }
-
         document.getElementById("modalPrice").textContent = selPlan.display;
         renderBenefits();
 
@@ -1035,28 +1026,14 @@
         btn.disabled = true;
         document.getElementById("lblGenerate").textContent = t("generating");
 
-        // Rastreamento de intenção de pagamento
-        if (window.DodoTracker) {
-          window.DodoTracker.capture('click_generate_pix', { 
-            plan_name: selPlan.name 
-          });
-        }
-
         try {
-          const attribution = window.DodoTracker ? window.DodoTracker.getUTMs() : {};
-          
-          // Captura Sale Code da URL (?code=...)
-          const urlParams = new URLSearchParams(window.location.search);
-          const saleCode = urlParams.get('code');
-          if (saleCode) attribution.sale_code = saleCode;
-          
           const res = await fetch("/api/create-pix", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-              value: selPlan.value, 
+            body: JSON.stringify({
+              value: selPlan.value,
               plan: selPlan._key,
-              attribution: attribution 
+              plan_name: selPlan.name
             }),
           });
           const data = await res.json();
@@ -1135,14 +1112,6 @@
           const data = await res.json();
           
           if (data.status === "paid") {
-            // Dispara evento de compra no Tracker
-            if (window.DodoTracker) {
-              window.DodoTracker.capture('purchase', { 
-                value: selPlan.value,
-                plan: selPlan._key 
-              });
-            }
-
             // Preserva parâmetros da URL original (como UTMs ou user_id)
             const urlParams = new URLSearchParams(window.location.search);
             // Se o plano tiver uma URL de redirect específica no config, podemos passar também
@@ -1177,9 +1146,6 @@
         // --- BYPASS DE TESTE LOCAL (Não afeta a produção real na Vercel) ---
         if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
             alert("⚠️ Modo de Teste Local: Simulando PIX Pago com sucesso!");
-            if (window.DodoTracker) {
-              window.DodoTracker.capture('purchase', { value: selPlan.value, plan: selPlan._key });
-            }
             const urlParams = new URLSearchParams(window.location.search);
             if (selPlan && selPlan.url) {
                 urlParams.set('redirect', encodeURIComponent(selPlan.url));
@@ -1310,12 +1276,6 @@
               if (!p.bio_full || p.bio_full === "...")   p.bio_full = L.pt.bioFull;
               if (!p.bio_short || p.bio_short === "...") p.bio_short = L.pt.bioShort;
 
-              // Inicializa Pixel do Facebook se existir
-              if (p.facebook_pixel_id && window.DodoTracker) {
-                window.DodoTracker.setPixel(p.facebook_pixel_id);
-                window.DodoTracker.capture('click_checkout', { source: 'checkout_direct_load' });
-              }
-
               const p_1255 = p; // preserve reference for existing code
               // Preenche perfil
               document.querySelector(".co-username").textContent =
@@ -1335,6 +1295,7 @@
               const imagesCount = p.stat_images || "1.6K";
               const videosCount = p.stat_videos || "1.8K";
               const mediasCount = p.stat_medias || "3.387 Mídias";
+              const paidVideosCount = p.stat_paid_videos || "147 Vídeos";
               const likesCount  = p.stat_likes  || "245K";
               const postsCount  = p.stat_posts  || "3.166 Postagens";
 
@@ -1346,7 +1307,7 @@
 
               if (elStatImages) elStatImages.textContent = imagesCount;
               if (elStatVideos) elStatVideos.textContent = videosCount;
-              if (elStatMedias) elStatMedias.textContent = mediasCount.replace(" Mídias", "").replace(" Medias", ""); // Apenas número na barra
+              if (elStatMedias) elStatMedias.textContent = paidVideosCount.replace(" Vídeos", "").replace(" Videos", "").replace(" Vdeos", ""); // Apenas número no cadeado
               if (elStatLikes)  elStatLikes.textContent  = likesCount;
 
               // 2. Abas de Navegação (Tabs)
@@ -1384,28 +1345,29 @@
 
               // Bio
               const fullText = p.bio_full || "...";
-              let shortText = p.bio_short || "...";
               
-              const breakIdx = fullText.indexOf('\n\n');
-              const htmlBreakIdx = fullText.indexOf('<br><br>');
+              // Encontra a PRIMEIRA quebra de linha (seja \n ou <br>)
+              const indices = [
+                  fullText.indexOf('\n'),
+                  fullText.indexOf('<br>'),
+                  fullText.indexOf('<br/>'),
+                  fullText.indexOf('<br />')
+              ].filter(i => i !== -1);
               
-              let finalBreakIdx = -1;
-              if (breakIdx !== -1 && htmlBreakIdx !== -1) {
-                  finalBreakIdx = Math.min(breakIdx, htmlBreakIdx);
-              } else if (breakIdx !== -1) {
-                  finalBreakIdx = breakIdx;
-              } else if (htmlBreakIdx !== -1) {
-                  finalBreakIdx = htmlBreakIdx;
-              } else if (fullText.indexOf('<br>') !== -1 && fullText.indexOf('<br>') === fullText.lastIndexOf('<br>')) {
-                  // Fallback se tiver apenas 1 quebra simples no texto todo (caso raro)
-                  finalBreakIdx = fullText.indexOf('<br>');
-              }
+              const finalBreakIdx = indices.length > 0 ? Math.min(...indices) : -1;
               
+              let shortText = fullText;
               if (finalBreakIdx !== -1) {
-                  shortText = fullText.substring(0, finalBreakIdx) + "... ";
+                  shortText = fullText.substring(0, finalBreakIdx).trim() + "... ";
                   document.getElementById("btnReadMore").style.display = "inline-block";
               } else {
-                  document.getElementById("btnReadMore").style.display = "none";
+                  // Se não houver quebra, verifica se o texto é muito longo (fallback de segurança)
+                  if (fullText.length > 120) {
+                      shortText = fullText.substring(0, 110).trim() + "... ";
+                      document.getElementById("btnReadMore").style.display = "inline-block";
+                  } else {
+                      document.getElementById("btnReadMore").style.display = "none";
+                  }
               }
               
               document.getElementById("bioShortContent").innerHTML = shortText;
@@ -1452,7 +1414,7 @@
                 PLANS[o.id] = {
                   value: o.value_cents,
                   display: `R$ ${(o.value_cents / 100).toFixed(2).replace(".", ",")}`,
-                  label: o.name,
+                  name: o.name,
                   url: o.url,
                   benefits: ["b1", "b2", "b3v"],
                 };
@@ -1475,37 +1437,6 @@
         }
       }
 
-      async function registerLead() {
-        try {
-          if (localStorage.getItem("dodo_lead_registered")) return;
-
-          const clickId = localStorage.getItem("vitrine_click_id");
-          if (!clickId) return;
-
-          const attribution = window.DodoTracker ? window.DodoTracker.getUTMs() : {};
-          
-          const urlParams = new URLSearchParams(window.location.search);
-          const saleCode = urlParams.get('code');
-          if (saleCode) attribution.sale_code = saleCode;
-
-          const res = await fetch("/api/register-lead", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              clientId: clickId,
-              attribution: attribution
-            }),
-          });
-
-          if (res.ok) {
-            localStorage.setItem("dodo_lead_registered", "true");
-            console.log("[Dodo] Lead registrado com sucesso.");
-          }
-        } catch (err) {
-          console.error("[Dodo] Falha ao registrar lead:", err);
-        }
-      }
-
       (async function init() {
         // Iniciar invisível para evitar flash
         document.body.style.opacity = '0';
@@ -1513,8 +1444,6 @@
 
         try {
           await loadConfig();
-          // Registrar Lead após carregar configs (garante o tracker pronto)
-          setTimeout(registerLead, 1000);
         } finally {
           // Remover preloader com fade
           const preloader = document.getElementById("preloader");

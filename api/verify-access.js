@@ -14,10 +14,10 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { id } = req.query;
+  const { id, client_id } = req.query;
 
-  if (!id || id === '—') {
-    return res.status(401).json({ authorized: false, message: 'ID de transação ausente.' });
+  if ((!id || id === '—') && !client_id) {
+    return res.status(401).json({ authorized: false, message: 'Identificador de transação ou cliente ausente.' });
   }
 
   const supabaseUrl = process.env.SUPABASE_URL;
@@ -31,15 +31,18 @@ module.exports = async function handler(req, res) {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
-    // Busca a transação pelo ID da PushinPay ou pelo ID interno
-    const { data, error } = await supabase
-      .from('transactions')
-      .select('status, paid_at, value, payer_name')
-      .or(`pushinpay_id.eq.${id},id.eq.${id}`)
-      .single();
+    let query = supabase.from('transactions').select('status, paid_at, value, payer_name');
+    
+    if (id && id !== '—') {
+      query = query.or(`pushinpay_id.eq.${id},id.eq.${id}`);
+    } else {
+      query = query.eq('client_id', client_id);
+    }
+
+    const { data, error } = await query.maybeSingle();
 
     if (error || !data) {
-      console.warn(`[verify-access] Transação não encontrada: ${id}`);
+      console.warn(`[verify-access] Transação não encontrada. ID: ${id} | Client: ${client_id}`);
       return res.status(404).json({ authorized: false, message: 'Transação não encontrada.' });
     }
 
