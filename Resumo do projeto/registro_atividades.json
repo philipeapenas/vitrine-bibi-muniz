@@ -150,5 +150,48 @@
         "dependencies": [
             "track_dash_deploy"
         ]
+    },
+    {
+        "id": "track_v13_a_admin",
+        "status": "completed",
+        "title": "Fase A — Ressuscitar Admin + protecao de rota (Basic Auth)",
+        "responsible_skill": "dev-expert",
+        "dependencies": []
+    },
+    {
+        "id": "track_v13_a5_blindagem",
+        "status": "completed",
+        "title": "Fase A.5 — Blindar service key: writes via APIs server-side /api/admin/*",
+        "responsible_skill": "dev-expert",
+        "dependencies": [
+            "track_v13_a_admin"
+        ]
+    },
+    {
+        "id": "track_v13_a6_secret_hygiene",
+        "status": "completed",
+        "title": "Fase A.6 — Higiene de segredos: remover hardcode, destravar .env.vercel.local do git, unificar env SUPABASE_SERVICE_KEY (rotacao = acao do founder)",
+        "responsible_skill": "dev-expert",
+        "dependencies": [
+            "track_v13_a5_blindagem"
+        ]
+    },
+    {
+        "id": "track_v13_b_auth",
+        "status": "pending",
+        "title": "Fase B — Supabase Auth (email + Google) antes do PIX, conta<->transacao",
+        "responsible_skill": "dev-expert",
+        "dependencies": [
+            "track_v13_a_admin"
+        ]
+    },
+    {
+        "id": "track_v13_c_membros",
+        "status": "pending",
+        "title": "Fase C — Area de membros logada com galeria de midias propria",
+        "responsible_skill": "frontend-expert",
+        "dependencies": [
+            "track_v13_b_auth"
+        ]
     }
 ]

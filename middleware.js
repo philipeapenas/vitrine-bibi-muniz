@@ -1,17 +1,25 @@
 export const config = {
-  matcher: ['/obrigado.html'],
+  matcher: ['/admin/:path*', '/obrigado.html', '/:slug/obrigado'],
 };
 
 export default async function middleware(request) {
   const url = new URL(request.url);
+  const hostname = url.hostname;
+  const pathname = url.pathname;
+
+  // ─── Extrair slug da URL (/:slug/obrigado) ───
+  const slugMatch = pathname.match(/^\/([^\/]+)\/obrigado$/);
+  const isObrigado = pathname === '/obrigado.html' || slugMatch;
+  const slug = slugMatch ? slugMatch[1] : null;
 
   // Barreira de Segurança: Página de Obrigado (Instablock)
-  if (url.pathname === '/obrigado.html') {
+  if (isObrigado) {
     const txId = url.searchParams.get('tx') || url.searchParams.get('tx_id');
+    const checkoutRedirect = slug ? `/${slug}/checkout` : '/checkout.html';
     
     // Se não tem ID, instablock imediato para o checkout
     if (!txId || txId === '—') {
-      return Response.redirect(new URL('/checkout.html', request.url), 307);
+      return Response.redirect(new URL(checkoutRedirect, request.url), 307);
     }
 
     const supabaseUrl = process.env.SUPABASE_URL;
@@ -36,12 +44,37 @@ export default async function middleware(request) {
           
           if (!isPaid) {
             console.log(`[Middleware] Instablock: Pagamento não confirmado para ${txId}`);
-            return Response.redirect(new URL('/checkout.html', request.url), 307);
+            return Response.redirect(new URL(checkoutRedirect, request.url), 307);
           }
         }
       } catch (err) {
         console.error('[Middleware] Erro ao validar transação:', err.message);
       }
     }
+  }
+
+  // Barreira de Segurança: Painel Admin (Basic Auth)
+  if (pathname.startsWith('/admin')) {
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return;
+    }
+
+    const authorizationHeader = request.headers.get('authorization');
+    if (authorizationHeader) {
+      const basicAuth = authorizationHeader.split(' ')[1];
+      const [user, password] = atob(basicAuth).split(':');
+      const ADMIN_PASS = process.env.ADMIN_PASSWORD;
+
+      if (user === 'admin' && password === ADMIN_PASS) {
+        return;
+      }
+    }
+
+    return new Response('Acesso Negado. Insira as credenciais do Administrador.', {
+      status: 401,
+      headers: {
+        'WWW-Authenticate': 'Basic realm="Painel Admin Vitrine-Hot"',
+      },
+    });
   }
 }

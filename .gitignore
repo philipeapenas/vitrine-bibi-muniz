@@ -1,6 +1,8 @@
 .vercel
 .env
 .env.local
+.env.*.local
+.env.vercel.local
 node_modules/
 *.log
 npm-debug.log*

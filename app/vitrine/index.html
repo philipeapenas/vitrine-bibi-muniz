@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Bibi Muniz</title>
   <meta name="description" content="Todos os meus links em um só lugar.">
-  <link rel="icon" href="assets/photos/profile.jpg">
+  <link rel="icon" href="/assets/photos/profile.jpg">
 
   <meta property="og:title" content="Bibi Muniz">
   <meta property="og:description" content="Todos os meus links em um só lugar.">
-  <meta property="og:image" content="assets/photos/profile.jpg">
+  <meta property="og:image" content="/assets/photos/profile.jpg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +29,7 @@
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
     body {
-      background: radial-gradient(1200px 800px at 50% -10%, #2a1230 0%, var(--bg) 55%) no-repeat;
+      background: url('/assets/photos/bg.jpg') center/cover no-repeat;
       background-attachment: fixed;
       color: var(--text);
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -159,9 +159,8 @@
   <div class="wrap">
 
     <section class="profile">
-      <img src="assets/photos/profile.jpg" alt="Bibi Muniz">
+      <img src="/assets/photos/profile.jpg" alt="Profile" decoding="async">
       <h1>Bibi Muniz</h1>
-      <p class="handle">@bibimunizz021</p>
       <p class="bio">Tudo o que você procura 💋</p>
     </section>
 
@@ -170,7 +169,7 @@
     <section class="tutorial">
       <h2>Não está abrindo? 👇</h2>
       <p class="sub">Se o link não abrir, siga 3 passos:</p>
-      <img src="assets/photos/tutorial.webp" alt="Tutorial: toque nos três pontinhos e abra no navegador">
+      <img src="/assets/photos/tutorial.webp" alt="Tutorial: toque nos três pontinhos e abra no navegador">
       <div class="steps">
         <div class="step"><div class="num">1)</div><div>Toque nos <strong>três pontinhos</strong> (canto superior direito)</div></div>
         <div class="step"><div class="num">2)</div><div>Escolha <strong>"Abrir no navegador"</strong></div></div>
@@ -184,21 +183,67 @@
     (function () {
       "use strict";
 
-      const LINKS = [
-        { title: "Privacy 🍊",          url: "http://bibimuniz.vercel.app/checkout" },
-        { title: "Cantinho secreto 🔞", url: "https://apextry.com/go/bibimunizzofc" }
-      ];
+      // ─── Extrair slug da URL (/:slug) ───
+      const parts = window.location.pathname.replace(/\/$/, '').split('/');
+      // URL: /bibimuniz -> parts = ['', 'bibimuniz']
+      const MODEL_SLUG = parts.length >= 2 && parts[1] ? parts[1] : null;
 
-      const root = document.getElementById('links');
-      LINKS.forEach(function (l) {
-        const a = document.createElement('a');
-        a.className = 'link-btn';
-        a.href = l.url;
-        a.rel = 'noopener noreferrer';
-        a.textContent = l.title;
-        root.appendChild(a);
-      });
+      if (!MODEL_SLUG) {
+        document.querySelector('.wrap').innerHTML = '<p style="text-align:center;color:#b8b8c2;margin-top:60px;">URL invalida. Acesse: /nome-da-modelo</p>';
+        return;
+      }
+
+      // Atualizar titulo da pagina enquanto carrega
+      document.title = 'Carregando...';
+
+      async function loadVitrine() {
+        try {
+          const res = await fetch('/api/checkout-config?model=' + encodeURIComponent(MODEL_SLUG));
+          if (!res.ok) {
+            document.querySelector('.wrap').innerHTML = '<p style="text-align:center;color:#b8b8c2;margin-top:60px;">Modelo nao encontrada.</p>';
+            return;
+          }
+          const data = await res.json();
+          const p = data.profile;
+          if (!p) return;
+
+          // Atualizar titulo e meta
+          document.title = p.creator_name || MODEL_SLUG;
+          const metaDesc = document.querySelector('meta[name="description"]');
+          if (metaDesc) metaDesc.content = p.bio_short || 'Todos os meus links em um so lugar.';
+          const ogTitle = document.querySelector('meta[property="og:title"]');
+          if (ogTitle) ogTitle.content = p.creator_name || MODEL_SLUG;
+
+          // Perfil
+          const profileImg = document.querySelector('.profile img');
+          if (profileImg && p.profile_picture_url) {
+            profileImg.src = p.profile_picture_url;
+            profileImg.alt = p.creator_name || '';
+          }
+          const h1 = document.querySelector('.profile h1');
+          if (h1) h1.textContent = p.creator_name || '';
+          const bio = document.querySelector('.profile .bio');
+          if (bio) bio.textContent = p.bio_short || p.bio_full || '';
+
+          // Links da vitrine (site_links) — puxados via API
+          const root = document.getElementById('links');
+          // A API checkout-config retorna offers, mas para links da vitrine
+          // precisamos de uma chamada separada. Por ora, colocar link para o checkout.
+          const checkoutLink = document.createElement('a');
+          checkoutLink.className = 'link-btn';
+          checkoutLink.href = '/' + MODEL_SLUG + '/checkout';
+          checkoutLink.textContent = 'Ver conteudo exclusivo \uD83D\uDD25';
+          root.appendChild(checkoutLink);
+
+        } catch (err) {
+          console.error('[vitrine]', err);
+        }
+      }
+
+      loadVitrine();
     })();
   </script>
 </body>
 </html>
+
+

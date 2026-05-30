@@ -1,5 +1,10 @@
 {
   "cleanUrls": true,
+  "rewrites": [
+    { "source": "/:slug/checkout", "destination": "/app/checkout/checkout.html" },
+    { "source": "/:slug/obrigado", "destination": "/app/checkout/obrigado.html" },
+    { "source": "/:slug", "destination": "/app/vitrine/index.html" }
+  ],
   "headers": [
     {
       "source": "/(.*\\.html)",

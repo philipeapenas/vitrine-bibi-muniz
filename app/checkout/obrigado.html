@@ -363,6 +363,11 @@
     const clientId   = params.get('name')    || params.get('client') || 'Visitante';
     const txId       = params.get('tx')      || params.get('tx_id')  || '—';
     const valueStr   = params.get('value')   || '0';
+
+    // ─── Extrair slug da URL (/:slug/obrigado) ───
+    const pathParts = window.location.pathname.replace(/\/$/, '').split('/');
+    const MODEL_SLUG = (pathParts.length >= 3 && pathParts[2] === 'obrigado') ? pathParts[1] : null;
+    const checkoutRedirect = MODEL_SLUG ? '/' + MODEL_SLUG + '/checkout' : '/checkout.html';
     
     // Atualiza interface básica
     document.getElementById('summaryClient').textContent = clientId;
@@ -417,14 +422,15 @@
         statusEl.style.color = "#EF4444";
         
         setTimeout(() => {
-            window.location.href = "/checkout.html";
+            window.location.href = checkoutRedirect;
         }, 2000);
         return; // Interrompe carregamento da config
     }
 
     // ─── LOAD CONFIG (DADOS DO ADMIN) ───
     try {
-        const res = await fetch('/api/checkout-config');
+        const configUrl = MODEL_SLUG ? '/api/checkout-config?model=' + encodeURIComponent(MODEL_SLUG) : '/api/checkout-config';
+        const res = await fetch(configUrl);
         if (!res.ok) return;
         const data = await res.json();
         const p = data.profile;
@@ -449,17 +455,18 @@
     // ─── TRACKER INIT (Facebook Pixel + PageView) ───
     if (window.DodoTracker) {
         // O config-profile já foi buscado acima e está em 'data.profile'
-        const res = await fetch('/api/checkout-config');
-        const data = await res.json();
-        const p = data.profile;
-        if (p && p.facebook_pixel_id) {
-            window.DodoTracker.setPixel(p.facebook_pixel_id);
+        const res2 = await fetch(configUrl);
+        const data2 = await res2.json();
+        const p2 = data2.profile;
+        if (p2 && p2.facebook_pixel_id) {
+            window.DodoTracker.setPixel(p2.facebook_pixel_id);
         }
     }
 })();
 </script>
 
-<script src="js/tracker.js?v=1.1" defer></script>
+<script src="/js/tracker.js?v=1.1" defer></script>
 
 </body>
 </html>
+

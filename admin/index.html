@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodo Hot | Admin</title>
+    <link rel="stylesheet" href="/admin/style.css?v=3.5">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="/admin/admin-client.js?v=4.5" defer></script>
+    <script src="/admin/app.js?v=4.5" defer></script>
+</head>
+<body>
+
+    <!-- Overlay de Login -->
+    <div id="config-overlay" class="overlay">
+        <div class="config-modal">
+            <h2>Sign In</h2>
+            <p>Digite a <strong>senha do admin</strong> para acessar o painel administrativo.</p>
+            <input type="password" id="adminKeyInput" placeholder="Senha do admin" autocomplete="current-password">
+            <button id="saveKeyBtn">Acessar Admin</button>
+        </div>
+    </div>
+
+    <!-- ─── SIDEBAR ─── -->
+    <aside class="sidebar" id="mainSidebar">
+        <div class="sidebar-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px; color:var(--accent); filter: drop-shadow(0 0 8px var(--accent-glow));">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+            </svg>
+            <span class="sidebar-logo-text">Thunder</span>
+        </div>
+        <nav class="sidebar-menu">
+            <button class="tab-btn active" data-tab="tab-analytics">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                Dashboard
+            </button>
+            <button class="tab-btn" data-tab="tab-appearance">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Identidade & Perfil
+            </button>
+            <button class="tab-btn" data-tab="tab-thankyou">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                Pós-Venda
+            </button>
+            <button class="tab-btn" data-tab="tab-offers">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                Planos & Checkout
+            </button>
+            <button class="tab-btn" data-tab="tab-vitrine">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                Vitrine
+            </button>
+            <div style="flex:1"></div>
+            <button id="logoutBtn" style="color:var(--text-secondary)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                Sair
+            </button>
+        </nav>
+    </aside>
+
+    <!-- ─── MAIN ─── -->
+    <main class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="header-title">
+                <button id="mobileMenuBtn" style="display:none; background:none; border:none; color:var(--text-primary); padding:4px; margin-right:12px; cursor:pointer;" aria-label="Menu">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                </button>
+                <h1>Painel de Operações</h1>
+                <span id="conn-status" class="badge">Sincronizado</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; margin: 8px 0 12px;">
+                <label style="font-size:0.8rem; color:var(--text-secondary); font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">Modelo:</label>
+                <select id="modelSelector" class="form-input" style="min-width:200px; padding:8px 12px; font-size:0.9rem; background:var(--surface-low); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary);">
+                    <option value="">Carregando...</option>
+                </select>
+                <button id="btnNewModel" class="btn-primary" style="padding:6px 14px; font-size:0.8rem; white-space:nowrap; display:flex; align-items:center; gap:4px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Nova Modelo
+                </button>
+            </div>
+            <div class="header-actions">
+                <button id="deployBtn" class="btn-thunder">Confirmar & Publicar Site</button>
+                <button id="refreshBtn" class="btn-outline">Recarregar</button>
+            </div>
+        </div>
+
+        <div id="tab-analytics" class="tab-content" style="display: block;">
+            
+            <div class="dashboard-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 12px; background: var(--surface-low); border: 1px solid var(--border-color);">
+                <div style="font-weight: 600; font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">
+                    Analítico / Controle de Período
+                </div>
+                <div class="filter-container">
+                    <select id="filterMode" class="form-input filter-select">
+                        <option value="today">Hoje</option>
+                        <option value="yesterday">Ontem</option>
+                        <option value="week">Esta Semana</option>
+                        <option value="month">Este Mês</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
+                    <div id="dateInputGroup" class="date-input-group">
+                        <input type="date" id="dateFilter" class="form-input">
+                    </div>
+                    <div id="rangeInputGroup" class="date-input-group" style="display:none;">
+                        <input type="date" id="dateStart" class="form-input">
+                        <span class="range-sep">até</span>
+                        <input type="date" id="dateEnd" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- LINHA 1: KPIs Minimalistas -->
+            <section class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                <!-- Card: Visitas -->
+                <div class="kpi-card minimalist">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                        <div class="kpi-label" style="margin-bottom:0;">PAGEVIEWS</div>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" style="opacity:0.8;"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </div>
+                    <div class="kpi-value" id="kpi-pageviews">—</div>
+                    <div class="kpi-comparison" style="margin-top:0.25rem;">Visitantes únicos do dia</div>
+                </div>
+
+                <!-- Card: Cliques -->
+                <div class="kpi-card minimalist">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                        <div class="kpi-label" style="margin-bottom:0;">CLIQUES (OFERTAS)</div>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" style="opacity:0.8;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                    </div>
+                    <div class="kpi-value" id="kpi-clicks">—</div>
+                    <div class="kpi-comparison" style="margin-top:0.25rem;" id="kpi-ctr">—</div>
+                </div>
+
+                <!-- Card: PIX Gerados -->
+                <div class="kpi-card minimalist">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                        <div class="kpi-label" style="margin-bottom:0;">PIX GERADOS</div>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" style="opacity:0.8;"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                    </div>
+                    <div class="kpi-value" id="kpi-pay-created">—</div>
+                    <div class="kpi-comparison" style="margin-top:0.25rem; color:#d97706;">Aguardando Pagamento</div>
+                </div>
+
+                <!-- Card: Vendas -->
+                <div class="kpi-card minimalist">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                        <div class="kpi-label" style="margin-bottom:0; color:#34d399;">VENDAS APROVADAS</div>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" style="opacity:0.8;"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <div class="kpi-value approved" style="color:#10b981;" id="kpi-pay-approved">—</div>
+                    <div class="kpi-comparison" style="margin-top:0.25rem; color:#059669;">PIX pagos na hora</div>
+                </div>
+            </section>
+
+            <!-- HISTÓRICO -->
+            <section class="section-card">
+                <div class="section-header">
+                    <h2>Histórico Operacional</h2>
+                </div>
+                <div class="table-responsive">
+                    <table id="salesTable">
+                        <thead><tr><th>Horário</th><th>Status</th><th>Cliente</th><th>Sale Code</th><th>Plano</th><th>Valor</th></tr></thead>
+                        <tbody id="salesTableBody"><tr><td colspan="6" class="text-center text-muted">Aguardando dados...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- ═══ TAB: IDENTIDADE & PERFIL ═══ -->
+        <div id="tab-appearance" class="tab-content" style="display: none;">
+            <section class="data-section">
+                <div class="section-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <h2>Identidade & Perfil</h2>
+                </div>
+                <form id="profileForm" class="identity-grid">
+                    <div class="form-group">
+                        <label>Foto de Perfil</label>
+                        <div class="upload-group">
+                            <div class="upload-thumb" id="thumbProfile"></div>
+                            <div class="upload-actions">
+                                <input type="file" id="fileProfilePic" accept="image/*" style="font-size:0.8rem; color:var(--text-secondary)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Capa (Banner)</label>
+                        <div class="upload-group">
+                            <div class="upload-thumb banner" id="thumbBanner"></div>
+                            <div class="upload-actions">
+                                <input type="file" id="fileBannerPic" accept="image/*" style="font-size:0.8rem; color:var(--text-secondary)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Nome do Perfil</label>
+                        <input type="text" id="iptCreatorName" class="form-input" placeholder="Bibi Muniz">
+                    </div>
+                    <div class="form-group">
+                        <label>Username (ex: @BibMuniz)</label>
+                        <input type="text" id="iptCreatorHandle" class="form-input" placeholder="@bibimunizz021">
+                    </div>
+
+                    <!-- Highlighted Vercel Hook configuration -->
+                    <div class="form-group full" style="border: 2px dashed var(--accent); padding: 20px; border-radius: 12px; background: var(--accent-light); margin: 10px 0;">
+                        <label style="color:var(--accent); display:flex; align-items:center; gap:8px; font-weight:800; font-size: 1rem;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                            CONFIGURAÇÃO DE DEPLOY (VERCEL)
+                        </label>
+                        <input type="url" id="iptVercelHook" class="form-input" placeholder="Cole o Deploy Hook da Vercel aqui..." style="background: rgba(0,0,0,0.3); border: 1px solid var(--accent);">
+                        <small style="color:var(--text-primary); opacity:0.8; display:block; margin-top:8px; font-size: 12px; line-height: 1.4;"> 
+                            <b>IMPORTANTE:</b> Sem esta URL, as mudanças feitas aqui NÃO aparecerão no site público.<br>
+                            Obtenha em: <b>Settings > Git > Deploy Hooks</b> no painel da Vercel.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Localização</label>
+                        <input type="text" id="iptLocation" class="form-input" placeholder="Balneário Camboriú - SC">
+                    </div>
+                    <div class="form-group">
+                        <label>URL Instagram</label>
+                        <input type="url" id="iptInstaUrl" class="form-input" placeholder="https://instagram.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label>Meta Pixel ID (Facebook)</label>
+                        <input type="text" id="iptFBPixel" class="form-input" placeholder="8923481230912...">
+                    </div>
+                    <div class="form-group full">
+                        <label>Bio Curta (Exibida na Vitrine)</label>
+                        <textarea id="iptBioShort" class="form-input" rows="2" placeholder="O que aparece logo acima dos links..." style="width: 100%; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px;"></textarea>
+                    </div>
+                    <div class="form-group full">
+                        <label>Bio Completa / Descrição da Modelo</label>
+                        <textarea id="iptBioFull" class="form-input" rows="5" placeholder="SÓ ASSINA SE ESTIVER PREPARADO..."></textarea>
+                    </div>
+
+
+                    <div class="form-group full" style="display:flex; justify-content:flex-end;">
+                        <button type="submit" class="btn-primary">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            Salvar Identidade
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Stats do Feed -->
+            <section class="data-section" style="margin-top:24px;">
+                <div class="section-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <h2>Estatísticas Aparentes (Feed)</h2>
+                </div>
+                <form id="statsForm" class="identity-grid">
+                    <div class="form-group">
+                        <label>Curtidas (ex: 245K)</label>
+                        <input type="text" id="iptStatLikes" class="form-input" placeholder="245K">
+                    </div>
+                    <div class="form-group">
+                        <label>Total de Postagens</label>
+                        <input type="text" id="iptStatPosts" class="form-input" placeholder="3.166 Postagens">
+                    </div>
+                    <div class="form-group">
+                        <label>Total de Mídias (Soma)</label>
+                        <input type="text" id="iptStatMedias" class="form-input" placeholder="3.387 Mídias">
+                    </div>
+                    <div class="form-group">
+                        <label>Imagens no Feed</label>
+                        <input type="text" id="iptStatImages" class="form-input" placeholder="1.6K">
+                    </div>
+                    <div class="form-group">
+                        <label>Vídeos no Feed</label>
+                        <input type="text" id="iptStatVideos" class="form-input" placeholder="1.8K">
+                    </div>
+                    <div class="form-group full" style="display:flex; justify-content:flex-end;">
+                        <button type="submit" class="btn-primary">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            Salvar Estatísticas
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+        </div>
+
+        <!-- ═══ TAB: PÓS-VENDA ═══ -->
+        <div id="tab-thankyou" class="tab-content" style="display: none;">
+            <section class="data-section">
+                <div class="section-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                    <h2>Página de Obrigado (Pós-Venda)</h2>
+                </div>
+                <form id="thankyouForm" class="identity-grid">
+                    <div class="form-group full">
+                        <label>Título da Página (Headline)</label>
+                        <input type="text" id="iptThxTitle" class="form-input" placeholder="Pagamento Aprovado!">
+                    </div>
+                    <div class="form-group full">
+                        <label>Mensagem de Sucesso</label>
+                        <textarea id="iptThxMessage" class="form-input" rows="3" placeholder="Obrigada! O seu acesso VIP exclusivo acabou de ser liberado."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Texto do Botão VIP</label>
+                        <input type="text" id="iptThxBtnText" class="form-input" placeholder="Acessar Grupo VIP">
+                    </div>
+                    <div class="form-group">
+                        <label>Link do Grupo (Telegram/WhatsApp)</label>
+                        <input type="url" id="iptThxBtnUrl" class="form-input" placeholder="https://t.me/seu_grupo_vip">
+                    </div>
+                    <div class="form-group full" style="display:flex; justify-content:flex-end; gap:16px; align-items:center;">
+                        <a href="/obrigado.html" target="_blank" class="btn-ghost" style="display:inline-flex; align-items:center; gap:6px; text-decoration:none;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                            Preview
+                        </a>
+                        <button type="submit" class="btn-primary">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            Salvar Pós-Venda
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Preview Card -->
+            <section class="data-section" style="margin-top:24px;">
+                <div class="section-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    <h2>Preview da Página de Obrigado</h2>
+                </div>
+                <div style="padding:32px; display:flex; justify-content:center;">
+                    <div style="width:100%; max-width:400px; background:#1a1a2e; border-radius:16px; overflow:hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+                        <div id="prevBanner" style="height:160px; background:linear-gradient(135deg,#1a1a2e,#16213e); background-size:cover; background-position:center; position:relative;">
+                            <div style="position:absolute; bottom:-24px; left:50%; transform:translateX(-50%); width:48px; height:48px; background:#10B981; border-radius:50%; display:flex; align-items:center; justify-content:center; border:3px solid #111827;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <div style="padding:40px 24px 24px; text-align:center;">
+                            <h3 id="prevTitle" style="font-size:1.4rem; font-weight:800; color:#fff; margin-bottom:8px;">Pagamento Aprovado!</h3>
+                            <p id="prevMessage" style="font-size:0.875rem; color:#9ca3af; margin-bottom:24px;">Obrigada! O seu acesso VIP acabou de ser liberado.</p>
+                            <a id="prevBtn" href="#" style="display:block; background:#3B82F6; color:white; padding:14px; border-radius:10px; text-decoration:none; font-weight:700; font-size:0.95rem;">Acessar Grupo VIP</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ═══ TAB: PLANOS ═══ -->
+        <div id="tab-offers" class="tab-content" style="display: none;">
+            <section class="data-section">
+                <div class="section-header" style="justify-content: space-between;">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        <h2>Planos Ativos</h2>
+                    </div>
+                    <button id="btnNewOffer" class="btn-primary" style="padding: 8px 16px; display:flex; align-items:center; gap:6px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Adicionar
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table id="offersTable">
+                        <thead><tr><th>ID</th><th>Nome</th><th>Preço</th><th>Promoção</th><th class="text-center">Ações</th></tr></thead>
+                        <tbody id="offersTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="data-section" id="offerEditor" style="display: none; margin-top:24px;">
+                <div class="section-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    <h2 id="lblOfferEditorTitle">Nova Oferta</h2>
+                </div>
+                <form id="offerForm" class="identity-grid" style="padding: 32px;">
+                    <div class="form-group"><label>ID Único (ex: plan-premium)</label><input type="text" id="iptOfferId" class="form-input" required></div>
+                    <div class="form-group"><label>Nome (ex: Ilimitado)</label><input type="text" id="iptOfferName" class="form-input" required></div>
+                    <div class="form-group full"><label>Link de Pagamento (URL PushinPay)</label><input type="url" id="iptOfferUrl" class="form-input" required placeholder="https://pay.pushinpay.com.br/..."></div>
+                    <div class="form-group"><label>Preço em Centavos (2990 = R$29,90)</label><input type="number" id="iptOfferValue" class="form-input" required></div>
+                    <div class="form-group"><label>Tem Desconto ativo?</label>
+                        <select id="iptOfferPromo" class="form-input" style="appearance:none;"><option value="false">Não</option><option value="true">Sim</option></select>
+                    </div>
+                    <div class="form-group"><label>Etiqueta de Desconto (ex: 70% OFF)</label><input type="text" id="iptOfferPromoLbl" class="form-input"></div>
+                    <div class="form-group"><label>Visível na Vitrine?</label>
+                        <select id="iptOfferActive" class="form-input" style="appearance:none;"><option value="true" selected>Sim</option><option value="false">Escondido</option></select>
+                    </div>
+                    <div class="form-group full" style="display:flex; gap:16px; justify-content:flex-end;">
+                        <button type="button" id="btnCancelOffer" class="btn-ghost">Cancelar</button>
+                        <button type="submit" class="btn-primary">Salvar Oferta</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <!-- ═══ TAB: VITRINE ═══ -->
+        <div id="tab-vitrine" class="tab-content" style="display: none;">
+            <section class="data-section">
+                <div class="section-header" style="justify-content: space-between;">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                        <h2>Botões da Vitrine</h2>
+                    </div>
+                    <button id="btnNewLink" class="btn-primary" style="padding: 8px 16px; display:flex; align-items:center; gap:6px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Adicionar Botão
+                    </button>
+                </div>
+                <p style="font-size:0.82rem; color:var(--text-secondary); padding:0 32px 16px;">Esses botões aparecem na vitrine principal (link-in-bio). Ordene e edite o texto livremente.</p>
+                
+                <div class="links-global-settings" style="margin: 0 32px 24px; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display:flex; flex-direction:column; gap:2px;">
+                        <span style="font-weight:600; font-size:0.9rem;">Animação de Atenção</span>
+                        <span style="font-size:0.75rem; color:var(--text-secondary);">Faz o primeiro botão pulsar suavemente para converter mais.</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="iptPulseEnabled">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="table-responsive">
+                    <table id="linksTable">
+                        <thead><tr><th style="width:40px;"></th><th>Texto do Botão</th><th>URL Destino</th><th>Ativo</th><th class="text-center">Ações</th></tr></thead>
+                        <tbody id="linksTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="data-section" id="linkEditor" style="display: none; margin-top:24px;">
+                <div class="section-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    <h2 id="lblLinkEditorTitle">Novo Botão</h2>
+                </div>
+                <form id="linkForm" class="identity-grid" style="padding: 32px;">
+                    <div class="form-group full"><label>Texto do Botão (ex: Cantinho secreto 🔞)</label><input type="text" id="iptLinkTitle" class="form-input" required placeholder="Meu Link Exclusivo"></div>
+                    <div class="form-group full"><label>URL de Destino</label><input type="url" id="iptLinkUrl" class="form-input" required placeholder="https://..."></div>
+                    <div class="form-group"><label>Válido?</label>
+                        <select id="iptLinkActive" class="form-input" style="appearance:none;"><option value="true" selected>Sim (visível)</option><option value="false">Não (oculto)</option></select>
+                    </div>
+                    <div class="form-group full" style="display:flex; gap:16px; justify-content:flex-end;">
+                        <button type="button" id="btnCancelLink" class="btn-ghost">Cancelar</button>
+                        <button type="submit" class="btn-primary">Salvar Botão</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Carrossel da Vitrine -->
+            <section class="data-section" style="margin-top:24px;">
+                <div class="section-header" style="justify-content:space-between;">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        <h2>Fotos do Carrossel (Vitrine)</h2>
+                    </div>
+                    <label class="btn-primary" style="padding:8px 16px; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Adicionar Fotos
+                        <input type="file" id="fileCarousel" accept="image/*" multiple style="display:none;">
+                    </label>
+                </div>
+                <p style="font-size:0.82rem; color:var(--text-secondary); padding:0 32px 12px;">Essas fotos aparecem no fundo embaçado da vitrine. Recomendado: formato retrato (9:16). Máx 8 fotos.</p>
+                <div id="carouselGrid" style="padding: 0 32px 32px; display:grid; grid-template-columns: repeat(auto-fill, minmax(100px,1fr)); gap:12px;">
+                    <div id="carouselLoading" style="color:var(--text-secondary); font-size:0.85rem; grid-column:1/-1; padding:16px 0;">Carregando fotos...</div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+</body>
+</html>

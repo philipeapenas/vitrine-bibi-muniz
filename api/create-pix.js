@@ -25,7 +25,7 @@ module.exports = async function handler(req, res) {
   }
 
   const body = req.body || {};
-  const { value, plan, plan_name, plan_value, attribution, clientId } = body;
+  const { value, plan, plan_name, plan_value, attribution, clientId, model_slug } = body;
 
   if (!value || typeof value !== 'number' || value < 50) {
     return res.status(400).json({ error: 'value deve ser número >= 50 (centavos)' });
@@ -60,7 +60,7 @@ module.exports = async function handler(req, res) {
 
     // ─── Log no Supabase (não-bloqueante) ─────────────────
     // Erros aqui NÃO impedem a resposta ao usuário — transação já foi criada na PushinPay
-    logToSupabase(data, plan, plan_name, attribution || {}, clientId).catch(err =>
+    logToSupabase(data, plan, plan_name, attribution || {}, clientId, model_slug).catch(err =>
       console.warn('[create-pix] Supabase log falhou (não crítico):', err.message)
     );
 
@@ -80,7 +80,7 @@ module.exports = async function handler(req, res) {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-async function logToSupabase(pixData, plan, plan_name, attribution, clientId) {
+async function logToSupabase(pixData, plan, plan_name, attribution, clientId, model_slug) {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
   if (!supabaseUrl || !supabaseKey) return; // Silencioso — env vars opcionais
@@ -110,6 +110,7 @@ async function logToSupabase(pixData, plan, plan_name, attribution, clientId) {
     utm_term:       attribution?.utm_term     || null,
     utm_content:    attribution?.utm_content  || null,
     src:            attribution?.src          || null,
+    model_slug:     model_slug                || null,
   });
 }
 

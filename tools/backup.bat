@@ -1,12 +1,12 @@
 @echo off
-REM Backup do projeto Vitrine - Bibi Muniz -> philipeapenas/vitrine-bibi-muniz (main)
+REM Backup do projeto Vitrine-Hot -> philipeapenas/vitrine-bibi-muniz (main)
 REM Uso: clique duplo. Stage tudo que o .gitignore deixa passar, commit com timestamp, push.
 
 REM Sobe 1 nivel: tools/ -> raiz do projeto
 cd /d "%~dp0.."
 
 echo.
-echo === Vitrine - Bibi Muniz backup ===
+echo === Vitrine-Hot backup ===
 echo Repo: %CD%
 echo.
 

@@ -1,8 +1,8 @@
-// Edge Function Vercel — checkout-config (v2 com campos completos)
+// Edge Function Vercel — checkout-config (v3 multi-model)
 export const config = { runtime: 'edge' };
 
-const SUPABASE_URL     = 'https://mdmjyvxrozxrxwmasnuq.supabase.co';
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kbWp5dnhyb3p4cnh3bWFzbnVxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDMxMTE2OCwiZXhwIjoyMDg5ODg3MTY4fQ.GWXmfDW1ShSmScUxDUPRCXyI_AJIwDC5AHJW-umApJA';
+const SUPABASE_URL     = process.env.SUPABASE_URL || 'https://mdmjyvxrozxrxwmasnuq.supabase.co';
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
 const headers = {
   'apikey': SERVICE_ROLE_KEY,
@@ -15,17 +15,40 @@ export default async function handler(req) {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
   }
 
+  if (!SERVICE_ROLE_KEY) {
+    return new Response(JSON.stringify({ error: 'SUPABASE_SERVICE_KEY nao configurada no servidor' }), { status: 500 });
+  }
+
+  // Extrair slug da modelo via query string
+  const url = new URL(req.url);
+  const modelSlug = url.searchParams.get('model');
+
+  if (!modelSlug) {
+    return new Response(JSON.stringify({ error: 'Parametro model obrigatorio (ex: ?model=bibimuniz)' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
   try {
     const [profileRes, offersRes] = await Promise.all([
-      fetch(`${SUPABASE_URL}/rest/v1/site_profile?select=*&order=id.asc&limit=1`, { headers }),
-      fetch(`${SUPABASE_URL}/rest/v1/site_offers?select=*&order=created_at.asc`, { headers }),
+      fetch(`${SUPABASE_URL}/rest/v1/site_profile?select=*&slug=eq.${encodeURIComponent(modelSlug)}`, {
+        headers: { ...headers, 'Accept': 'application/vnd.pgrst.object+json' }
+      }),
+      fetch(`${SUPABASE_URL}/rest/v1/site_offers?select=*&model_slug=eq.${encodeURIComponent(modelSlug)}&order=created_at.asc`, { headers }),
     ]);
 
+    if (profileRes.status === 406) {
+      // PostgREST retorna 406 quando .object+json nao encontra resultado
+      return new Response(JSON.stringify({ error: 'Modelo nao encontrada: ' + modelSlug }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
     if (!profileRes.ok) throw new Error("Failed to fetch profile");
     if (!offersRes.ok) throw new Error("Failed to fetch offers");
 
-    const profileData = await profileRes.json();
-    const profile     = profileData.length > 0 ? profileData[0] : null;
+    const profile = await profileRes.json();
 
     let offers = await offersRes.json();
     offers     = offers.filter(o => o.active);
