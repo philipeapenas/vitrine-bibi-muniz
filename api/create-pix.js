@@ -19,9 +19,23 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const token = process.env.PUSHINPAY_TOKEN;
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+  if (!supabaseUrl || !supabaseKey) {
+    return res.status(500).json({ error: 'Supabase credentials missing' });
+  }
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  let token = process.env.PUSHINPAY_TOKEN;
+  try {
+    const { data: globalSettings } = await supabase.from('global_settings').select('pushinpay_token').eq('id', 1).single();
+    if (globalSettings && globalSettings.pushinpay_token) {
+      token = globalSettings.pushinpay_token;
+    }
+  } catch(e) {}
+  
   if (!token) {
-    return res.status(500).json({ error: 'PUSHINPAY_TOKEN não configurado no Vercel' });
+    return res.status(500).json({ error: 'PushinPay token missing' });
   }
 
   const body = req.body || {};
@@ -60,7 +74,7 @@ module.exports = async function handler(req, res) {
 
     // ─── Log no Supabase (não-bloqueante) ─────────────────
     // Erros aqui NÃO impedem a resposta ao usuário — transação já foi criada na PushinPay
-    logToSupabase(data, plan, plan_name, attribution || {}, clientId, model_slug).catch(err =>
+    logToSupabase(data, plan, plan_name, attribution || {}, clientId, model_slug, supabase).catch(err =>
       console.warn('[create-pix] Supabase log falhou (não crítico):', err.message)
     );
 
@@ -80,12 +94,8 @@ module.exports = async function handler(req, res) {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-async function logToSupabase(pixData, plan, plan_name, attribution, clientId, model_slug) {
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
-  if (!supabaseUrl || !supabaseKey) return; // Silencioso — env vars opcionais
-
-  const supabase = createClient(supabaseUrl, supabaseKey);
+async function logToSupabase(pixData, plan, plan_name, attribution, clientId, model_slug, supabase) {
+  if (!supabase) return;
 
   const finalValue = parseInt(pixData.value) || 0;
 

@@ -5,6 +5,8 @@
 //  ⚠️  Limite: PushinPay permite 1 consulta/minuto por transação
 // ═══════════════════════════════════════════════════════
 
+const { createClient } = require('@supabase/supabase-js');
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -16,8 +18,22 @@ module.exports = async function handler(req, res) {
   const { id } = req.query;
   if (!id) return res.status(400).json({ error: 'Parâmetro id obrigatório' });
 
-  const token = process.env.PUSHINPAY_TOKEN;
-  if (!token) return res.status(500).json({ error: 'PUSHINPAY_TOKEN não configurado' });
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+  if (!supabaseUrl || !supabaseKey) {
+    return res.status(500).json({ error: 'Supabase credentials missing' });
+  }
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  let token = process.env.PUSHINPAY_TOKEN;
+  try {
+    const { data: globalSettings } = await supabase.from('global_settings').select('pushinpay_token').eq('id', 1).single();
+    if (globalSettings && globalSettings.pushinpay_token) {
+      token = globalSettings.pushinpay_token;
+    }
+  } catch(e) {}
+  
+  if (!token) return res.status(500).json({ error: 'PushinPay token missing' });
 
   try {
     const pushinRes = await fetch(`https://api.pushinpay.com.br/api/transactions/${id}`, {

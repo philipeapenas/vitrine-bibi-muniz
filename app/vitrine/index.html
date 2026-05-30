@@ -225,14 +225,21 @@
           const bio = document.querySelector('.profile .bio');
           if (bio) bio.textContent = p.bio_short || p.bio_full || '';
 
-          // Links da vitrine (site_links) — puxados via API
+          // Botão Único da Vitrine (configurado no Admin)
           const root = document.getElementById('links');
-          // A API checkout-config retorna offers, mas para links da vitrine
-          // precisamos de uma chamada separada. Por ora, colocar link para o checkout.
           const checkoutLink = document.createElement('a');
           checkoutLink.className = 'link-btn';
-          checkoutLink.href = '/' + MODEL_SLUG + '/checkout';
-          checkoutLink.textContent = 'Ver conteudo exclusivo \uD83D\uDD25';
+          
+          const btnUrl = p.main_button_url && p.main_button_url.trim() !== '' 
+              ? p.main_button_url 
+              : '/' + MODEL_SLUG + '/checkout';
+              
+          const btnText = p.main_button_text && p.main_button_text.trim() !== '' 
+              ? p.main_button_text 
+              : 'Ver conteúdo exclusivo \uD83D\uDD25';
+
+          checkoutLink.href = btnUrl;
+          checkoutLink.textContent = btnText;
           root.appendChild(checkoutLink);
 
         } catch (err) {
