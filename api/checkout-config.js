@@ -49,7 +49,16 @@ export default async function handler(req) {
     if (!offersRes.ok) throw new Error("Failed to fetch offers");
 
     const profile = await profileRes.json();
-
+    
+    // Normalizar caminhos de imagem para absolutos caso venham do banco como relativos (assets/...)
+    if (profile) {
+      if (profile.profile_picture_url && profile.profile_picture_url.startsWith('assets/')) {
+        profile.profile_picture_url = '/' + profile.profile_picture_url;
+      }
+      if (profile.cover_picture_url && profile.cover_picture_url.startsWith('assets/')) {
+        profile.cover_picture_url = '/' + profile.cover_picture_url;
+      }
+    }
     let offers = await offersRes.json();
     offers     = offers.filter(o => o.active);
 

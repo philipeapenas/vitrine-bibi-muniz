@@ -1,0 +1,17 @@
+{
+    "objetivo":  "Organizar pastas do projeto Vitrine-Hot (Multi-Modelo) para /app e fixar assets quebrados na Vercel e dependencias do privacy.com.br",
+    "entregas":  [
+                     {
+                         "titulo":  "Organização de Diretórios e Fix de Assets na Vercel",
+                         "arquivo":  "Dodo Company/01_Projetos/Vitrine-Hot/03_Entregas/2026-05-30_organizacao-diretorios-fix-assets.md"
+                     }
+                 ],
+    "template":  "entrega",
+    "decisoes":  "Mover moldes HTML para pastas separadas sob /app sem alterar logica de reescrita Vercel; Remover dependencias de scripts/assets de terceiros para evitar bloqueios 403 e Mixed Content; Normalizar paths relativos vindos do Supabase no edge function.",
+    "skills_acionadas":  [
+                             "dev-expert"
+                         ],
+    "aprendizados":  "A Vercel nao gera arquivos estaticos por admin, e preciso reescrever as URLs para apontar para moldes dinamicos pre-existentes; Imagens relativas do banco precisam ser convertidas para caminho absoluto quando usadas em rotas dinamicas (/slug/checkout) da Vercel; Depender de assets (hotlink) de dominios como privacy.com.br e falho se o firewall deles bloquear a request (gerando 403) ou redirecionar script pra login (gerando erro de Mixed Content HTTP).",
+    "session_id":  "2026-05-30_00-22",
+    "projeto":  "Vitrine-Hot"
+}

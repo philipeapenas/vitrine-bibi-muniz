@@ -346,6 +346,26 @@
 
         <!-- ═══ TAB: PLANOS ═══ -->
         <div id="tab-offers" class="tab-content" style="display: none;">
+            <section class="data-section" style="margin-bottom: 24px; border: 1px solid var(--accent); background: rgba(59, 130, 246, 0.05);">
+                <div class="section-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <h2>Configuração Global de Pagamento</h2>
+                </div>
+                <form id="globalSettingsForm" class="identity-grid" style="padding: 16px 32px 32px;">
+                    <p style="font-size:0.85rem; color:var(--text-secondary); grid-column:1/-1; margin-top:-8px; margin-bottom:8px;">Este token PushinPay é único e processará o checkout de <strong>todas</strong> as modelos.</p>
+                    <div class="form-group full">
+                        <label>Token PushinPay</label>
+                        <input type="password" id="iptGlobalPushinPay" class="form-input" placeholder="sk_live_..." required>
+                    </div>
+                    <div class="form-group full" style="display:flex; justify-content:flex-end;">
+                        <button type="submit" class="btn-primary">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            Salvar Token Global
+                        </button>
+                    </div>
+                </form>
+            </section>
+
             <section class="data-section">
                 <div class="section-header" style="justify-content: space-between;">
                     <div style="display:flex; align-items:center; gap:12px;">
@@ -393,71 +413,28 @@
         <!-- ═══ TAB: VITRINE ═══ -->
         <div id="tab-vitrine" class="tab-content" style="display: none;">
             <section class="data-section">
-                <div class="section-header" style="justify-content: space-between;">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-                        <h2>Botões da Vitrine</h2>
-                    </div>
-                    <button id="btnNewLink" class="btn-primary" style="padding: 8px 16px; display:flex; align-items:center; gap:6px;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        Adicionar Botão
-                    </button>
-                </div>
-                <p style="font-size:0.82rem; color:var(--text-secondary); padding:0 32px 16px;">Esses botões aparecem na vitrine principal (link-in-bio). Ordene e edite o texto livremente.</p>
-                
-                <div class="links-global-settings" style="margin: 0 32px 24px; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between;">
-                    <div style="display:flex; flex-direction:column; gap:2px;">
-                        <span style="font-weight:600; font-size:0.9rem;">Animação de Atenção</span>
-                        <span style="font-size:0.75rem; color:var(--text-secondary);">Faz o primeiro botão pulsar suavemente para converter mais.</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="iptPulseEnabled">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <div class="table-responsive">
-                    <table id="linksTable">
-                        <thead><tr><th style="width:40px;"></th><th>Texto do Botão</th><th>URL Destino</th><th>Ativo</th><th class="text-center">Ações</th></tr></thead>
-                        <tbody id="linksTableBody"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <section class="data-section" id="linkEditor" style="display: none; margin-top:24px;">
                 <div class="section-header">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                    <h2 id="lblLinkEditorTitle">Novo Botão</h2>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                    <h2>Botão da Vitrine</h2>
                 </div>
-                <form id="linkForm" class="identity-grid" style="padding: 32px;">
-                    <div class="form-group full"><label>Texto do Botão (ex: Cantinho secreto 🔞)</label><input type="text" id="iptLinkTitle" class="form-input" required placeholder="Meu Link Exclusivo"></div>
-                    <div class="form-group full"><label>URL de Destino</label><input type="url" id="iptLinkUrl" class="form-input" required placeholder="https://..."></div>
-                    <div class="form-group"><label>Válido?</label>
-                        <select id="iptLinkActive" class="form-input" style="appearance:none;"><option value="true" selected>Sim (visível)</option><option value="false">Não (oculto)</option></select>
+                <p style="font-size:0.82rem; color:var(--text-secondary); padding:0 32px 16px;">Este será o único botão visível na vitrine desta modelo.</p>
+                <form id="vitrineBtnForm" class="identity-grid" style="padding: 0 32px 32px;">
+                    <div class="form-group full">
+                        <label>Texto do Botão (ex: Ver conteúdo exclusivo)</label>
+                        <input type="text" id="iptMainBtnText" class="form-input" required placeholder="Ver conteúdo exclusivo">
                     </div>
-                    <div class="form-group full" style="display:flex; gap:16px; justify-content:flex-end;">
-                        <button type="button" id="btnCancelLink" class="btn-ghost">Cancelar</button>
-                        <button type="submit" class="btn-primary">Salvar Botão</button>
+                    <div class="form-group full">
+                        <label>URL de Destino</label>
+                        <input type="url" id="iptMainBtnUrl" class="form-input" required placeholder="https://...">
+                    </div>
+                    <div class="form-group full" style="display:flex; justify-content:flex-end; gap:16px; align-items:center;">
+                        <span id="vitrineUrlPreview" style="font-size:0.8rem; color:var(--text-secondary);">A vitrine aparecerá em: /modelo</span>
+                        <button type="submit" class="btn-primary">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            Salvar Botão
+                        </button>
                     </div>
                 </form>
-            </section>
-
-            <!-- Carrossel da Vitrine -->
-            <section class="data-section" style="margin-top:24px;">
-                <div class="section-header" style="justify-content:space-between;">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                        <h2>Fotos do Carrossel (Vitrine)</h2>
-                    </div>
-                    <label class="btn-primary" style="padding:8px 16px; display:flex; align-items:center; gap:6px; cursor:pointer;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        Adicionar Fotos
-                        <input type="file" id="fileCarousel" accept="image/*" multiple style="display:none;">
-                    </label>
-                </div>
-                <p style="font-size:0.82rem; color:var(--text-secondary); padding:0 32px 12px;">Essas fotos aparecem no fundo embaçado da vitrine. Recomendado: formato retrato (9:16). Máx 8 fotos.</p>
-                <div id="carouselGrid" style="padding: 0 32px 32px; display:grid; grid-template-columns: repeat(auto-fill, minmax(100px,1fr)); gap:12px;">
-                    <div id="carouselLoading" style="color:var(--text-secondary); font-size:0.85rem; grid-column:1/-1; padding:16px 0;">Carregando fotos...</div>
-                </div>
             </section>
         </div>
 

@@ -98,8 +98,6 @@ modelSelector.addEventListener('change', () => {
         loadProfileData();
         loadOffersData();
         loadThankyouData();
-        loadLinksData();
-        loadCarouselPhotos();
     }
 });
 
@@ -244,13 +242,12 @@ async function initSupabase(key) {
     // Carregar lista de modelos primeiro
     await loadModels();
 
-    // Carga Global: Carrega todos os dados da modelo selecionada
+    // Carga Global
+    loadGlobalSettings();
     loadData();
     loadProfileData();
     loadOffersData();
     loadThankyouData();
-    loadLinksData();
-    loadCarouselPhotos();
 
     setupRealtime();
 }
@@ -515,7 +512,7 @@ tabsBtns.forEach(btn => {
         if (btn.dataset.tab === 'tab-appearance') { loadProfileData(); }
         if (btn.dataset.tab === 'tab-offers')     loadOffersData();
         if (btn.dataset.tab === 'tab-thankyou')   loadThankyouData();
-        if (btn.dataset.tab === 'tab-vitrine')    { loadLinksData(); loadCarouselPhotos(); }
+        if (btn.dataset.tab === 'tab-vitrine')    { loadProfileData(); }
 
         // Auto-close sidebar on mobile
         if (window.innerWidth <= 768) {
@@ -564,7 +561,8 @@ async function loadProfileData() {
         document.getElementById('iptFBPixel').value       = data.facebook_pixel_id || '';
         document.getElementById('iptBioFull').value       = data.bio_full        || '';
         document.getElementById('iptBioShort').value      = data.bio_short       || data.bio_full || '';
-        document.getElementById('iptPulseEnabled').checked = data.pulse_enabled !== false;
+        document.getElementById('iptMainBtnText').value   = data.main_button_text || 'Ver conteúdo exclusivo';
+        document.getElementById('iptMainBtnUrl').value    = data.main_button_url || '';
         if (data.profile_picture_url) document.getElementById('thumbProfile').style.backgroundImage = `url('${data.profile_picture_url}')`;
         if (data.banner_image_url)    document.getElementById('thumbBanner').style.backgroundImage  = `url('${data.banner_image_url}')`;
         // Stats
@@ -597,6 +595,8 @@ async function persistProfileData(showFeedback = false) {
             bio_full:            bioFull,
             bio_short:           document.getElementById('iptBioShort').value,
             vercel_deploy_hook_url: document.getElementById('iptVercelHook').value,
+            main_button_text:    document.getElementById('iptMainBtnText').value,
+            main_button_url:     document.getElementById('iptMainBtnUrl').value,
             updated_at:          new Date()
         }, { count: 'exact' }).eq('slug', currentModelSlug);
 
@@ -620,23 +620,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     } finally { btn.innerHTML = 'Salvar Identidade'; }
 });
 
-// Auto-salvar Pulse Toggle
-document.getElementById('iptPulseEnabled').addEventListener('change', async (e) => {
-    if (!dbClient) return;
-    try {
-        const { error } = await dbClient.from('site_profile').update({
-            pulse_enabled: e.target.checked,
-            updated_at: new Date()
-        }).eq('slug', currentModelSlug);
-        if (error) throw error;
-        setPending();
-        // Feedback visual sutil (opcional)
-        console.log("Pulse updated:", e.target.checked);
-    } catch(e) { 
-        alert("Erro ao salvar animação: " + e.message);
-        e.target.checked = !e.target.checked; // Reverter em caso de erro
-    }
-});
+
 
 async function persistStatsData(showFeedback = false) {
     if (!dbClient) return;
@@ -822,287 +806,56 @@ window.deleteOffer = async (id) => {
     }
 };
 
-// ─── Vitrine Links (Botões da Vitrine) ───────────────
-let linksSortable = null;
-
-async function loadLinksData() {
+// ─── Configuração Global de Pagamento ────────────
+async function loadGlobalSettings() {
     if (!dbClient) return;
     try {
-        const { data } = await dbClient.from('site_links').select('*').eq('model_slug', currentModelSlug).order('sort_order', { ascending: true });
-        const tbody = document.getElementById('linksTableBody');
-        tbody.innerHTML = '';
-        if (!data?.length) {
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhum botão cadastrado ainda. Clique em "Adicionar Botão".</td></tr>';
-            return;
+        const { data } = await dbClient.from('global_settings').select('pushinpay_token').eq('id', 1).single();
+        if (data) {
+            document.getElementById('iptGlobalPushinPay').value = data.pushinpay_token || '';
         }
-
-        data.forEach((link) => {
-            const tr = document.createElement('tr');
-            tr.dataset.id = link.id;
-            const activeTag = link.active !== false
-                ? '<span class="tag approved">Visível</span>'
-                : '<span class="tag created">Oculto</span>';
-            const shortUrl = link.url ? (link.url.length > 45 ? link.url.slice(0, 45) + '…' : link.url) : '-';
-            
-            tr.innerHTML = `
-                <td>
-                    <div class="link-drag-handle" title="Arraste para reordenar">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 9l7-7 7 7M5 15l7 7 7-7"/></svg>
-                    </div>
-                </td>
-                <td><strong>${link.title}</strong></td>
-                <td style="font-size:0.8rem; color:var(--text-secondary);">${shortUrl}</td>
-                <td>${activeTag}</td>
-                <td class="text-center" style="display:flex; gap:8px; justify-content:center;">
-                    <button onclick="editLink(${link.id})" style="background:var(--input-bg); color:var(--text-primary); border:1px solid var(--border-color); padding:6px 14px; border-radius:6px; cursor:pointer; font-size:0.8rem;">Editar</button>
-                    <button onclick="deleteLink(${link.id})" style="background:rgba(239,68,68,0.1); color:var(--danger); border:1px solid rgba(239,68,68,0.2); padding:6px 14px; border-radius:6px; cursor:pointer; font-size:0.8rem;">Remover</button>
-                </td>`;
-            tbody.appendChild(tr);
-        });
-
-        // Inicializa ou reinicializa Sortable para a tabela
-        if (linksSortable) linksSortable.destroy();
-        linksSortable = new Sortable(tbody, {
-            animation: 350,
-            handle: '.link-drag-handle',
-            ghostClass: 'sortable-ghost',
-            chosenClass: 'sortable-chosen',
-            onEnd: async () => {
-                const items = Array.from(tbody.querySelectorAll('tr'));
-                const updates = items.map((el, index) => ({
-                    id: el.dataset.id,
-                    sort_order: index
-                }));
-
-                // Salva a nova ordem de forma sequencial ou batch
-                for (const update of updates) {
-                    await dbClient.from('site_links').update({ sort_order: update.sort_order }).eq('id', update.id);
-                }
-                console.log('Ordem dos links sincronizada');
-                setPending();
-            }
-        });
-
-    } catch(e) { console.error('loadLinksData:', e); }
+    } catch(e) { console.error("loadGlobalSettings:", e); }
 }
 
-let editingLinkId = null;
-
-document.getElementById('btnNewLink').addEventListener('click', () => {
-    editingLinkId = null;
-    document.getElementById('linkForm').reset();
-    document.getElementById('lblLinkEditorTitle').textContent = 'Novo Botão';
-    document.getElementById('linkEditor').style.display = 'block';
-    document.getElementById('linkEditor').scrollIntoView({ behavior: 'smooth' });
-});
-
-document.getElementById('btnCancelLink').addEventListener('click', () => {
-    document.getElementById('linkEditor').style.display = 'none';
-});
-
-document.getElementById('linkForm').addEventListener('submit', async (e) => {
+document.getElementById('globalSettingsForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const btn = e.target.querySelector('button[type="submit"]');
-    btn.textContent = 'Salvando...';
-    try {
-        const payload = {
-            title:      document.getElementById('iptLinkTitle').value,
-            url:        document.getElementById('iptLinkUrl').value,
-            active:     document.getElementById('iptLinkActive').value === 'true',
-            updated_at: new Date()
-        };
-        if (editingLinkId) {
-            await dbClient.from('site_links').update(payload).eq('id', editingLinkId);
-        } else {
-            // Calcula sort_order máximo + 1
-            const { data: existing } = await dbClient.from('site_links').select('sort_order').eq('model_slug', currentModelSlug).order('sort_order', { ascending: false }).limit(1);
-            payload.sort_order = existing?.length ? (existing[0].sort_order || 0) + 1 : 1;
-            payload.model_slug = currentModelSlug;
-            await dbClient.from('site_links').insert([payload]);
-        }
-        document.getElementById('linkEditor').style.display = 'none';
-        loadLinksData();
-        setPending();
-    } catch(e) { alert('Erro: ' + e.message); }
-    finally { btn.textContent = 'Salvar Botão'; }
-});
-
-window.editLink = async (id) => {
-    const { data } = await dbClient.from('site_links').select('*').eq('id', id).single();
-    if (!data) return;
-    editingLinkId = id;
-    document.getElementById('iptLinkTitle').value  = data.title;
-    document.getElementById('iptLinkUrl').value    = data.url || '';
-    document.getElementById('iptLinkActive').value = String(data.active !== false);
-    document.getElementById('lblLinkEditorTitle').textContent = 'Editar Botão';
-    document.getElementById('linkEditor').style.display = 'block';
-    document.getElementById('linkEditor').scrollIntoView({ behavior: 'smooth' });
-};
-
-window.deleteLink = async (id) => {
-    if (confirm('Remover este botão da vitrine?')) {
-        await dbClient.from('site_links').delete().eq('id', id);
-        loadLinksData();
-        setPending();
-    }
-};
-
-// ─── Carrossel da Vitrine (Gerenciamento Avançado) ────────────
-let carouselSortable = null;
-
-function formatSPDate(isoDate) {
-    if (!isoDate) return '-';
-    return new Date(isoDate).toLocaleString('pt-BR', {
-        timeZone: 'America/Sao_Paulo',
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-}
-
-async function loadCarouselPhotos() {
     if (!dbClient) return;
-    const grid = document.getElementById('carouselGrid');
-    if (!grid) return;
-    grid.innerHTML = '<div id="carouselLoading" style="color:var(--text-secondary); font-size:0.85rem; grid-column:1/-1; padding:16px 0;">Carregando fotos...</div>';
-
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.innerHTML = 'Salvando...';
     try {
-        // Busca da tabela ordenada
-        const { data, error } = await dbClient
-            .from('carousel_photos')
-            .select('*')
-            .eq('model_slug', currentModelSlug)
-            .order('sort_order', { ascending: true });
-            
+        const token = document.getElementById('iptGlobalPushinPay').value;
+        const { error } = await dbClient.from('global_settings').upsert({ id: 1, pushinpay_token: token });
         if (error) throw error;
-
-        grid.innerHTML = '';
-        if (!data || !data.length) {
-            grid.innerHTML = '<div style="color:var(--text-secondary); font-size:0.85rem; grid-column:1/-1; padding:16px 0;">Nenhuma foto adicionada. Clique em "Adicionar Fotos".</div>';
-            return;
-        }
-
-        data.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'carousel-card';
-            card.dataset.id = item.id;
-            card.innerHTML = `
-                <div class="carousel-drag-handle">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 9l7-7 7 7M5 15l7 7 7-7"/></svg>
-                </div>
-                <button onclick="deleteCarouselPhoto('${item.id}', '${item.storage_path}')" class="carousel-delete-btn" title="Remover">✕</button>
-                <img src="${item.public_url}" alt="Carousel Photo" loading="lazy">
-                <div class="carousel-info">
-                    <div class="carousel-date">Atualizado: ${formatSPDate(item.updated_at)}</div>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-
-        // Inicializa ou reinicializa o Sortable
-        if (carouselSortable) carouselSortable.destroy();
-        carouselSortable = new Sortable(grid, {
-            animation: 350,
-            ghostClass: 'sortable-ghost',
-            chosenClass: 'sortable-chosen',
-            dragClass: 'sortable-drag',
-            handle: '.carousel-card',
-            onEnd: async () => {
-                const items = Array.from(grid.querySelectorAll('.carousel-card'));
-                const updates = items.map((el, index) => ({
-                    id: el.dataset.id,
-                    sort_order: index,
-                    updated_at: new Date().toISOString()
-                }));
-
-                // Salva a nova ordem no banco
-                for (const update of updates) {
-                    await dbClient.from('carousel_photos').update({ sort_order: update.sort_order }).eq('id', update.id);
-                }
-                console.log('Ordem salva com sucesso');
-                setPending();
-            }
-        });
-
-    } catch(e) {
-        grid.innerHTML = `<div style="color:var(--danger); font-size:0.85rem; grid-column:1/-1; padding:16px 0;">Erro ao carregar: ${e.message}</div>`;
-        console.error('loadCarouselPhotos:', e);
-    }
-}
-
-document.getElementById('fileCarousel').addEventListener('change', async (e) => {
-    if (!dbClient) { alert('Conecte-se ao Supabase primeiro.'); return; }
-    const files = Array.from(e.target.files);
-    if (!files.length) return;
-
-    const label = e.target.closest('label');
-    label.style.opacity = '0.6';
-    label.style.pointerEvents = 'none';
-
-    try {
-        const { data: existing } = await dbClient.from('carousel_photos').select('id');
-        const currentCount = existing?.length || 0;
-        const maxNew = Math.max(0, 10 - currentCount); // Aumentado para 10 fotos no premium
-        const toUpload = files.slice(0, maxNew);
-
-        if (toUpload.length === 0) {
-            alert('Limite de fotos atingido.');
-            return;
-        }
-
-        // Busca o maior sort_order atual
-        const { data: lastItem } = await dbClient.from('carousel_photos').select('sort_order').eq('model_slug', currentModelSlug).order('sort_order', { ascending: false }).limit(1);
-        let nextOrder = lastItem?.length ? (lastItem[0].sort_order + 1) : 0;
-
-        for (const file of toUpload) {
-            const ext = file.name.split('.').pop();
-            const storagePath = `carousel/bg-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-            
-            // 1. Upload no Storage
-            const { error: uploadError } = await dbClient.storage.from('site_assets').upload(storagePath, file, { upsert: false });
-            if (uploadError) throw uploadError;
-
-            // 2. Pega URL pública
-            const { data: { publicUrl } } = dbClient.storage.from('site_assets').getPublicUrl(storagePath);
-
-            // 3. Insere na tabela
-            await dbClient.from('carousel_photos').insert([{
-                storage_path: storagePath,
-                public_url: publicUrl,
-                sort_order: nextOrder++,
-                model_slug: currentModelSlug
-            }]);
-        }
-
-        await loadCarouselPhotos();
         setPending();
     } catch(err) {
-        alert('Erro no upload: ' + err.message);
+        alert('Erro ao salvar Token Global: ' + err.message);
     } finally {
-        label.style.opacity = '';
-        label.style.pointerEvents = '';
-        e.target.value = '';
+        btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Salvar Token Global';
     }
 });
 
-window.deleteCarouselPhoto = async (id, storagePath) => {
-    if (!confirm(`Remover esta foto do carrossel?`)) return;
+// ─── Vitrine Única (Botão) ────────────
+document.getElementById('vitrineBtnForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!dbClient) return;
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.innerHTML = 'Salvando...';
     try {
-        // 1. Remove do Storage
-        const { error: storageError } = await dbClient.storage.from('site_assets').remove([storagePath]);
-        
-        // 2. Remove da Tabela
-        const { error: dbError } = await dbClient.from('carousel_photos').delete().eq('id', id);
-        
-        if (dbError) throw dbError;
-        loadCarouselPhotos();
+        const text = document.getElementById('iptMainBtnText').value;
+        const url = document.getElementById('iptMainBtnUrl').value;
+        const { error } = await dbClient.from('site_profile').update({
+            main_button_text: text,
+            main_button_url: url,
+            updated_at: new Date()
+        }).eq('slug', currentModelSlug);
+        if (error) throw error;
         setPending();
-    } catch(e) {
-        alert('Erro ao remover: ' + e.message);
+    } catch(err) {
+        alert('Erro ao salvar Botão da Vitrine: ' + err.message);
+    } finally {
+        btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Salvar Botão';
     }
-};
+});
 
 // ─── Auto-Detect Changes (Single-Click Flow) ────────
 function setupAutoDetect() {

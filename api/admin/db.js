@@ -16,6 +16,7 @@ const ALLOWED = {
   carousel_photos: '*',
   tracking_events: ['GET'],
   transactions: ['GET'],
+  global_settings: '*',
 };
 
 function methodAllowed(table, method) {
