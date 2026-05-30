@@ -46,9 +46,10 @@ module.exports = async function handler(req, res) {
   }
 
   // ─── Montar webhook_url dinâmico ──────────────────────
-  // SITE_URL: URL base do projeto no Vercel (ex: https://vitrine-bibi.vercel.app)
-  // Sem SITE_URL, o webhook não é enviado — pagamento confirmado só por polling.
-  const siteUrl = process.env.SITE_URL || '';
+  // SITE_URL dinâmico baseado na requisição atual (elimina necessidade da env var)
+  const protocol = req.headers['x-forwarded-proto'] || 'https';
+  const host = req.headers.host;
+  const siteUrl = process.env.SITE_URL || (host ? `${protocol}://${host}` : '');
   const webhookUrl = siteUrl ? `${siteUrl}/api/webhook-pix` : undefined;
 
   try {
