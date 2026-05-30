@@ -614,8 +614,7 @@ async function persistProfileData(showFeedback = false) {
             if (val !== undefined) updatePayload[key] = val;
         }
 
-        const { error, count } = await dbClient.from('site_profile').update(updatePayload
-        }, { count: 'exact' }).eq('slug', currentModelSlug);
+        const { error, count } = await dbClient.from('site_profile').update(updatePayload, { count: 'exact' }).eq('slug', currentModelSlug);
 
         if (error) throw error;
         if (count === 0) throw new Error("Chave sem permissão de escrita");
