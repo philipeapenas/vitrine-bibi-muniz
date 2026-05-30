@@ -554,25 +554,30 @@ async function loadProfileData() {
     try {
         const { data } = await dbClient.from('site_profile').select('*').eq('slug', currentModelSlug).single();
         if (!data) return;
-        document.getElementById('iptCreatorName').value   = data.creator_name    || '';
-        document.getElementById('iptCreatorHandle').value = data.creator_handle  || '';
-        document.getElementById('iptLocation').value      = data.location        || '';
-        document.getElementById('iptInstaUrl').value      = data.instagram_url   || '';
-        document.getElementById('iptFBPixel').value       = data.facebook_pixel_id || '';
-        document.getElementById('iptBioFull').value       = data.bio_full        || '';
-        document.getElementById('iptBioShort').value      = data.bio_short       || data.bio_full || '';
-        document.getElementById('iptMainBtnText').value   = data.main_button_text || 'Ver conteúdo exclusivo';
-        document.getElementById('iptMainBtnUrl').value    = data.main_button_url || '';
-        if (data.profile_picture_url) document.getElementById('thumbProfile').style.backgroundImage = `url('${data.profile_picture_url}')`;
-        if (data.banner_image_url)    document.getElementById('thumbBanner').style.backgroundImage  = `url('${data.banner_image_url}')`;
+        const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+        setVal('iptCreatorName', data.creator_name || '');
+        setVal('iptCreatorHandle', data.creator_handle || '');
+        setVal('iptLocation', data.location || '');
+        setVal('iptInstaUrl', data.instagram_url || '');
+        setVal('iptFBPixel', data.facebook_pixel_id || '');
+        setVal('iptBioFull', data.bio_full || '');
+        setVal('iptBioShort', data.bio_short || data.bio_full || '');
+        setVal('iptMainBtnText', data.main_button_text || 'Ver conteúdo exclusivo');
+        setVal('iptMainBtnUrl', data.main_button_url || '');
+        
+        const thumbP = document.getElementById('thumbProfile');
+        const thumbB = document.getElementById('thumbBanner');
+        if (data.profile_picture_url && thumbP) thumbP.style.backgroundImage = `url('${data.profile_picture_url}')`;
+        if (data.banner_image_url && thumbB) thumbB.style.backgroundImage  = `url('${data.banner_image_url}')`;
+        
         // Stats
-        document.getElementById('iptStatLikes').value   = data.stat_likes   || '245K';
-        document.getElementById('iptStatPosts').value   = data.stat_posts   || '3.166 Postagens';
-        document.getElementById('iptStatMedias').value  = data.stat_medias  || '3.387 Mídias';
-        document.getElementById('iptStatImages').value  = data.stat_images  || '1.6K';
-        document.getElementById('iptStatVideos').value  = data.stat_videos  || '1.8K';
-        document.getElementById('iptStatPaidVideos').value = data.stat_paid_videos || '147 Vídeos';
-        document.getElementById('iptVercelHook').value  = data.vercel_deploy_hook_url || '';
+        setVal('iptStatLikes', data.stat_likes || '245K');
+        setVal('iptStatPosts', data.stat_posts || '3.166 Postagens');
+        setVal('iptStatMedias', data.stat_medias || '3.387 Mídias');
+        setVal('iptStatImages', data.stat_images || '1.6K');
+        setVal('iptStatVideos', data.stat_videos || '1.8K');
+        setVal('iptStatPaidVideos', data.stat_paid_videos || '147 Vídeos');
+        setVal('iptVercelHook', data.vercel_deploy_hook_url || '');
     } catch(e) { console.error("loadProfileData:", e); }
 }
 
@@ -583,21 +588,33 @@ async function persistProfileData(showFeedback = false) {
         const picUrl    = (await uploadFile('fileProfilePic', 'profile')) || cur?.profile_picture_url || '';
         const bannerUrl = (await uploadFile('fileBannerPic', 'banner'))  || cur?.banner_image_url    || '';
 
-        const bioFull = document.getElementById('iptBioFull').value;
-        const { error, count } = await dbClient.from('site_profile').update({
-            creator_name:        document.getElementById('iptCreatorName').value,
-            creator_handle:      document.getElementById('iptCreatorHandle').value,
-            location:            document.getElementById('iptLocation').value,
-            instagram_url:       document.getElementById('iptInstaUrl').value,
-            facebook_pixel_id:   document.getElementById('iptFBPixel').value,
+        const getVal = (id) => { const el = document.getElementById(id); return el ? el.value : undefined; };
+        
+        const updatePayload = {
             profile_picture_url: picUrl,
             banner_image_url:    bannerUrl,
-            bio_full:            bioFull,
-            bio_short:           document.getElementById('iptBioShort').value,
-            vercel_deploy_hook_url: document.getElementById('iptVercelHook').value,
-            main_button_text:    document.getElementById('iptMainBtnText').value,
-            main_button_url:     document.getElementById('iptMainBtnUrl').value,
             updated_at:          new Date()
+        };
+        
+        const fields = [
+            ['creator_name', 'iptCreatorName'],
+            ['creator_handle', 'iptCreatorHandle'],
+            ['location', 'iptLocation'],
+            ['instagram_url', 'iptInstaUrl'],
+            ['facebook_pixel_id', 'iptFBPixel'],
+            ['bio_full', 'iptBioFull'],
+            ['bio_short', 'iptBioShort'],
+            ['vercel_deploy_hook_url', 'iptVercelHook'],
+            ['main_button_text', 'iptMainBtnText'],
+            ['main_button_url', 'iptMainBtnUrl']
+        ];
+        
+        for (const [key, id] of fields) {
+            const val = getVal(id);
+            if (val !== undefined) updatePayload[key] = val;
+        }
+
+        const { error, count } = await dbClient.from('site_profile').update(updatePayload
         }, { count: 'exact' }).eq('slug', currentModelSlug);
 
         if (error) throw error;
