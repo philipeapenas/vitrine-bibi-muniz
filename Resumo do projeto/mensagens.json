@@ -3,7 +3,7 @@
         "from": "fullstack-dev",
         "to": "ceo-dodo",
         "status": "success",
-        "summary": "Deep Technical Review (Audit) concluída com sucesso. NASA-level V&V aplicada: \n1. Edge Function refatorada com tipagem forte e validação de payload.\n2. Implementado Cache-Busting agressivo em todos os scripts (v10.2).\n3. Teste de fumaça via script de auditoria confirmou integridade do pipeline.\n4. Audit Log gerado em 'audit_log.md'. O projeto está PRONTO para escala.",
+        "summary": "Deep Technical Review (Audit) conclu\u00edda com sucesso. NASA-level V&V aplicada: \n1. Edge Function refatorada com tipagem forte e valida\u00e7\u00e3o de payload.\n2. Implementado Cache-Busting agressivo em todos os scripts (v10.2).\n3. Teste de fuma\u00e7a via script de auditoria confirmou integridade do pipeline.\n4. Audit Log gerado em 'audit_log.md'. O projeto est\u00e1 PRONTO para escala.",
         "files_affected": [
             "supabase/functions/tracking-webhook/index.ts",
             "index.html",
@@ -14,7 +14,7 @@
         "from": "frontend-expert",
         "to": "ceo-dodo",
         "status": "success",
-        "summary": "Dashboard front-end desenvolvido com sucesso na pasta /admin. Estilo minimalista com cores semânticas atreladas a cada KPI e comunicação Real-time via Supabase estabelecida com barreira de admin token.",
+        "summary": "Dashboard front-end desenvolvido com sucesso na pasta /admin. Estilo minimalista com cores sem\u00e2nticas atreladas a cada KPI e comunica\u00e7\u00e3o Real-time via Supabase estabelecida com barreira de admin token.",
         "files_affected": [
             "middleware.js",
             "admin/index.html",
@@ -26,7 +26,7 @@
         "from": "vercel-expert",
         "to": "ceo-dodo",
         "status": "success",
-        "summary": "Deploy realizado em produção via Vercel CLI com sucesso. O dashboard Admin já pode ser acessado remotamente.",
+        "summary": "Deploy realizado em produ\u00e7\u00e3o via Vercel CLI com sucesso. O dashboard Admin j\u00e1 pode ser acessado remotamente.",
         "links": [
             "https://bibimuniz.vercel.app",
             "https://vitrine-bibi-muniz-aauqgwqt3-inovafluxoia-9360s-projects.vercel.app"
@@ -36,13 +36,13 @@
         "from": "fullstack-dev",
         "to": "ceo-dodo",
         "status": "success",
-        "summary": "Proteção Basic Auth via middleware.js implementada nativamente e refatoração de rotas estáticas absolutas no index.html aplicadas."
+        "summary": "Prote\u00e7\u00e3o Basic Auth via middleware.js implementada nativamente e refatora\u00e7\u00e3o de rotas est\u00e1ticas absolutas no index.html aplicadas."
     },
     {
         "from": "ceo-dodo",
         "to": "owner",
         "status": "success",
-        "summary": "Fase 12 da Vitrine Bibi Muniz (Admin e Auth) 100% finalizada com correções de Vercel e JS em Prod e blindagem da Service Key. Encerrando pacote de orquestração.",
+        "summary": "Fase 12 da Vitrine Bibi Muniz (Admin e Auth) 100% finalizada com corre\u00e7\u00f5es de Vercel e JS em Prod e blindagem da Service Key. Encerrando pacote de orquestra\u00e7\u00e3o.",
         "files_affected": []
     },
     {
@@ -50,7 +50,7 @@
         "type": "handoff",
         "from": "assistente-expert",
         "to": "ceo-dodo",
-        "subject": "Vault atualizado — Vitrine V3 Tutorial-Centric (2026-05-04)",
+        "subject": "Vault atualizado \u2014 Vitrine V3 Tutorial-Centric (2026-05-04)",
         "message": "Auto-archive concluido. Sessao de refatoracao radical da Vitrine Bibi Muniz arquivada no Vault. Daily note 04-05-26 criada com herancas P1/P2/P3 (4 itens marcados N/A pela remocao do admin/tracking, 1 concluido hoje). Nota de entrega criada documentando a transicao V2 (Glassmorphism+Supabase+admin+tracking+presells) -> V3 (single-page tutorial-centric). PRF do projeto reescrito refletindo nova arquitetura. Logs de atividade (3 skills) e log de chat depositados via log_to_daily.py.",
         "context": {
             "project": "Vitrine - Bibi Muniz",
@@ -69,8 +69,8 @@
         "type": "work_order",
         "from": "user",
         "to": "dev-expert",
-        "subject": "Vitrine-Hot V13 — virar plataforma propria: Auth (email+Google), cadastro antes do PIX e area de membros logada + ressuscitar Admin",
-        "message": "Founder quer evoluir a Vitrine-Hot de 'Privacy fake de validacao' para uma plataforma propria real, single-model (1 fork = 1 dominio = 1 modelo, sem multi-tenant). Decisoes travadas com o CEO: (1) PROPOSITO do cadastro = area de membros propria (sair do Telegram, consumir midias DENTRO do site); (2) MOMENTO = cadastro ANTES de gerar o PIX (clica em comprar -> cadastra/loga -> gera PIX); (3) ENTREGA = area de membros logada no proprio site (galeria de midias, nao redirect pro Telegram); (4) ESCOPO = so a Bibi por enquanto, single-model. Estado atual ja levantado: checkout.html ja e config-driven via /api/checkout-config (tabelas site_profile + site_offers no Supabase) e existe bucket site_assets. JA EXISTIU um painel /admin (admin/index.html, style.css, app.js + Basic Auth no middleware) que foi REMOVIDO na refatoracao V3 (04/05) — recuperar do historico do git como base. Nao ha auth de usuario hoje (PIX anonimo PushinPay, entrega gated por tx_id no middleware.js).",
+        "subject": "Vitrine-Hot V13 \u2014 virar plataforma propria: Auth (email+Google), cadastro antes do PIX e area de membros logada + ressuscitar Admin",
+        "message": "Founder quer evoluir a Vitrine-Hot de 'Privacy fake de validacao' para uma plataforma propria real, single-model (1 fork = 1 dominio = 1 modelo, sem multi-tenant). Decisoes travadas com o CEO: (1) PROPOSITO do cadastro = area de membros propria (sair do Telegram, consumir midias DENTRO do site); (2) MOMENTO = cadastro ANTES de gerar o PIX (clica em comprar -> cadastra/loga -> gera PIX); (3) ENTREGA = area de membros logada no proprio site (galeria de midias, nao redirect pro Telegram); (4) ESCOPO = so a Bibi por enquanto, single-model. Estado atual ja levantado: checkout.html ja e config-driven via /api/checkout-config (tabelas site_profile + site_offers no Supabase) e existe bucket site_assets. JA EXISTIU um painel /admin (admin/index.html, style.css, app.js + Basic Auth no middleware) que foi REMOVIDO na refatoracao V3 (04/05) \u2014 recuperar do historico do git como base. Nao ha auth de usuario hoje (PIX anonimo PushinPay, entrega gated por tx_id no middleware.js).",
         "context": {
             "project": "Vitrine-Hot",
             "artifacts": [
@@ -95,8 +95,8 @@
         "type": "handoff",
         "from": "dev-expert",
         "to": "ceo-dodo",
-        "subject": "Fase A concluida — Admin restaurado + Basic Auth religado no middleware",
-        "message": "Fase A entregue como restauracao (nao reescrita). (1) Recuperei admin/index.html, admin/app.js, admin/style.css do commit 44ba017 via git checkout — esse admin JA edita site_profile (nome, @, bio, foto, banner, stats, pagina obrigado), site_offers (preco/upsert/delete), site_links e carousel_photos, e faz upload pro bucket site_assets. (2) Validei AO VIVO via curl que o schema atual do Supabase ja tem todas as colunas que o admin espera (stat_*, thankyou_*, location) — restauracao plugou sem migracao. (3) Religei o Basic Auth de /admin no middleware.js (matcher + bloco), preservando intacta a logica de instablock do obrigado.html. Sintaxe do middleware checada com node --check (OK). NAO restaurei admin/audit_supabase.ps1 (script one-off, regra scratch). Auth do admin (decisao do founder): login cola a service_role key no browser/localStorage por enquanto — blindagem agendada como Fase A.5.",
+        "subject": "Fase A concluida \u2014 Admin restaurado + Basic Auth religado no middleware",
+        "message": "Fase A entregue como restauracao (nao reescrita). (1) Recuperei admin/index.html, admin/app.js, admin/style.css do commit 44ba017 via git checkout \u2014 esse admin JA edita site_profile (nome, @, bio, foto, banner, stats, pagina obrigado), site_offers (preco/upsert/delete), site_links e carousel_photos, e faz upload pro bucket site_assets. (2) Validei AO VIVO via curl que o schema atual do Supabase ja tem todas as colunas que o admin espera (stat_*, thankyou_*, location) \u2014 restauracao plugou sem migracao. (3) Religei o Basic Auth de /admin no middleware.js (matcher + bloco), preservando intacta a logica de instablock do obrigado.html. Sintaxe do middleware checada com node --check (OK). NAO restaurei admin/audit_supabase.ps1 (script one-off, regra scratch). Auth do admin (decisao do founder): login cola a service_role key no browser/localStorage por enquanto \u2014 blindagem agendada como Fase A.5.",
         "context": {
             "project": "Vitrine-Hot",
             "artifacts": [
@@ -115,8 +115,8 @@
         "type": "handoff",
         "from": "dev-expert",
         "to": "ceo-dodo",
-        "subject": "Fase A.5 concluida — service key blindada (proxy server-side + shim), validado ao vivo",
-        "message": "Service key removida do browser. Arquitetura: (1) api/admin/db.js = proxy PostgREST autenticado (header x-admin-token = ADMIN_PASSWORD), service key so no servidor, com allowlist de tabelas (site_profile/site_offers/site_links/carousel_photos full; tracking_events/transactions somente GET). (2) api/admin/storage.js = upload/remove no bucket site_assets via base64 (limite ~4.5MB, ok p/ imagens; video=Fase C). (3) admin/admin-client.js = shim que imita o subconjunto do supabase-js (from/select/eq/gte/lte/order/limit/single/update/insert/upsert/delete + storage + channel stub) e roteia tudo pelos endpoints — os 40+ call sites do app.js ficaram INTACTOS (mudanca cirurgica). (4) Login do painel agora pede a SENHA do admin (sessionStorage, nao mais a service_role key em localStorage); validacao de senha via ping autenticado no initSupabase. Removido o CDN supabase-js do index.html e a const orfa SUPABASE_URL do app.js. TESTES AO VIVO (node->Supabase, sem mutar prod): T1 sem token=401, T2 GET single=ok, T3 GET array=ok, T4 PATCH transactions=403 (allowlist), T5 PATCH site_profile id=999 count:exact=count:0 (parse Content-Range ok). node --check passou em todos os arquivos.",
+        "subject": "Fase A.5 concluida \u2014 service key blindada (proxy server-side + shim), validado ao vivo",
+        "message": "Service key removida do browser. Arquitetura: (1) api/admin/db.js = proxy PostgREST autenticado (header x-admin-token = ADMIN_PASSWORD), service key so no servidor, com allowlist de tabelas (site_profile/site_offers/site_links/carousel_photos full; tracking_events/transactions somente GET). (2) api/admin/storage.js = upload/remove no bucket site_assets via base64 (limite ~4.5MB, ok p/ imagens; video=Fase C). (3) admin/admin-client.js = shim que imita o subconjunto do supabase-js (from/select/eq/gte/lte/order/limit/single/update/insert/upsert/delete + storage + channel stub) e roteia tudo pelos endpoints \u2014 os 40+ call sites do app.js ficaram INTACTOS (mudanca cirurgica). (4) Login do painel agora pede a SENHA do admin (sessionStorage, nao mais a service_role key em localStorage); validacao de senha via ping autenticado no initSupabase. Removido o CDN supabase-js do index.html e a const orfa SUPABASE_URL do app.js. TESTES AO VIVO (node->Supabase, sem mutar prod): T1 sem token=401, T2 GET single=ok, T3 GET array=ok, T4 PATCH transactions=403 (allowlist), T5 PATCH site_profile id=999 count:exact=count:0 (parse Content-Range ok). node --check passou em todos os arquivos.",
         "context": {
             "project": "Vitrine-Hot",
             "artifacts": [
@@ -126,7 +126,7 @@
                 "Projetos/Dominio/Vitrine-Hot/admin/app.js",
                 "Projetos/Dominio/Vitrine-Hot/admin/index.html"
             ],
-            "next_action": "ACOES DO FOUNDER NO DEPLOY: setar na Vercel as env vars ADMIN_PASSWORD (gate do /admin + login do painel + token das APIs) e SUPABASE_SERVICE_ROLE_KEY (service key, so no servidor). TRADEOFFS: realtime do dashboard virou stub (sem auto-live; refresh manual + carga inicial funcionam) pois websocket exigiria key no browser; upload limitado a ~4.5MB (config images ok). RECOMENDACAO DE SEGURANCA FORTE: api/checkout-config.js TEM a service_role key HARDCODED como fallback (linha 5) e ela esta no historico do git — rotacionar a service key no Supabase e remover o hardcode (mover 100% p/ env). PENDENTE: Fase B (auth email+Google antes do PIX) e Fase C (area de membros)."
+            "next_action": "ACOES DO FOUNDER NO DEPLOY: setar na Vercel as env vars ADMIN_PASSWORD (gate do /admin + login do painel + token das APIs) e SUPABASE_SERVICE_ROLE_KEY (service key, so no servidor). TRADEOFFS: realtime do dashboard virou stub (sem auto-live; refresh manual + carga inicial funcionam) pois websocket exigiria key no browser; upload limitado a ~4.5MB (config images ok). RECOMENDACAO DE SEGURANCA FORTE: api/checkout-config.js TEM a service_role key HARDCODED como fallback (linha 5) e ela esta no historico do git \u2014 rotacionar a service key no Supabase e remover o hardcode (mover 100% p/ env). PENDENTE: Fase B (auth email+Google antes do PIX) e Fase C (area de membros)."
         },
         "timestamp": "2026-05-22T00:30:00-03:00",
         "status": "read"
@@ -136,8 +136,8 @@
         "type": "handoff",
         "from": "dev-expert",
         "to": "ceo-dodo",
-        "subject": "ALERTA DE SEGURANCA + Fase A.6 — segredos vazados no git; codigo limpo e env unificada",
-        "message": "Durante a emenda da rotacao descobri vazamento maior: o arquivo .env.vercel.local estava COMMITADO no git (e no GitHub philipeapenas/vitrine-bibi-muniz) contendo PUSHINPAY_TOKEN (token de pagamento!), SUPABASE_SERVICE_KEY, ADMIN_PASSWORD=bibi123 e VERCEL_OIDC_TOKEN. Alem do service key hardcoded no checkout-config.js. ACOES FEITAS (codigo/repo): (1) removido hardcode do checkout-config.js (agora 100% env, fail-closed se faltar); (2) git rm --cached .env.vercel.local + adicionado ao .gitignore (arquivo preservado localmente); (3) unificado o nome do env para SUPABASE_SERVICE_KEY em TODO o projeto (era SUPABASE_SERVICE_ROLE_KEY em checkout-config + meus 2 endpoints novos); (4) adicionado script npm run dev = vercel dev no package.json. Verificado: zero JWT hardcoded em codigo, sintaxe OK, proxy re-testado ao vivo com o novo env (200). NAO consigo rotacionar segredos externos — e acao do founder no dashboard.",
+        "subject": "ALERTA DE SEGURANCA + Fase A.6 \u2014 segredos vazados no git; codigo limpo e env unificada",
+        "message": "Durante a emenda da rotacao descobri vazamento maior: o arquivo .env.vercel.local estava COMMITADO no git (e no GitHub philipeapenas/vitrine-bibi-muniz) contendo PUSHINPAY_TOKEN (token de pagamento!), SUPABASE_SERVICE_KEY, ADMIN_PASSWORD=bibi123 e VERCEL_OIDC_TOKEN. Alem do service key hardcoded no checkout-config.js. ACOES FEITAS (codigo/repo): (1) removido hardcode do checkout-config.js (agora 100% env, fail-closed se faltar); (2) git rm --cached .env.vercel.local + adicionado ao .gitignore (arquivo preservado localmente); (3) unificado o nome do env para SUPABASE_SERVICE_KEY em TODO o projeto (era SUPABASE_SERVICE_ROLE_KEY em checkout-config + meus 2 endpoints novos); (4) adicionado script npm run dev = vercel dev no package.json. Verificado: zero JWT hardcoded em codigo, sintaxe OK, proxy re-testado ao vivo com o novo env (200). NAO consigo rotacionar segredos externos \u2014 e acao do founder no dashboard.",
         "context": {
             "project": "Vitrine-Hot",
             "artifacts": [
@@ -147,7 +147,7 @@
                 "Projetos/Dominio/Vitrine-Hot/.gitignore",
                 "Projetos/Dominio/Vitrine-Hot/package.json"
             ],
-            "next_action": "ROTACAO OBRIGATORIA PELO FOUNDER (os valores antigos estao no historico do git, precisam virar inuteis): (1) Supabase: roll do JWT secret/service key; (2) PushinPay: regenerar o token de pagamento; (3) Vercel: revogar o OIDC token; (4) trocar ADMIN_PASSWORD de bibi123 p/ algo forte. Depois: por os NOVOS valores em UM unico .env local (gitignored) e nas Env Vars da Vercel, usando os nomes: PUSHINPAY_TOKEN, SUPABASE_URL, SUPABASE_SERVICE_KEY, SITE_URL, ADMIN_PASSWORD. Testar local com 'npm run dev' (vercel dev em localhost:3000) antes do deploy. OPCIONAL: purgar historico do git (filter-repo/BFG + force push) — secundario, a rotacao e o que fecha o risco. PENDENTE: Fase B (auth) e Fase C (membros)."
+            "next_action": "ROTACAO OBRIGATORIA PELO FOUNDER (os valores antigos estao no historico do git, precisam virar inuteis): (1) Supabase: roll do JWT secret/service key; (2) PushinPay: regenerar o token de pagamento; (3) Vercel: revogar o OIDC token; (4) trocar ADMIN_PASSWORD de bibi123 p/ algo forte. Depois: por os NOVOS valores em UM unico .env local (gitignored) e nas Env Vars da Vercel, usando os nomes: PUSHINPAY_TOKEN, SUPABASE_URL, SUPABASE_SERVICE_KEY, SITE_URL, ADMIN_PASSWORD. Testar local com 'npm run dev' (vercel dev em localhost:3000) antes do deploy. OPCIONAL: purgar historico do git (filter-repo/BFG + force push) \u2014 secundario, a rotacao e o que fecha o risco. PENDENTE: Fase B (auth) e Fase C (membros)."
         },
         "timestamp": "2026-05-22T01:00:00-03:00",
         "status": "read"
@@ -157,8 +157,8 @@
         "type": "handoff",
         "from": "dev-expert",
         "to": "ceo-dodo",
-        "subject": "Verificacao local OK (vercel dev) — rotacao da chave funcionando, admin proxy validado ponta-a-ponta",
-        "message": "Setup local + smoke test concluidos. (1) Instalei Vercel CLI (54.3.0) e linkei a pasta Vitrine-Hot ao projeto vitrine-bibi-muniz (time inovafluxoia-9360s-projects). Removi o script 'dev'=vercel dev do package.json (causava recursao 'must not recursively invoke itself'); rodar 'vercel dev' direto. (2) Com 'vercel dev' em localhost:3100 e a chave NOVA (sb_secret) no .env: /api/checkout-config retorna os dados reais da Bibi (200) — como removi o hardcode, isso PROVA que a rotacao da service key esta funcionando. (3) Admin proxy /api/admin/db validado num build estavel: token errado=401, GET=200, PATCH idempotente+count=200 (escrita ok), DELETE em transactions=403 (allowlist). storage=401 sem token. (4) IMPORTANTE: vercel dev no Windows tem flakiness de build/HMR — a 1a request apos start/edicao pega build incompleto e da 500 vazio; estabiliza apos warm-up/restart. NAO e bug de codigo (provado tambem por testes diretos em Node). Em producao nao ocorre.",
+        "subject": "Verificacao local OK (vercel dev) \u2014 rotacao da chave funcionando, admin proxy validado ponta-a-ponta",
+        "message": "Setup local + smoke test concluidos. (1) Instalei Vercel CLI (54.3.0) e linkei a pasta Vitrine-Hot ao projeto vitrine-bibi-muniz (time inovafluxoia-9360s-projects). Removi o script 'dev'=vercel dev do package.json (causava recursao 'must not recursively invoke itself'); rodar 'vercel dev' direto. (2) Com 'vercel dev' em localhost:3100 e a chave NOVA (sb_secret) no .env: /api/checkout-config retorna os dados reais da Bibi (200) \u2014 como removi o hardcode, isso PROVA que a rotacao da service key esta funcionando. (3) Admin proxy /api/admin/db validado num build estavel: token errado=401, GET=200, PATCH idempotente+count=200 (escrita ok), DELETE em transactions=403 (allowlist). storage=401 sem token. (4) IMPORTANTE: vercel dev no Windows tem flakiness de build/HMR \u2014 a 1a request apos start/edicao pega build incompleto e da 500 vazio; estabiliza apos warm-up/restart. NAO e bug de codigo (provado tambem por testes diretos em Node). Em producao nao ocorre.",
         "context": {
             "project": "Vitrine-Hot",
             "artifacts": [
@@ -175,12 +175,12 @@
         "type": "work_order",
         "from": "user",
         "to": "ceo-dodo",
-        "subject": "Evolução para Multi-Tenant (Múltiplas Modelos em 1 Repositório)",
+        "subject": "Evolu\u00e7\u00e3o para Multi-Tenant (M\u00faltiplas Modelos em 1 Reposit\u00f3rio)",
         "message": "Atualmente eu preciso ajustar a logica do projeto Vitrine-Hot, eu queria que esse projeto portasse a vitrine de todas as modelos, ex: Pasta da modelo 1 contem: Vitrine da modelo 1, links da modelo 1 e checkout da modelo 1. E o /admin eh possivel configurar todos os conteudos das modelos disponiveis. Isso eh possivel?",
         "context": {
             "project": "Vitrine-Hot",
             "artifacts": [],
-            "next_action": "Avaliar viabilidade estratégica e arquitetural, e apresentar plano de implementação."
+            "next_action": "Avaliar viabilidade estrat\u00e9gica e arquitetural, e apresentar plano de implementa\u00e7\u00e3o."
         },
         "timestamp": "2026-05-29T21:35:00-03:00",
         "status": "read"
@@ -208,14 +208,14 @@
         "type": "response",
         "from": "ceo-dodo",
         "to": "owner",
-        "subject": "Análise do Admin vs Nova Visão Multi-Tenant concluída",
-        "message": "A análise completa das funcionalidades do /admin foi realizada e documentada. O admin atual funciona perfeitamente de forma config-driven (usando Supabase para alterar qual modelo é exibido na mesma SPA). No entanto, isso entra em conflito direto com a nova visão de separar cada modelo em PASTAS reais. O admin não gera pastas. Um arquivo de análise com as recomendações de refatoração foi criado.",
+        "subject": "An\u00e1lise do Admin vs Nova Vis\u00e3o Multi-Tenant conclu\u00edda",
+        "message": "A an\u00e1lise completa das funcionalidades do /admin foi realizada e documentada. O admin atual funciona perfeitamente de forma config-driven (usando Supabase para alterar qual modelo \u00e9 exibido na mesma SPA). No entanto, isso entra em conflito direto com a nova vis\u00e3o de separar cada modelo em PASTAS reais. O admin n\u00e3o gera pastas. Um arquivo de an\u00e1lise com as recomenda\u00e7\u00f5es de refatora\u00e7\u00e3o foi criado.",
         "context": {
             "project": "Vitrine-Hot",
             "artifacts": [
                 "Projetos/Dominio/Vitrine-Hot/Resumo do projeto/analise_admin.md"
             ],
-            "next_action": "Aprovar o plano de refatoração para gerar sites estáticos (SSG) ou modificar a arquitetura do admin para criar os arquivos físicos das vitrines."
+            "next_action": "Aprovar o plano de refatora\u00e7\u00e3o para gerar sites est\u00e1ticos (SSG) ou modificar a arquitetura do admin para criar os arquivos f\u00edsicos das vitrines."
         },
         "timestamp": "2026-05-30T03:34:50.153Z",
         "status": "pending"
@@ -243,7 +243,7 @@
         "from": "dev-expert",
         "to": "ceo-dodo",
         "subject": "Integracao Frontend e Backend Concluida",
-        "message": "app/vitrine/index.html, api/create-pix.js e api/check-pix.js atualizados para usar dados do admin (botão customizado e token global) com sucesso.",
+        "message": "app/vitrine/index.html, api/create-pix.js e api/check-pix.js atualizados para usar dados do admin (bot\u00e3o customizado e token global) com sucesso.",
         "context": {
             "project": "Vitrine-Hot",
             "artifacts": [
@@ -252,6 +252,41 @@
             "next_action": "Testar e publicar o projeto na Vercel."
         },
         "timestamp": "2026-05-30T04:33:39.961Z",
+        "status": "pending"
+    },
+    {
+        "id": "msg_vitrine_ui_fix_001",
+        "type": "work_order",
+        "from": "ceo-dodo",
+        "to": "frontend-expert",
+        "subject": "Fix UX Flicker - Preloader Animado",
+        "message": "Founder aprovou plano para remover strings hardcoded (Bibi Muniz) do HTML inicial e adicionar tela de loading animada com spinner no index.html e checkout.html, controlando a visibilidade via JS (DOM).",
+        "context": {
+            "project": "Vitrine-Hot",
+            "artifacts": [
+                "implementation_plan.md"
+            ],
+            "next_action": "Implementar preloader e limpar HTML estatico"
+        },
+        "timestamp": "2026-06-04T16:28:35.113193",
+        "status": "pending"
+    },
+    {
+        "id": "msg_vitrine_ui_fix_002",
+        "type": "response",
+        "from": "frontend-expert",
+        "to": "ceo-dodo",
+        "subject": "UI/UX Flicker Resolvido - Preloader Implementado",
+        "message": "Plano de remocao de strings hardcoded e insercao de preloader executado com sucesso nos arquivos index.html e checkout.html. Interface cirurgicamente adaptada com CSS puro e JS (DOM fade out) para melhor performance sem flicker.",
+        "context": {
+            "project": "Vitrine-Hot",
+            "artifacts": [
+                "walkthrough.md",
+                "task.md"
+            ],
+            "next_action": "CEO avaliar fechamento do fluxo."
+        },
+        "timestamp": "2026-06-04T16:31:42.342940",
         "status": "pending"
     }
 ]

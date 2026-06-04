@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Bibi Muniz</title>
-  <meta name="description" content="Todos os meus links em um só lugar.">
-  <link rel="icon" href="/assets/photos/profile.jpg">
+  <title>Carregando...</title>
+  <meta name="description" content="Conteúdo exclusivo.">
+  <link rel="icon" href="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=">
 
-  <meta property="og:title" content="Bibi Muniz">
-  <meta property="og:description" content="Todos os meus links em um só lugar.">
-  <meta property="og:image" content="/assets/photos/profile.jpg">
+  <meta property="og:title" content="Vitrine">
+  <meta property="og:description" content="Conteúdo exclusivo.">
+  <meta property="og:image" content="">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +36,29 @@
       min-height: 100dvh;
       -webkit-font-smoothing: antialiased;
     }
+    
+    /* Preloader */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(1200px 800px at 50% -10%, #2a1230 0%, var(--bg) 55%) no-repeat;
+      background-attachment: fixed;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+    .co-spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid rgba(255, 61, 127, 0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
     .wrap {
       max-width: 440px;
       margin: 0 auto;
@@ -156,12 +179,17 @@
 </head>
 <body>
 
+  <!-- PRELOADER -->
+  <div id="preloader">
+    <div class="co-spinner"></div>
+  </div>
+
   <div class="wrap">
 
     <section class="profile">
-      <img src="/assets/photos/profile.jpg" alt="Profile" decoding="async">
-      <h1>Bibi Muniz</h1>
-      <p class="bio">Tudo o que você procura 💋</p>
+      <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Profile" decoding="async">
+      <h1>...</h1>
+      <p class="bio"></p>
     </section>
 
     <section class="links" id="links"></section>
@@ -244,6 +272,12 @@
 
         } catch (err) {
           console.error('[vitrine]', err);
+        } finally {
+          const preloader = document.getElementById('preloader');
+          if (preloader) {
+            preloader.style.opacity = '0';
+            preloader.style.visibility = 'hidden';
+          }
         }
       }
 

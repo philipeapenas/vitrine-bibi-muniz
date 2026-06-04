@@ -26,7 +26,7 @@
     },
     {
         "id": "track_2_apply_fixes",
-        "title": "Ajuste de Layout e Correção de Scroll",
+        "title": "Ajuste de Layout e Corre\u00e7\u00e3o de Scroll",
         "status": "completed",
         "responsible_skill": "stitch-frontend",
         "dependencies": [
@@ -112,7 +112,7 @@
     },
     {
         "status": "pending",
-        "title": "Consolida��o Global",
+        "title": "Consolida\ufffd\ufffdo Global",
         "dependencies": [
             "track_3_fase3_deploy"
         ],
@@ -122,14 +122,14 @@
     {
         "id": "track_tracking_impl",
         "status": "completed",
-        "title": "Implementação do Tracking Frontend/Backend",
+        "title": "Implementa\u00e7\u00e3o do Tracking Frontend/Backend",
         "responsible_skill": "tracking-specialist",
         "dependencies": []
     },
     {
         "id": "track_dash_frontend",
         "status": "completed",
-        "title": "Criação do Dashboard e Integração Supabase",
+        "title": "Cria\u00e7\u00e3o do Dashboard e Integra\u00e7\u00e3o Supabase",
         "responsible_skill": "frontend-expert",
         "dependencies": []
     },
@@ -145,7 +145,7 @@
     {
         "id": "track_dash_auth",
         "status": "completed",
-        "title": "Correção de Asset & Basic Auth",
+        "title": "Corre\u00e7\u00e3o de Asset & Basic Auth",
         "responsible_skill": "fullstack-dev",
         "dependencies": [
             "track_dash_deploy"
@@ -154,14 +154,14 @@
     {
         "id": "track_v13_a_admin",
         "status": "completed",
-        "title": "Fase A — Ressuscitar Admin + protecao de rota (Basic Auth)",
+        "title": "Fase A \u2014 Ressuscitar Admin + protecao de rota (Basic Auth)",
         "responsible_skill": "dev-expert",
         "dependencies": []
     },
     {
         "id": "track_v13_a5_blindagem",
         "status": "completed",
-        "title": "Fase A.5 — Blindar service key: writes via APIs server-side /api/admin/*",
+        "title": "Fase A.5 \u2014 Blindar service key: writes via APIs server-side /api/admin/*",
         "responsible_skill": "dev-expert",
         "dependencies": [
             "track_v13_a_admin"
@@ -170,7 +170,7 @@
     {
         "id": "track_v13_a6_secret_hygiene",
         "status": "completed",
-        "title": "Fase A.6 — Higiene de segredos: remover hardcode, destravar .env.vercel.local do git, unificar env SUPABASE_SERVICE_KEY (rotacao = acao do founder)",
+        "title": "Fase A.6 \u2014 Higiene de segredos: remover hardcode, destravar .env.vercel.local do git, unificar env SUPABASE_SERVICE_KEY (rotacao = acao do founder)",
         "responsible_skill": "dev-expert",
         "dependencies": [
             "track_v13_a5_blindagem"
@@ -179,7 +179,7 @@
     {
         "id": "track_v13_b_auth",
         "status": "pending",
-        "title": "Fase B — Supabase Auth (email + Google) antes do PIX, conta<->transacao",
+        "title": "Fase B \u2014 Supabase Auth (email + Google) antes do PIX, conta<->transacao",
         "responsible_skill": "dev-expert",
         "dependencies": [
             "track_v13_a_admin"
@@ -188,10 +188,17 @@
     {
         "id": "track_v13_c_membros",
         "status": "pending",
-        "title": "Fase C — Area de membros logada com galeria de midias propria",
+        "title": "Fase C \u2014 Area de membros logada com galeria de midias propria",
         "responsible_skill": "frontend-expert",
         "dependencies": [
             "track_v13_b_auth"
         ]
+    },
+    {
+        "id": "track_ui_flicker_fix",
+        "status": "completed",
+        "title": "Remover Hardcoded HTML e add Animacao de Loading",
+        "responsible_skill": "frontend-expert",
+        "dependencies": []
     }
 ]
