@@ -1457,22 +1457,37 @@
         document.body.style.opacity = '0';
         document.body.style.transition = 'opacity 0.4s ease';
 
+        let picUrl = null;
         try {
           await loadConfig();
-        } finally {
-          // Remover preloader com fade
-          const preloader = document.getElementById("preloader");
-          if (preloader) {
-            preloader.classList.add("loaded");
+          const avatar = document.querySelector(".co-avatar-bg");
+          if (avatar && avatar.style.backgroundImage && avatar.style.backgroundImage.includes("url(")) {
+            picUrl = avatar.style.backgroundImage.slice(4, -1).replace(/["']/g, "");
           }
+        } catch (e) {
+          console.error(e);
         }
-        
-        // Revelar suavemente
-        setTimeout(() => {
-          document.body.style.opacity = '1';
-          const stats = document.getElementById("coStatsRow");
-          if(stats) stats.style.opacity = '1';
-        }, 300); // Aguarda um pouco o fade do loader
+
+        const finishLoading = () => {
+          const preloader = document.getElementById("preloader");
+          if (preloader) preloader.classList.add("loaded");
+          
+          setTimeout(() => {
+            document.body.style.opacity = '1';
+            const stats = document.getElementById("coStatsRow");
+            if(stats) stats.style.opacity = '1';
+          }, 300);
+        };
+
+        if (picUrl) {
+          const img = new Image();
+          const fallback = setTimeout(finishLoading, 3000);
+          img.onload = () => { clearTimeout(fallback); finishLoading(); };
+          img.onerror = () => { clearTimeout(fallback); finishLoading(); };
+          img.src = picUrl;
+        } else {
+          finishLoading();
+        }
 
         try {
           if (localStorage.getItem("co_cookie_ok")) {

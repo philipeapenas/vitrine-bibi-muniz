@@ -270,9 +270,26 @@
           checkoutLink.textContent = btnText;
           root.appendChild(checkoutLink);
 
+          const hidePreloader = () => {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+              preloader.style.opacity = '0';
+              preloader.style.visibility = 'hidden';
+            }
+          };
+
+          if (p.profile_picture_url) {
+            const img = new Image();
+            const fallback = setTimeout(hidePreloader, 3000);
+            img.onload = () => { clearTimeout(fallback); hidePreloader(); };
+            img.onerror = () => { clearTimeout(fallback); hidePreloader(); };
+            img.src = p.profile_picture_url;
+          } else {
+            hidePreloader();
+          }
+
         } catch (err) {
           console.error('[vitrine]', err);
-        } finally {
           const preloader = document.getElementById('preloader');
           if (preloader) {
             preloader.style.opacity = '0';
