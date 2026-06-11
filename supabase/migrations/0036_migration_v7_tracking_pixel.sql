@@ -27,6 +27,7 @@ ALTER TABLE public.site_profile ADD COLUMN IF NOT EXISTS facebook_pixel_id text;
 -- 4. Índices para performance em relatórios
 CREATE INDEX IF NOT EXISTS idx_tracking_utm_source ON public.tracking_events (utm_source);
 CREATE INDEX IF NOT EXISTS idx_transactions_utm_source ON public.transactions (utm_source);
+ALTER TABLE public.tracking_events ADD COLUMN IF NOT EXISTS event_type text;
 CREATE INDEX IF NOT EXISTS idx_tracking_event_type ON public.tracking_events (event_type);
 
 -- ✅ Pronto! O sistema de dados está preparado para o tracking 360º.

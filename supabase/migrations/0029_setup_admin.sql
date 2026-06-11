@@ -56,6 +56,6 @@ VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- 3. Storage Bucket para Imagens (Usando Admin Dashboard Uploads)
-INSERT INTO storage.buckets (id, name, public) VALUES ('site_assets', 'site_assets', true) ON CONFLICT (id) DO NOTHING;
+INSERT INTO storage.buckets (id, name) VALUES ('site_assets', 'site_assets') ON CONFLICT (id) DO NOTHING;
 CREATE POLICY "Acesso público às imagens" ON storage.objects FOR SELECT TO public USING (bucket_id = 'site_assets');
 -- Upload será feito apenas via Service Role Key

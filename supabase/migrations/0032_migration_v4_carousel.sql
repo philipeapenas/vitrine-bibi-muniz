@@ -15,7 +15,7 @@ CREATE POLICY "Acesso publico para selecao" ON public.carousel_photos FOR SELECT
 
 -- Gatilho para auto-update do updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIaGGER AS $$
+RETURNS TRIGGER AS $$
 BEGIN
     NEW.updated_at = now();
     RETURN NEW;

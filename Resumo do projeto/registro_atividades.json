@@ -1,204 +1,204 @@
 [
-    {
-        "id": "track_-1_implement_logging",
-        "title": "Implementar Logging em Tempo Real",
-        "status": "completed",
-        "responsible_skill": "skill-expert",
-        "dependencies": []
-    },
-    {
-        "id": "track_0_fix_ceo_dodo",
-        "title": "Corrigir Comportamento do /ceo-dodo",
-        "status": "completed",
-        "responsible_skill": "skill-expert",
-        "dependencies": [
-            "track_-1_implement_logging"
-        ]
-    },
-    {
-        "id": "track_1_optimize_skill",
-        "title": "Otimizar Skill /stitch-frontend",
-        "status": "completed",
-        "responsible_skill": "skill-expert",
-        "dependencies": [
-            "track_0_fix_ceo_dodo"
-        ]
-    },
-    {
-        "id": "track_2_apply_fixes",
-        "title": "Ajuste de Layout e Corre\u00e7\u00e3o de Scroll",
-        "status": "completed",
-        "responsible_skill": "stitch-frontend",
-        "dependencies": [
-            "track_1_optimize_skill"
-        ]
-    },
-    {
-        "id": "track_3_deploy",
-        "title": "Deploy das Melhorias",
-        "status": "completed",
-        "responsible_skill": "vercel-expert",
-        "dependencies": [
-            "track_2_apply_fixes"
-        ]
-    },
-    {
-        "status": "completed",
-        "title": "Pesquisa UI/UX e Playbook",
-        "dependencies": [],
-        "id": "track_1_fase2_pesquisa",
-        "responsible_skill": "skill-expert"
-    },
-    {
-        "status": "completed",
-        "title": "Criar Skill flow-archivist",
-        "dependencies": [
-            "track_1_fase2_pesquisa"
-        ],
-        "id": "track_2_fase2_archivist",
-        "responsible_skill": "skill-expert"
-    },
-    {
-        "status": "completed",
-        "title": "Refatorar Perfil Vitrine",
-        "dependencies": [
-            "track_2_fase2_archivist"
-        ],
-        "id": "track_3_fase2_css",
-        "responsible_skill": "stitch-frontend"
-    },
-    {
-        "status": "completed",
-        "title": "Deploy Atualizado",
-        "dependencies": [
-            "track_3_fase2_css"
-        ],
-        "id": "track_4_fase2_deploy",
-        "responsible_skill": "vercel-expert"
-    },
-    {
-        "status": "completed",
-        "title": "Arquivar Fluxo da Fase 2",
-        "dependencies": [
-            "track_4_fase2_deploy"
-        ],
-        "id": "track_5_fase2_arquivar",
-        "responsible_skill": "flow-archivist"
-    },
-    {
-        "status": "pending",
-        "title": "Criar css-surgeon",
-        "dependencies": [],
-        "id": "track_1_fase3_surgeon",
-        "responsible_skill": "skill-expert"
-    },
-    {
-        "status": "pending",
-        "title": "Refinamento do CSS",
-        "dependencies": [
-            "track_1_fase3_surgeon"
-        ],
-        "id": "track_2_fase3_css",
-        "responsible_skill": "css-surgeon"
-    },
-    {
-        "status": "pending",
-        "title": "Deploy Vercel",
-        "dependencies": [
-            "track_2_fase3_css"
-        ],
-        "id": "track_3_fase3_deploy",
-        "responsible_skill": "vercel-expert"
-    },
-    {
-        "status": "pending",
-        "title": "Consolida\ufffd\ufffdo Global",
-        "dependencies": [
-            "track_3_fase3_deploy"
-        ],
-        "id": "track_4_fase3_archivist",
-        "responsible_skill": "flow-archivist"
-    },
-    {
-        "id": "track_tracking_impl",
-        "status": "completed",
-        "title": "Implementa\u00e7\u00e3o do Tracking Frontend/Backend",
-        "responsible_skill": "tracking-specialist",
-        "dependencies": []
-    },
-    {
-        "id": "track_dash_frontend",
-        "status": "completed",
-        "title": "Cria\u00e7\u00e3o do Dashboard e Integra\u00e7\u00e3o Supabase",
-        "responsible_skill": "frontend-expert",
-        "dependencies": []
-    },
-    {
-        "id": "track_dash_deploy",
-        "status": "completed",
-        "title": "Deploy do Dashboard na Vercel",
-        "responsible_skill": "vercel-expert",
-        "dependencies": [
-            "track_dash_frontend"
-        ]
-    },
-    {
-        "id": "track_dash_auth",
-        "status": "completed",
-        "title": "Corre\u00e7\u00e3o de Asset & Basic Auth",
-        "responsible_skill": "fullstack-dev",
-        "dependencies": [
-            "track_dash_deploy"
-        ]
-    },
-    {
-        "id": "track_v13_a_admin",
-        "status": "completed",
-        "title": "Fase A \u2014 Ressuscitar Admin + protecao de rota (Basic Auth)",
-        "responsible_skill": "dev-expert",
-        "dependencies": []
-    },
-    {
-        "id": "track_v13_a5_blindagem",
-        "status": "completed",
-        "title": "Fase A.5 \u2014 Blindar service key: writes via APIs server-side /api/admin/*",
-        "responsible_skill": "dev-expert",
-        "dependencies": [
-            "track_v13_a_admin"
-        ]
-    },
-    {
-        "id": "track_v13_a6_secret_hygiene",
-        "status": "completed",
-        "title": "Fase A.6 \u2014 Higiene de segredos: remover hardcode, destravar .env.vercel.local do git, unificar env SUPABASE_SERVICE_KEY (rotacao = acao do founder)",
-        "responsible_skill": "dev-expert",
-        "dependencies": [
-            "track_v13_a5_blindagem"
-        ]
-    },
-    {
-        "id": "track_v13_b_auth",
-        "status": "pending",
-        "title": "Fase B \u2014 Supabase Auth (email + Google) antes do PIX, conta<->transacao",
-        "responsible_skill": "dev-expert",
-        "dependencies": [
-            "track_v13_a_admin"
-        ]
-    },
-    {
-        "id": "track_v13_c_membros",
-        "status": "pending",
-        "title": "Fase C \u2014 Area de membros logada com galeria de midias propria",
-        "responsible_skill": "frontend-expert",
-        "dependencies": [
-            "track_v13_b_auth"
-        ]
-    },
-    {
-        "id": "track_ui_flicker_fix",
-        "status": "completed",
-        "title": "Remover Hardcoded HTML e add Animacao de Loading",
-        "responsible_skill": "frontend-expert",
-        "dependencies": []
-    }
+  {
+    "id": "track_-1_implement_logging",
+    "title": "Implementar Logging em Tempo Real",
+    "status": "completed",
+    "responsible_skill": "skill-expert",
+    "dependencies": []
+  },
+  {
+    "id": "track_0_fix_ceo_dodo",
+    "title": "Corrigir Comportamento do /ceo-dodo",
+    "status": "completed",
+    "responsible_skill": "skill-expert",
+    "dependencies": [
+      "track_-1_implement_logging"
+    ]
+  },
+  {
+    "id": "track_1_optimize_skill",
+    "title": "Otimizar Skill /stitch-frontend",
+    "status": "completed",
+    "responsible_skill": "skill-expert",
+    "dependencies": [
+      "track_0_fix_ceo_dodo"
+    ]
+  },
+  {
+    "id": "track_2_apply_fixes",
+    "title": "Ajuste de Layout e Correção de Scroll",
+    "status": "completed",
+    "responsible_skill": "stitch-frontend",
+    "dependencies": [
+      "track_1_optimize_skill"
+    ]
+  },
+  {
+    "id": "track_3_deploy",
+    "title": "Deploy das Melhorias",
+    "status": "completed",
+    "responsible_skill": "vercel-expert",
+    "dependencies": [
+      "track_2_apply_fixes"
+    ]
+  },
+  {
+    "status": "completed",
+    "title": "Pesquisa UI/UX e Playbook",
+    "dependencies": [],
+    "id": "track_1_fase2_pesquisa",
+    "responsible_skill": "skill-expert"
+  },
+  {
+    "status": "completed",
+    "title": "Criar Skill flow-archivist",
+    "dependencies": [
+      "track_1_fase2_pesquisa"
+    ],
+    "id": "track_2_fase2_archivist",
+    "responsible_skill": "skill-expert"
+  },
+  {
+    "status": "completed",
+    "title": "Refatorar Perfil Vitrine",
+    "dependencies": [
+      "track_2_fase2_archivist"
+    ],
+    "id": "track_3_fase2_css",
+    "responsible_skill": "stitch-frontend"
+  },
+  {
+    "status": "completed",
+    "title": "Deploy Atualizado",
+    "dependencies": [
+      "track_3_fase2_css"
+    ],
+    "id": "track_4_fase2_deploy",
+    "responsible_skill": "vercel-expert"
+  },
+  {
+    "status": "completed",
+    "title": "Arquivar Fluxo da Fase 2",
+    "dependencies": [
+      "track_4_fase2_deploy"
+    ],
+    "id": "track_5_fase2_arquivar",
+    "responsible_skill": "flow-archivist"
+  },
+  {
+    "status": "pending",
+    "title": "Criar css-surgeon",
+    "dependencies": [],
+    "id": "track_1_fase3_surgeon",
+    "responsible_skill": "skill-expert"
+  },
+  {
+    "status": "pending",
+    "title": "Refinamento do CSS",
+    "dependencies": [
+      "track_1_fase3_surgeon"
+    ],
+    "id": "track_2_fase3_css",
+    "responsible_skill": "css-surgeon"
+  },
+  {
+    "status": "pending",
+    "title": "Deploy Vercel",
+    "dependencies": [
+      "track_2_fase3_css"
+    ],
+    "id": "track_3_fase3_deploy",
+    "responsible_skill": "vercel-expert"
+  },
+  {
+    "status": "pending",
+    "title": "Consolida��o Global",
+    "dependencies": [
+      "track_3_fase3_deploy"
+    ],
+    "id": "track_4_fase3_archivist",
+    "responsible_skill": "flow-archivist"
+  },
+  {
+    "id": "track_tracking_impl",
+    "status": "completed",
+    "title": "Implementação do Tracking Frontend/Backend",
+    "responsible_skill": "tracking-specialist",
+    "dependencies": []
+  },
+  {
+    "id": "track_dash_frontend",
+    "status": "completed",
+    "title": "Criação do Dashboard e Integração Supabase",
+    "responsible_skill": "frontend-expert",
+    "dependencies": []
+  },
+  {
+    "id": "track_dash_deploy",
+    "status": "completed",
+    "title": "Deploy do Dashboard na Vercel",
+    "responsible_skill": "vercel-expert",
+    "dependencies": [
+      "track_dash_frontend"
+    ]
+  },
+  {
+    "id": "track_dash_auth",
+    "status": "completed",
+    "title": "Correção de Asset & Basic Auth",
+    "responsible_skill": "fullstack-dev",
+    "dependencies": [
+      "track_dash_deploy"
+    ]
+  },
+  {
+    "id": "track_v13_a_admin",
+    "status": "completed",
+    "title": "Fase A — Ressuscitar Admin + protecao de rota (Basic Auth)",
+    "responsible_skill": "dev-expert",
+    "dependencies": []
+  },
+  {
+    "id": "track_v13_a5_blindagem",
+    "status": "completed",
+    "title": "Fase A.5 — Blindar service key: writes via APIs server-side /api/admin/*",
+    "responsible_skill": "dev-expert",
+    "dependencies": [
+      "track_v13_a_admin"
+    ]
+  },
+  {
+    "id": "track_v13_a6_secret_hygiene",
+    "status": "completed",
+    "title": "Fase A.6 — Higiene de segredos: remover hardcode, destravar .env.vercel.local do git, unificar env SUPABASE_SERVICE_KEY (rotacao = acao do founder)",
+    "responsible_skill": "dev-expert",
+    "dependencies": [
+      "track_v13_a5_blindagem"
+    ]
+  },
+  {
+    "id": "track_v13_b_auth",
+    "status": "pending",
+    "title": "Fase B — Supabase Auth (email + Google) antes do PIX, conta<->transacao",
+    "responsible_skill": "dev-expert",
+    "dependencies": [
+      "track_v13_a_admin"
+    ]
+  },
+  {
+    "id": "track_v13_c_membros",
+    "status": "pending",
+    "title": "Fase C — Area de membros logada com galeria de midias propria",
+    "responsible_skill": "frontend-expert",
+    "dependencies": [
+      "track_v13_b_auth"
+    ]
+  },
+  {
+    "id": "track_ui_flicker_fix",
+    "status": "completed",
+    "title": "Remover Hardcoded HTML e add Animacao de Loading",
+    "responsible_skill": "frontend-expert",
+    "dependencies": []
+  }
 ]

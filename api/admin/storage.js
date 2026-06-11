@@ -8,7 +8,7 @@
 
 const { createClient } = require('@supabase/supabase-js');
 
-const SUPABASE_URL = 'https://mdmjyvxrozxrxwmasnuq.supabase.co';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://api-supabase.dodigital.shop';
 const BUCKET = 'site_assets';
 
 module.exports = async function handler(req, res) {

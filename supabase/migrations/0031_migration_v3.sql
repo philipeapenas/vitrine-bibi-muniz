@@ -34,6 +34,6 @@ ON CONFLICT DO NOTHING;
 
 -- ─── Storage: Permitir leitura pública do bucket site_assets (carousel) ───
 -- Cria política de leitura pública para o bucket inteiro (incluindo pasta carousel/)
-INSERT INTO storage.buckets (id, name, public)
-VALUES ('site_assets', 'site_assets', true)
-ON CONFLICT (id) DO UPDATE SET public = true;
+INSERT INTO storage.buckets (id, name)
+VALUES ('site_assets', 'site_assets')
+ON CONFLICT (id) DO NOTHING;

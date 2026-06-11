@@ -9,7 +9,7 @@
 //  header x-admin-token a cada chamada.
 // ═══════════════════════════════════════════════════════
 (function () {
-  const SUPABASE_URL = 'https://mdmjyvxrozxrxwmasnuq.supabase.co';
+  const SUPABASE_URL = 'https://api-supabase.dodigital.shop';
   const PUBLIC_BASE = `${SUPABASE_URL}/storage/v1/object/public/site_assets/`;
 
   function buildQuery(parts) {

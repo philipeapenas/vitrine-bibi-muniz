@@ -1,7 +1,7 @@
 // Edge Function Vercel — checkout-config (v3 multi-model)
 export const config = { runtime: 'edge' };
 
-const SUPABASE_URL     = process.env.SUPABASE_URL || 'https://mdmjyvxrozxrxwmasnuq.supabase.co';
+const SUPABASE_URL     = process.env.SUPABASE_URL || 'https://api-supabase.dodigital.shop';
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
 const headers = {

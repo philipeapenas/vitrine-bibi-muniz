@@ -5,7 +5,7 @@
 //  Espelha o envelope do supabase-js: { data, error, count }.
 // ═══════════════════════════════════════════════════════
 
-const SUPABASE_URL = 'https://mdmjyvxrozxrxwmasnuq.supabase.co';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://api-supabase.dodigital.shop';
 
 // Allowlist: tabela -> metodos permitidos ('*' = todos).
 // tracking_events/transactions sao apenas leitura no painel.

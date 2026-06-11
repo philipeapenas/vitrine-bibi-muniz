@@ -228,7 +228,11 @@ async function initSupabase(key) {
     const { error } = await dbClient.from('site_profile').select('slug').limit(1);
     if (error && error.status === 401) {
         dbClient = null;
-        alert("Senha do admin invalida.");
+        if (error.message && error.message.includes('Invalid API key')) {
+            alert("Erro de configuração no servidor: A Service Key do Supabase é inválida ou expirou. Atualize as variáveis de ambiente na Vercel.");
+        } else {
+            alert("Senha do admin invalida.");
+        }
         sessionStorage.removeItem('vitrine_admin_token');
         overlay.classList.remove('hidden');
         connStatus.textContent = "● Desconectado";
