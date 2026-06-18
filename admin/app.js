@@ -571,6 +571,15 @@ async function loadProfileData() {
         
         const thumbP = document.getElementById('thumbProfile');
         const thumbB = document.getElementById('thumbBanner');
+        const fileP = document.getElementById('fileProfilePic');
+        const fileB = document.getElementById('fileBannerPic');
+        
+        // Reset inputs e previews ao trocar de modelo
+        if (thumbP) thumbP.style.backgroundImage = 'none';
+        if (thumbB) thumbB.style.backgroundImage = 'none';
+        if (fileP) fileP.value = '';
+        if (fileB) fileB.value = '';
+
         if (data.profile_picture_url && thumbP) thumbP.style.backgroundImage = `url('${data.profile_picture_url}')`;
         if (data.banner_image_url && thumbB) thumbB.style.backgroundImage  = `url('${data.banner_image_url}')`;
         

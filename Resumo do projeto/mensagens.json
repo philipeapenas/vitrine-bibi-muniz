@@ -333,5 +333,40 @@
     },
     "timestamp": "2026-06-09T04:21:54.547Z",
     "status": "pending"
+  },
+  {
+    "id": "msg_vitrine_v14_003_final",
+    "type": "handoff",
+    "from": "assistente-expert",
+    "to": "ceo-dodo",
+    "subject": "Vault atualizado — 2026-06-11",
+    "message": "Auto-archive concluido. Daily, entrega e logs atualizados.",
+    "context": {
+      "project": "Vitrine-Hot",
+      "artifacts": [
+        "Dodo Company/05_Daily/Semana_08-06-26.md",
+        "Dodo Company/01_Projetos/Vitrine-Hot/03_Entregas/2026-06-11_fix-admin-bucket-publico.md"
+      ],
+      "next_action": "Nenhuma. Vault sincronizado."
+    },
+    "timestamp": "2026-06-11T01:46:03.979404-03:00",
+    "status": "pending"
+  },
+  {
+    "id": "msg_vitrine_hot_fix_ghosting",
+    "type": "handoff",
+    "from": "dev-expert",
+    "to": "ceo-dodo",
+    "subject": "Correcao Bug Ghosting Preview de Imagens no Admin",
+    "message": "Foi identificado e corrigido um bug no painel admin (admin/app.js) onde o preview da imagem de perfil nao era limpo ao trocar ou criar um novo modelo. Isso causava a impressao de que a imagem ja estava configurada, resultando no salvamento de uma string vazia no Supabase para o novo modelo. A rotina de loadProfileData foi alterada para zerar os campos input e limpar os previews antes de carregar o novo perfil.",
+    "context": {
+      "project": "Vitrine-Hot",
+      "artifacts": [
+        "admin/app.js"
+      ],
+      "next_action": "O cliente precisa subir uma nova imagem no perfil thaismachado2 pelo painel Admin, e clicar em Salvar Identidade. Em seguida, acionar o deploy (ou sync)."
+    },
+    "timestamp": "2026-06-17T21:40:00-03:00",
+    "status": "pending"
   }
 ]
