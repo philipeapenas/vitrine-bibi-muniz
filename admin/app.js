@@ -526,19 +526,53 @@ tabsBtns.forEach(btn => {
 });
 
 // ─── Helpers para Upload ─────────────────────────────
-function previewFile(inputId, thumbId) {
-    document.getElementById(inputId).addEventListener('change', (e) => {
+// Upload-on-select: ao escolher a imagem, ela ja sobe pro bucket e grava a
+// URL no banco na hora. Selecionar == salvar. Evita os dois jeitos de perder
+// a imagem: esquecer de clicar em "Salvar Identidade" e trocar de modelo
+// (que limpa o input). O input e zerado apos o upload pra que o submit de
+// "Salvar Identidade" nao reenvie a mesma imagem duplicada.
+function previewFile(inputId, thumbId, uploadPrefix, column) {
+    document.getElementById(inputId).addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
+
+        const thumb = document.getElementById(thumbId);
+        const prevBg = thumb ? thumb.style.backgroundImage : '';
+
+        // Preview local imediato
         const reader = new FileReader();
         reader.onload = (ev) => {
-            document.getElementById(thumbId).style.backgroundImage = `url('${ev.target.result}')`;
+            if (thumb) thumb.style.backgroundImage = `url('${ev.target.result}')`;
         };
         reader.readAsDataURL(file);
+
+        // Envio + persistencia imediatos
+        if (!dbClient || !currentModelSlug) {
+            if (thumb) thumb.style.backgroundImage = prevBg;
+            e.target.value = '';
+            alert('Conecte-se e selecione uma modelo antes de enviar a imagem.');
+            return;
+        }
+        try {
+            const url = await uploadFile(inputId, uploadPrefix);
+            if (!url) return;
+            const { error, count } = await dbClient.from('site_profile')
+                .update({ [column]: url, updated_at: new Date() }, { count: 'exact' })
+                .eq('slug', currentModelSlug);
+            if (error) throw error;
+            if (count === 0) throw new Error('Nenhuma modelo encontrada para esse slug.');
+            if (thumb) thumb.style.backgroundImage = `url('${url}')`;
+            e.target.value = ''; // evita reenvio duplicado no submit de Salvar Identidade
+            alert('Imagem enviada e salva.');
+        } catch (err) {
+            if (thumb) thumb.style.backgroundImage = prevBg;
+            e.target.value = '';
+            alert('Falha ao enviar a imagem: ' + err.message);
+        }
     });
 }
-previewFile('fileProfilePic', 'thumbProfile');
-previewFile('fileBannerPic', 'thumbBanner');
+previewFile('fileProfilePic', 'thumbProfile', 'profile', 'profile_picture_url');
+previewFile('fileBannerPic', 'thumbBanner', 'banner', 'banner_image_url');
 
 async function uploadFile(inputId, filename) {
     const input = document.getElementById(inputId);
